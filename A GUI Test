@@ -1,0 +1,99 @@
+import javax.swing.*;
+import java.awt.event.*;
+import java.awt.*;
+
+class EmptyFrame extends JFrame 
+{
+	private String sundayEvents="";
+	private String mondayEvents="";
+	private String tuesdayEvents="";
+	private String wednesdayEvents="";
+	private String thursdayEvents="";
+	private String fridayEvents="";
+	private String saturdayEvents="";
+	public EmptyFrame() 
+ {
+  	setLayout(new GridLayout(1,7,15,15));
+	setTitle("EmptyFrame");
+	setSize(2000,500); // default size is 0,0
+	setLocation(0,30); // default is 0,0 (top left corner)
+	  JPanel sunday = new JPanel(new BorderLayout()); 
+    	add(sunday);
+    JLabel sundaylab = new JLabel("Sunday");
+    sunday.add(sundaylab,BorderLayout.NORTH);
+  	  TextArea sunEvents = new TextArea(sundayEvents,10,50);
+             sunEvents.setEditable(false) ;
+	sunday.add(sunEvents,BorderLayout.CENTER);
+	
+    JPanel monday = new JPanel(new BorderLayout()); 
+    	add(monday);
+    JLabel mondaylab = new JLabel("Monday");
+    monday.add(mondaylab,BorderLayout.NORTH);
+	TextArea monEvents = new TextArea(mondayEvents);
+    monEvents.setEditable(false) ;
+    monday.add(monEvents,BorderLayout.CENTER);  
+	
+    JPanel tuesday = new JPanel(new BorderLayout()); 
+    	add(tuesday);
+    JLabel tuesdaylab = new JLabel("Tuesday");
+    tuesday.add(tuesdaylab,BorderLayout.NORTH);
+	TextArea tuesEvents = new TextArea(tuesdayEvents);
+    tuesEvents.setEditable(false) ;         
+	tuesday.add(tuesEvents,BorderLayout.CENTER);  
+	
+    JPanel wednesday = new JPanel(new BorderLayout()); 
+    	add(wednesday);
+    JLabel wednesdaylab = new JLabel("Wednesday");
+    wednesday.add(wednesdaylab,BorderLayout.NORTH);
+
+	
+    JPanel thursday = new JPanel(new BorderLayout()); 
+    	add(thursday);
+    JLabel thursdaylab = new JLabel("Thursday");
+    thursday.add(thursdaylab,BorderLayout.NORTH);
+    
+	
+    JPanel friday = new JPanel(new BorderLayout()); 
+    	add(friday);
+    JLabel fridaylab = new JLabel("Friday");
+    friday.add(fridaylab,BorderLayout.NORTH);
+   
+	
+    JPanel saturday = new JPanel(new BorderLayout()); 
+    	add(saturday);
+    JLabel saturdaylab = new JLabel("Saturday");
+    saturday.add(saturdaylab,BorderLayout.NORTH);
+  
+	
+
+	    
+          
+	  TextArea wednesEvents = new TextArea(wednesdayEvents);
+     wednesEvents.setEditable(false) ;         
+	wednesday.add(wednesEvents,BorderLayout.CENTER);
+	TextArea thursEvents = new TextArea(thursdayEvents);
+    thursEvents.setEditable(false) ;         
+	thursday.add(thursEvents,BorderLayout.CENTER);
+	 TextArea friEvents = new TextArea(fridayEvents);
+     friEvents.setEditable(false) ;         
+	friday.add(friEvents,BorderLayout.CENTER);
+	  TextArea satEvents = new TextArea(saturdayEvents);
+     satEvents.setEditable(false) ;         
+	saturday.add(satEvents,BorderLayout.CENTER);
+
+  }
+  public void addEvents()
+  {
+  	//reads from file and adds to apprprte string
+  }
+  public void updateEvents()
+  {
+  	//reads teh new events and updates strings
+  }
+  public static void main(String[] args) 
+  {
+    JFrame f = new EmptyFrame();
+    f.show();
+  f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+  }
+}
