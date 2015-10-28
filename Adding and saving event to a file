@@ -1,0 +1,197 @@
+package addEvent;
+
+public class AddEvent {
+	private int startingHour;
+	private int startingMinute;
+	private int endingHour;
+	private int endingMinute;
+	private String eventName;
+	private String eventDescription;
+	private String eventPlace;
+	private String startingTimeOfDay;
+	private String endingTimeOfDay;
+	
+	
+	public void setSHour(int h)
+	{
+		startingHour = h;
+	}	
+	public int getSHour()
+	{
+		return startingHour;
+	}
+	
+	public void setSMinute(int h)
+	{
+		startingMinute = h;
+	}	
+	public int getSMinute()
+	{
+		return startingMinute;
+	}
+	
+	public void setEHour(int h)
+	{
+		endingHour = h;
+	}
+	public int getEHour()
+	{
+		return endingHour;
+	}
+	public void setEMinute(int h)
+	{
+		endingMinute = h;
+	}	
+	public int getEMinute()
+	{
+		return endingMinute;
+	}
+	
+	public void setEName(String n)
+	{
+		eventName = n;
+	}	
+	public String getEName()
+	{
+		return eventName;
+	}
+	
+	public void setEDescription(String d)
+	{
+		eventDescription = d;
+	}	
+	public String getEDescription()
+	{
+		return eventDescription;
+	}
+	
+	public void setEPlace(String p)
+	{
+		eventPlace = p;
+	}
+	public String getEPlace()
+	{
+		return eventPlace;
+	}
+	
+	public void setSTimeOfDay(String t)
+	{
+		startingTimeOfDay = t;
+	}	
+	public String getSTimeOfDay()
+	{
+		return startingTimeOfDay;
+	}
+	
+	public void setETimeOfDay(String t)
+	{
+		endingTimeOfDay = t;
+	}	
+	public String getETimeOfDay()
+	{
+		return endingTimeOfDay;
+	}
+}
+
+
+
+
+
+package addEvent;
+
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.*;
+public class Main1 {
+
+	public static void main(String[] args) {
+		Scanner scanner = new Scanner(System.in);		 
+		AddEvent event = new AddEvent();
+		
+		String name, location, description, startingTimeOfDay, endingTimeOfDay;
+		int startingHour, startingMinute, endingHour, endingMinute;
+		
+		System.out.print("Enter event name: ");
+		name = (scanner.nextLine());
+		event.setEName(name);		
+		
+		System.out.print("Enter the location of the event: ");
+		location = (scanner.nextLine());
+		event.setEPlace(location);
+		
+		System.out.print("Enter a event description: ");
+		description = (scanner.nextLine());
+		event.setEDescription(description);
+		
+		System.out.print("Enter the starting hour of event: ");
+		startingHour = (scanner.nextInt());
+		event.setSHour(startingHour);
+		
+		System.out.print("Enter the starting minute of event: ");
+		startingMinute = (scanner.nextInt());
+		event.setSMinute(startingMinute);
+		
+		System.out.print("Enter AM or PM for starting time of event: ");
+		startingTimeOfDay = (scanner.next());
+		event.setSTimeOfDay(startingTimeOfDay);		
+		
+		System.out.print("Enter the ending hour of event: ");
+		endingHour = (scanner.nextInt());
+		event.setEHour(endingHour);
+		
+		System.out.print("Enter the starting minute of event: ");
+		endingMinute = (scanner.nextInt());
+		event.setEMinute(endingMinute);
+		
+		System.out.print("Enter AM or PM for ending time of event: ");
+		endingTimeOfDay = (scanner.next());
+		event.setETimeOfDay(endingTimeOfDay);
+		
+		/*System.out.println("\nThe following event has been added to your calendar: ");
+		System.out.println("Event name: " + event.getEName());
+		System.out.println("Event location: " + event.getEPlace());
+		System.out.println("Event description: " + event.getEDescription());
+		System.out.println("Event start time: " + event.getSHour() + ":" + event.getSMinute() + " " + event.getSTimeOfDay());
+		System.out.println("Event end time: " + event.getEHour() + ":" + event.getEMinute() + " " + event.getETimeOfDay());
+		*/
+		
+		String fileName = name + ".txt";
+
+        try {
+            // Assume default encoding.
+            FileWriter fileWriter =
+                new FileWriter(fileName);
+
+            // Always wrap FileWriter in BufferedWriter.
+            BufferedWriter bufferedWriter =
+                new BufferedWriter(fileWriter);
+
+            // Note that write() does not automatically
+            // append a newline character.
+            bufferedWriter.write("\nThe following event has been added to your calendar: ");
+            bufferedWriter.newLine();
+            bufferedWriter.write("Event name: " + event.getEName());
+            bufferedWriter.newLine();
+            bufferedWriter.write("Event location: " + event.getEPlace());
+            bufferedWriter.newLine();
+            bufferedWriter.write("Event description: " + event.getEDescription());
+            bufferedWriter.newLine();
+            bufferedWriter.write("Event start time: " + event.getSHour() + ":" + event.getSMinute() + " " + event.getSTimeOfDay());
+            bufferedWriter.newLine();
+            bufferedWriter.write("Event end time: " + event.getEHour() + ":" + event.getEMinute() + " " + event.getETimeOfDay());
+            bufferedWriter.newLine();
+            // Always close files.
+            bufferedWriter.close();
+        }
+        catch(IOException ex) {
+            System.out.println(
+                "Error writing to file '"
+                + fileName + "'");
+        }
+        
+        System.out.println("Event has been written to the file named " + name + ".txt\n");
+
+	}
+}
