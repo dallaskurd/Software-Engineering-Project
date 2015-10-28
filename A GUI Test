@@ -6,7 +6,7 @@ import java.awt.event.ItemListener;
 import java.awt.event.*;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
-class EmptyFrame extends JFrame implements ItemListener
+class EmptyFrame extends JFrame implements ItemListener, ActionListener
 {
 	/**
 	 * 
@@ -21,11 +21,13 @@ class EmptyFrame extends JFrame implements ItemListener
 	private String saturdayEvents="";
 	private String todayevents="";
 	JPanel cards;
-	//Need Holiday Constants
+	//Need Holiday Consents
 	private String[] monthevents= new String[50];
 	Calendar cale = new GregorianCalendar();
+	static JFrame frame = new JFrame("GuiTest");
 	public void addCompToFrame(Container pane) 
  {
+		
 		JPanel comboBoxPane =new JPanel();
 		setTitle("EmptyFrame");
 		setSize(2000,500); // default size is 0,0
@@ -35,15 +37,26 @@ class EmptyFrame extends JFrame implements ItemListener
 		cb.setEditable(false);
         cb.addItemListener((ItemListener) this);
         comboBoxPane.add(cb);
+        JButton add=new JButton("Add Event");
+        JButton delete=new JButton("Delete Event");
+        JButton edit=new JButton("Edit Event");
+        add.addActionListener((ActionListener)this);
+        delete.addActionListener((ActionListener)this);
+        edit.addActionListener((ActionListener)this);
+        add.setActionCommand("add");
+        delete.setActionCommand("delete");
+        edit.setActionCommand("edit");
+        comboBoxPane.add(add);
+        comboBoxPane.add(delete);
+        comboBoxPane.add(edit);
         JPanel card1=new JPanel(new GridLayout(1,7,15,15));
         JPanel card2=new JPanel();
         JPanel card3=new JPanel();
-        /* WEEK VIEW */
 		  JPanel sunday = new JPanel(new BorderLayout()); 
 	    	add(sunday);
 	    JLabel sundaylab = new JLabel("Sunday");
 	    sunday.add(sundaylab,BorderLayout.NORTH);
-	  	  TextArea sunEvents = new TextArea(sundayEvents,10,50);
+	  	  TextArea sunEvents = new TextArea(sundayEvents,10,10);
 	             sunEvents.setEditable(false) ;
 		sunday.add(sunEvents,BorderLayout.CENTER);
 		card1.add(sunday);
@@ -111,14 +124,11 @@ class EmptyFrame extends JFrame implements ItemListener
 			daysleft++;
 			cale.add(Calendar.DAY_OF_MONTH, 1);
 		}
-		System.out.println(daysleft);
 		int lastday= todaydate+daysleft;
 		cale.add(Calendar.DAY_OF_MONTH, -1);
 		int lastdayofweek=cale.get(Calendar.DAY_OF_WEEK);
-		System.out.println(lastday+"  "+lastdayofweek);
 		cale.add(Calendar.DAY_OF_MONTH, -(lastday-1));
 		int daystart = cale.get(Calendar.DAY_OF_WEEK);
-		System.out.println(daystart);
 		cale.add(Calendar.DAY_OF_MONTH, todaydate);
 		JPanel month = new JPanel(new GridLayout(6,1,1,1));
 		JPanel labels = new JPanel(new GridLayout(1,7,14,1));
@@ -141,74 +151,67 @@ class EmptyFrame extends JFrame implements ItemListener
 		sixth.add(new JLabel("Friday"),BorderLayout.CENTER);
 		labels.add(sixth);
 		JPanel seventh = new JPanel(new BorderLayout());
-		seventh.add(new JLabel("Saturday"),BorderLayout.CENTER);
+		seventh.add(new JLabel("Saturday"),BorderLayout.WEST);
 		labels.add(seventh);
 		month.add(labels);
-		JPanel firstweek =new JPanel(new GridLayout(1,7,1,1));
+		JPanel firstweek =new JPanel(new GridLayout(1,7,5,20));
 		JPanel[] buffer=new JPanel[8];
 		for(int i=1; i<daystart; i++)
 		{
-			buffer[i]=new JPanel();
+			buffer[i]=new JPanel(new BorderLayout());
 			firstweek.add(buffer[i]);
-			System.out.println(i);
 		}
 		JPanel[] days=new JPanel[lastday+daystart];
 		TextArea[] daysevents=new TextArea[lastday+daystart];
 		for(int i=daystart;i<8;i++)
 		{
-			days[i]=new JPanel();		
+			days[i]=new JPanel(new BorderLayout());		
 			daysevents[i] = new TextArea(monthevents[i],5,10);
 			daysevents[i].setEditable(false);
-			days[i].add(daysevents[i]);
+			days[i].add(daysevents[i],BorderLayout.CENTER);
 			firstweek.add(days[i]);
-			System.out.println(i);
 		}
-		JPanel secondweek =new JPanel(new GridLayout(1,7,1,1)); 
-		JPanel thirdweek =new JPanel(new GridLayout(1,7,1,1));
-		JPanel fourthweek =new JPanel(new GridLayout(1,7,1,1));
-		JPanel fifthweek =new JPanel(new GridLayout(1,7,1,1)); 
+		JPanel secondweek =new JPanel(new GridLayout(1,7,5,5)); 
+		JPanel thirdweek =new JPanel(new GridLayout(1,7,5,5));
+		JPanel fourthweek =new JPanel(new GridLayout(1,7,5,5));
+		JPanel fifthweek =new JPanel(new GridLayout(1,7,5,5)); 
 		for(int i=8; i<15; i++)
 		{
-			days[i]=new JPanel();		
-			daysevents[i] = new TextArea(monthevents[i],5,10);
+			days[i]=new JPanel(new BorderLayout());		
+			daysevents[i] = new TextArea(monthevents[i],9,30);
 			daysevents[i].setEditable(false);
-			days[i].add(daysevents[i]);
+			days[i].add(daysevents[i],BorderLayout.CENTER);
 			secondweek.add(days[i]);
-			System.out.println(i);
 		}
 		for(int i=15; i<22; i++)
 		{
-			days[i]=new JPanel();		
+			days[i]=new JPanel(new BorderLayout());		
 			daysevents[i] = new TextArea(monthevents[i],5,10);
 			daysevents[i].setEditable(false);
-			days[i].add(daysevents[i]);
+			days[i].add(daysevents[i],BorderLayout.CENTER);
 			thirdweek.add(days[i]);
-			System.out.println(i);
 		}
 		for(int i=22; i<29; i++)
 		{
-			days[i]=new JPanel();		
+			days[i]=new JPanel(new BorderLayout());		
 			daysevents[i] = new TextArea(monthevents[i],5,10);
 			daysevents[i].setEditable(false);
-			days[i].add(daysevents[i]);
+			days[i].add(daysevents[i],BorderLayout.CENTER);
 			fourthweek.add(days[i]);
-			System.out.println(i);
 		}
 		for(int i=29; i<days.length; i++)
 		{
-			days[i]=new JPanel();		
+			days[i]=new JPanel(new BorderLayout());		
 			daysevents[i] = new TextArea(monthevents[i],5,10);
 			daysevents[i].setEditable(false);
-			days[i].add(daysevents[i]);
+			days[i].add(daysevents[i],BorderLayout.CENTER);
 			fifthweek.add(days[i]);
-			System.out.println(i);
 		}
 		JPanel[] buffer2=new JPanel[8];
 		for(int i=0; i<(7-lastdayofweek); i++)
 		{
 			buffer2[i]=new JPanel();		
 			fifthweek.add(buffer2[i]);
-			System.out.println(i);
 		}
 		month.add(firstweek);
 		month.add(secondweek);
@@ -221,9 +224,9 @@ class EmptyFrame extends JFrame implements ItemListener
 	JPanel day = new JPanel(new BorderLayout());
 	JLabel today =new JLabel("Today");
 	day.add(today,BorderLayout.NORTH);
-	TextArea dayevents =new TextArea(todayevents);
+	TextArea dayevents =new TextArea(todayevents,50,100);
 	dayevents.setEditable(false);
-	day.add(dayevents);
+	day.add(dayevents,BorderLayout.CENTER);
 	card3.add(day);
 	
 		cards = new JPanel(new CardLayout());
@@ -238,18 +241,46 @@ class EmptyFrame extends JFrame implements ItemListener
         CardLayout cl = (CardLayout)(cards.getLayout());
         cl.show(cards, (String)evt.getItem());
     }
-
+	public void actionPerformed(ActionEvent e) 
+	{
+		if("add".equals(e.getActionCommand()))
+		{
+			addEvents();
+			updateEvents();
+			frame.repaint();
+		}
+		if("delete".equals(e.getActionCommand()))
+		{
+			deleteEvents();
+			updateEvents();
+			frame.repaint();
+		}
+		if("edit".equals(e.getActionCommand()))
+		{
+			deleteEvents();
+			updateEvents();
+			frame.repaint();
+		}
+	}
   public void addEvents()
   {
-  	//reads from file and adds to apprprte string
+  	//Adds events to the string
   }
   public void updateEvents()
   {
-  	//reads teh new events and updates strings
+  	//Updates our string of events
+  }
+  public void deleteEvents()
+  {
+	  //Deltes events from the string
+  }
+  public void editEvents()
+  {
+	  //Edit events in the string
   }
   private static void createAndShowGUI() {
       //Create and set up the window.
-      JFrame frame = new JFrame("GuiTest");
+      
       frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
       
       //Create and set up the content pane.
