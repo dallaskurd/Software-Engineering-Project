@@ -30,7 +30,7 @@ class EmptyFrame extends JFrame implements ItemListener, ActionListener
 		
 		JPanel comboBoxPane =new JPanel();
 		setTitle("EmptyFrame");
-		setSize(2000,500); // default size is 0,0
+		setSize(2000,1000); // default size is 0,0
 		setLocation(0,30); // default is 0,0 (top left corner)
 		String comboBoxItems[] = { "Month View", "Week View", "Day View" };
 		JComboBox cb = new JComboBox(comboBoxItems);
@@ -176,7 +176,18 @@ class EmptyFrame extends JFrame implements ItemListener, ActionListener
 		cale.add(Calendar.DAY_OF_MONTH, -(lastday-1));
 		int daystart = cale.get(Calendar.DAY_OF_WEEK);
 		cale.add(Calendar.DAY_OF_MONTH, todaydate-1);
-		JPanel month = new JPanel(new GridLayout(6,1,1,1));
+		Boolean sevenweeks=false;
+		JPanel month;
+		if(cale.get(Calendar.DAY_OF_WEEK)==6||cale.get(Calendar.DAY_OF_WEEK)==7)
+		{
+			 month = new JPanel(new GridLayout(7,1,1,1));
+			 sevenweeks=true;
+			System.out.println("seven");
+		}
+		else
+		{
+			month = new JPanel(new GridLayout(6,1,1,1));
+		}
 		JPanel inter = new JPanel(new GridLayout(2,1,14,1));
 		JPanel controls = new JPanel(new GridLayout(1,3,14,1));
 		JPanel lm = new JPanel();
@@ -205,7 +216,7 @@ class EmptyFrame extends JFrame implements ItemListener, ActionListener
 		labels.add(new JLabel("Saturday"));
 		inter.add(labels);
 		month.add(inter);
-		JPanel firstweek =new JPanel(new GridLayout(1,7,5,20));
+		JPanel firstweek =new JPanel(new GridLayout(1,7,5,5));
 		JPanel[] buffer=new JPanel[8];
 		for(int i=1; i<daystart; i++)
 		{
@@ -226,6 +237,7 @@ class EmptyFrame extends JFrame implements ItemListener, ActionListener
 		JPanel thirdweek =new JPanel(new GridLayout(1,7,5,5));
 		JPanel fourthweek =new JPanel(new GridLayout(1,7,5,5));
 		JPanel fifthweek =new JPanel(new GridLayout(1,7,5,5)); 
+		JPanel sixthweek =new JPanel(new GridLayout(1,7,5,5));
 		for(int i=8; i<15; i++)
 		{
 			days[i]=new JPanel(new BorderLayout());		
@@ -250,25 +262,55 @@ class EmptyFrame extends JFrame implements ItemListener, ActionListener
 			days[i].add(daysevents[i],BorderLayout.CENTER);
 			fourthweek.add(days[i]);
 		}
-		for(int i=29; i<days.length; i++)
+		if(!sevenweeks)
 		{
-			days[i]=new JPanel(new BorderLayout());		
-			daysevents[i] = new TextArea(monthevents[i],5,10);
-			daysevents[i].setEditable(false);
-			days[i].add(daysevents[i],BorderLayout.CENTER);
-			fifthweek.add(days[i]);
+			for(int i=29; i<days.length; i++)
+			{
+				days[i]=new JPanel(new BorderLayout());		
+				daysevents[i] = new TextArea(monthevents[i],5,10);
+				daysevents[i].setEditable(false);
+				days[i].add(daysevents[i],BorderLayout.CENTER);
+				fifthweek.add(days[i]);
+			}
+			JPanel[] buffer2=new JPanel[8];
+			for(int i=0; i<(7-lastdayofweek); i++)
+			{
+				buffer2[i]=new JPanel();		
+				fifthweek.add(buffer2[i]);
+			}
 		}
-		JPanel[] buffer2=new JPanel[8];
-		for(int i=0; i<(7-lastdayofweek); i++)
+		else
 		{
-			buffer2[i]=new JPanel();		
-			fifthweek.add(buffer2[i]);
+			for(int i=29; i<36; i++)
+			{
+				days[i]=new JPanel(new BorderLayout());		
+				daysevents[i] = new TextArea(monthevents[i],5,10);
+				daysevents[i].setEditable(false);
+				days[i].add(daysevents[i],BorderLayout.CENTER);
+				fifthweek.add(days[i]);
+			}
+			for(int i=36; i<days.length; i++)
+			{
+				days[i]=new JPanel(new BorderLayout());		
+				daysevents[i] = new TextArea(monthevents[i],5,10);
+				daysevents[i].setEditable(false);
+				days[i].add(daysevents[i],BorderLayout.CENTER);
+				sixthweek.add(days[i]);
+			}
+			JPanel[] buffer2=new JPanel[8];
+			for(int i=0; i<(7-lastdayofweek); i++)
+			{
+				buffer2[i]=new JPanel();		
+				sixthweek.add(buffer2[i]);
+			}
 		}
 		month.add(firstweek);
 		month.add(secondweek);
 		month.add(thirdweek);
 		month.add(fourthweek);
 		month.add(fifthweek);
+		if(sevenweeks)
+			month.add(sixthweek);
 		card2.add(month);
 		
 	/* DAY VIEW */
