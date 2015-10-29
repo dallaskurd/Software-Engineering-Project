@@ -117,7 +117,52 @@ class EmptyFrame extends JFrame implements ItemListener, ActionListener
 		/* MONTH VIEW */
 		int todaydate = cale.get(Calendar.DAY_OF_MONTH);
 		int thismonth = cale.get(Calendar.MONTH);
+		String monthname;
 		System.out.println(thismonth);
+		if(thismonth==0)
+			monthname="January";
+		else if(thismonth==1)
+			monthname="February";
+		else if(thismonth==2)
+		{
+			monthname="March";
+		}
+		else if(thismonth==3)
+		{
+			monthname="April";
+		}
+		else if(thismonth==4)
+		{
+			monthname="May";
+		}
+		else if(thismonth==5)
+		{
+			monthname="June";
+		}
+		else if(thismonth==6)
+		{
+			monthname="July";
+		}
+		else if(thismonth==7)
+		{
+			monthname="August";
+		}
+		else if(thismonth==8)
+		{
+			monthname="September";
+		}
+		else if(thismonth==9)
+		{
+			monthname="October";
+		}
+		else if(thismonth==10)
+		{
+			monthname="November";
+		}
+		else
+		{
+			monthname="December";
+		}
 		int daysleft=0;
 		cale.add(Calendar.DAY_OF_MONTH, 1); //sees if its the last day
 		while(cale.get(Calendar.MONTH)==thismonth)
@@ -144,7 +189,7 @@ class EmptyFrame extends JFrame implements ItemListener, ActionListener
 		nextmonth.addActionListener((ActionListener)this);
 		nextmonth.setActionCommand("Next Month");
 		lm.add(lastmonth);
-		nm.add(new JLabel("October"));
+		nm.add(new JLabel(monthname));
 		xm.add(nextmonth);
 		controls.add(lm);
 		controls.add(nm);
