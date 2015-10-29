@@ -117,6 +117,7 @@ class EmptyFrame extends JFrame implements ItemListener, ActionListener
 		/* MONTH VIEW */
 		int todaydate = cale.get(Calendar.DAY_OF_MONTH);
 		int thismonth = cale.get(Calendar.MONTH);
+		System.out.println(thismonth);
 		int daysleft=0;
 		cale.add(Calendar.DAY_OF_MONTH, 1); //sees if its the last day
 		while(cale.get(Calendar.MONTH)==thismonth)
@@ -129,31 +130,36 @@ class EmptyFrame extends JFrame implements ItemListener, ActionListener
 		int lastdayofweek=cale.get(Calendar.DAY_OF_WEEK);
 		cale.add(Calendar.DAY_OF_MONTH, -(lastday-1));
 		int daystart = cale.get(Calendar.DAY_OF_WEEK);
-		cale.add(Calendar.DAY_OF_MONTH, todaydate);
+		cale.add(Calendar.DAY_OF_MONTH, todaydate-1);
 		JPanel month = new JPanel(new GridLayout(6,1,1,1));
+		JPanel inter = new JPanel(new GridLayout(2,1,14,1));
+		JPanel controls = new JPanel(new GridLayout(1,3,14,1));
+		JPanel lm = new JPanel();
+		JPanel nm = new JPanel();
+		JPanel xm = new JPanel();
+		JButton lastmonth=new JButton("Last Month");
+		lastmonth.addActionListener((ActionListener)this);
+		lastmonth.setActionCommand("Last Month");
+		JButton nextmonth=new JButton("Next Month");
+		nextmonth.addActionListener((ActionListener)this);
+		nextmonth.setActionCommand("Next Month");
+		lm.add(lastmonth);
+		nm.add(new JLabel("October"));
+		xm.add(nextmonth);
+		controls.add(lm);
+		controls.add(nm);
+		controls.add(xm);
+		inter.add(controls);
 		JPanel labels = new JPanel(new GridLayout(1,7,14,1));
-		JPanel first = new JPanel(new BorderLayout());
-		first.add(new JLabel("Sunday"),BorderLayout.CENTER);
-		labels.add(first);
-		JPanel second = new JPanel(new BorderLayout());
-		second.add(new JLabel("Monday"),BorderLayout.CENTER);
-		labels.add(second);
-		JPanel third = new JPanel(new BorderLayout());
-		third.add(new JLabel("Tuesday"),BorderLayout.CENTER);
-		labels.add(third);
-		JPanel fourth = new JPanel(new BorderLayout());
-		fourth.add(new JLabel("Wednesday"),BorderLayout.CENTER);
-		labels.add(fourth);
-		JPanel fifth = new JPanel(new BorderLayout());
-		fifth.add(new JLabel("Thursday"),BorderLayout.CENTER);
-		labels.add(fifth);
-		JPanel sixth = new JPanel(new BorderLayout());
-		sixth.add(new JLabel("Friday"),BorderLayout.CENTER);
-		labels.add(sixth);
-		JPanel seventh = new JPanel(new BorderLayout());
-		seventh.add(new JLabel("Saturday"),BorderLayout.WEST);
-		labels.add(seventh);
-		month.add(labels);
+		labels.add(new JLabel("Sunday"));
+		labels.add(new JLabel("Monday"));
+		labels.add(new JLabel("Tuesday"));
+		labels.add(new JLabel("Wednesday"));
+		labels.add(new JLabel("Thursday"));
+		labels.add(new JLabel("Friday"));
+		labels.add(new JLabel("Saturday"));
+		inter.add(labels);
+		month.add(inter);
 		JPanel firstweek =new JPanel(new GridLayout(1,7,5,20));
 		JPanel[] buffer=new JPanel[8];
 		for(int i=1; i<daystart; i++)
@@ -230,8 +236,9 @@ class EmptyFrame extends JFrame implements ItemListener, ActionListener
 	card3.add(day);
 	
 		cards = new JPanel(new CardLayout());
+		cards.add(card2, "Month View");
         cards.add(card1, "Week View");
-        cards.add(card2, "Month View");
+        
         cards.add(card3, "Day View");
         pane.add(comboBoxPane, BorderLayout.PAGE_START);
         pane.add(cards, BorderLayout.CENTER);
@@ -261,6 +268,14 @@ class EmptyFrame extends JFrame implements ItemListener, ActionListener
 			updateEvents();
 			frame.repaint();
 		}
+		if("Next Month".equals(e.getActionCommand()))
+		{
+			nextMonth();
+		}
+		if("Last Month".equals(e.getActionCommand()))
+		{
+			lastMonth();
+		}
 	}
   public void addEvents()
   {
@@ -277,6 +292,44 @@ class EmptyFrame extends JFrame implements ItemListener, ActionListener
   public void editEvents()
   {
 	  //Edit events in the string
+  }
+  public void nextMonth()
+  {
+	  if(cale.get(Calendar.MONTH)==10)
+	  { 
+		  cale.set(Calendar.MONTH,11);
+	  }
+	  
+	  else if(cale.get(Calendar.MONTH)==11)
+	  {
+		  cale.set(Calendar.MONTH,0);
+		  cale.add(Calendar.YEAR, 1);
+	  }
+	  else
+	  {
+		  cale.add(Calendar.MONTH,1);
+		  
+	  }
+	  frame.getContentPane().removeAll();
+	  addCompToFrame(frame.getContentPane());
+	  frame.getContentPane().revalidate();
+	  frame.getContentPane().repaint();
+  }
+  public void lastMonth()
+  {
+	  if(cale.get(Calendar.MONTH)==0)
+	  {
+		  cale.set(Calendar.MONTH,11);
+		  cale.add(Calendar.YEAR, -1);
+	  }
+	  else
+	  {
+		  cale.add(Calendar.MONTH,-1);
+		  
+	  }
+	  frame.getContentPane().removeAll();
+	  addCompToFrame(frame.getContentPane());
+	  frame.getContentPane().revalidate();
   }
   private static void createAndShowGUI() {
       //Create and set up the window.
