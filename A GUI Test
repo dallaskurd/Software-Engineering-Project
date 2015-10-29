@@ -25,6 +25,7 @@ class EmptyFrame extends JFrame implements ItemListener, ActionListener
 	private String[] monthevents= new String[50];
 	Calendar cale = new GregorianCalendar();
 	static JFrame frame = new JFrame("GuiTest");
+	
 	public void addCompToFrame(Container pane) 
  {
 		
@@ -321,11 +322,10 @@ class EmptyFrame extends JFrame implements ItemListener, ActionListener
 	dayevents.setEditable(false);
 	day.add(dayevents,BorderLayout.CENTER);
 	card3.add(day);
-	
+	JScrollPane scrollPane = new JScrollPane(card2);
 		cards = new JPanel(new CardLayout());
-		cards.add(card2, "Month View");
+		cards.add(scrollPane, "Month View");
         cards.add(card1, "Week View");
-        
         cards.add(card3, "Day View");
         pane.add(comboBoxPane, BorderLayout.PAGE_START);
         pane.add(cards, BorderLayout.CENTER);
