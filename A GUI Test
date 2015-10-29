@@ -119,7 +119,6 @@ class EmptyFrame extends JFrame implements ItemListener, ActionListener
 		int todaydate = cale.get(Calendar.DAY_OF_MONTH);
 		int thismonth = cale.get(Calendar.MONTH);
 		String monthname;
-		System.out.println(thismonth);
 		if(thismonth==0)
 			monthname="January";
 		else if(thismonth==1)
@@ -183,7 +182,6 @@ class EmptyFrame extends JFrame implements ItemListener, ActionListener
 		{
 			 month = new JPanel(new GridLayout(7,1,1,1));
 			 sevenweeks=true;
-			System.out.println("seven");
 		}
 		else
 		{
