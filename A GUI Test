@@ -178,9 +178,9 @@ class EmptyFrame extends JFrame implements ItemListener, ActionListener
 		cale.add(Calendar.DAY_OF_MONTH, todaydate-1);
 		Boolean sevenweeks=false;
 		JPanel month;
-		if(cale.get(Calendar.DAY_OF_WEEK)==6||cale.get(Calendar.DAY_OF_WEEK)==7)
-		{
-			 month = new JPanel(new GridLayout(7,1,1,1));
+		if((daystart==6||daystart==7)&&(lastday!=28))
+		{	
+			month = new JPanel(new GridLayout(7,1,1,1));
 			 sevenweeks=true;
 		}
 		else
