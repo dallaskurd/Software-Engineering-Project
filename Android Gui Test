@@ -61,7 +61,7 @@ setContentView(R.layout.activity_main);
         }, 10000); // 10,000 ms delay
         }
 
-
+//test
     });
        viewFlipper = (ViewFlipper) findViewById(R.id.viewflipper);
     params = new ViewGroup.LayoutParams(LayoutParams.WRAP_CONTENT,
