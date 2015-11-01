@@ -1,18 +1,22 @@
-package com.example.jason_000.test2; //Change This
+package com.example.jason_000.test4; //Change this lane 
 
 import java.util.ArrayList;
 import java.util.List;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.view.ViewPager;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -26,58 +30,52 @@ import android.widget.ViewFlipper;
 
 
 public class MainActivity extends Activity {
-    PopupWindow popUp;
     LinearLayout mainLayout;
     TextView tv;
-    LayoutParams params;
     LinearLayout layout;
     private ViewFlipper viewFlipper;
     private float lastX;
 
     @Override
- public void onCreate(Bundle savedInstanceState) {
-super.onCreate(savedInstanceState);
-setContentView(R.layout.activity_main);
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
 
-    popUp = new PopupWindow(this);
-    mainLayout = (LinearLayout) findViewById(R.id.main);
-    layout = new LinearLayout(this);
-   tv = new TextView(this);
-    CalendarView calendar = (CalendarView) findViewById(R.id.calendar);
-    calendar.setOnDateChangeListener(new OnDateChangeListener() {@Override
-        public void onSelectedDayChange(CalendarView view, int year, int month, int day) {
-            popUp.showAtLocation(mainLayout, Gravity.TOP, 200, 200);
-            popUp.update(100, 100, 500, 500); //This changes size and location
-            tv.setText("Events for that day go here");
-        Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-
+        mainLayout = (LinearLayout) findViewById(R.id.main);
+        layout = new LinearLayout(this);
+        tv = new TextView(this);
+        CalendarView calendar = (CalendarView) findViewById(R.id.calendar);
+        calendar.setOnDateChangeListener(new OnDateChangeListener() {
             @Override
-            public void run() {
-                // close your dialog
-                popUp.dismiss();
-            }
+            public void onSelectedDayChange(CalendarView view, int year, int month, int day) {
+                popUpEvent();
 
-        }, 10000); // 10,000 ms delay
-        }
+                    }
 
-//test
-    });
-       viewFlipper = (ViewFlipper) findViewById(R.id.viewflipper);
-    params = new ViewGroup.LayoutParams(LayoutParams.WRAP_CONTENT,
-            LayoutParams.WRAP_CONTENT);
-    layout.setOrientation(LinearLayout.VERTICAL);
 
-   layout.addView(tv, params);
-    popUp.setContentView(layout);
 
-}
+        });
+        viewFlipper = (ViewFlipper) findViewById(R.id.viewflipper);
+
+    }
+    public void popUpEvent() {
+        String names[] = {"A", "B", "C", "D"}; //Set Events Here
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(MainActivity.this);
+        LayoutInflater inflater = getLayoutInflater();
+        View convertView = (View) inflater.inflate(R.layout.custom, null);
+        alertDialog.setView(convertView);
+        alertDialog.setTitle("List");
+        ListView lv = (ListView) convertView.findViewById(R.id.listView1);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, names);
+        lv.setAdapter(adapter);
+        alertDialog.show();
+    }
     public boolean onTouchEvent(MotionEvent touchevent) {
 
         switch (touchevent.getAction()) {
 
             case MotionEvent.ACTION_DOWN:
-                                lastX = touchevent.getX();
+                lastX = touchevent.getX();
 
                 break;
 
@@ -96,7 +94,7 @@ setContentView(R.layout.activity_main);
                     // If there aren't any other children, just break.
 
                     if (viewFlipper.getDisplayedChild() == 0)
-                    break;
+                        break;
 
 
 
@@ -126,11 +124,11 @@ setContentView(R.layout.activity_main);
 
                     // If there is a child (to the left), kust break.
                     if (viewFlipper.getDisplayedChild() == 1)
-                    break;
+                        break;
                     // Next screen comes in from right.
                     viewFlipper.setInAnimation(this, R.anim.slide_in_from_right);
                     // Current screen goes out from left.
-                   viewFlipper.setOutAnimation(this, R.anim.slide_out_to_left);
+                    viewFlipper.setOutAnimation(this, R.anim.slide_out_to_left);
                     // Display previous screen.
                     viewFlipper.showPrevious();
                 }
