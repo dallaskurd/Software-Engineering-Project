@@ -22,6 +22,8 @@ public class MainActivity extends Activity {
     private ViewFlipper viewFlipper;
     private float lastX;
     String[] names;
+    String[] daynames;
+    Events[] dayevents; //Put Day events here
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,6 +44,15 @@ public class MainActivity extends Activity {
 
         });
         viewFlipper = (ViewFlipper) findViewById(R.id.viewflipper);
+        ListView lv2 = (ListView) findViewById(R.id.dayevents);
+        dayevents=setdayevents();
+        daynames = new String[dayevents.length];
+        for (int i=0;i<dayevents.length;i++)
+        {
+            daynames[i]=dayevents[i].getName();
+        }
+        ArrayAdapter<String> adapter = new MySimpleArrayAdapter<>(this, android.R.layout.simple_list_item_1, daynames,dayevents);
+        lv2.setAdapter(adapter);
 
     }
     public void popUpEvent() { //This is where we put the Month Events
@@ -65,7 +76,15 @@ public class MainActivity extends Activity {
         lv.setAdapter(adapter);
         alertDialog.show();
     }
-
+    public Events[] setdayevents()
+    {
+        Events t1= new Events("day",1);
+        Events t2= new Events("day2",2);
+        Events t3= new Events("day3",3);
+        Events t5= new Events("day4",4);
+         Events[] eve = {t1,t2,t3,t5}; //Just a placeholder
+         return eve;
+    }
     public boolean onTouchEvent(MotionEvent touchevent) {
 
         switch (touchevent.getAction()) {
