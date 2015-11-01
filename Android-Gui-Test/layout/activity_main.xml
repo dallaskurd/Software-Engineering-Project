@@ -10,7 +10,28 @@
 
     android:background="#f5f5f5"
     android:id="@+id/main">
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
 
+
+<Button
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="Add Event"
+    android:id="@+id/add"/>
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Delete Event"
+        android:id="@+id/delete"/>
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Edit Event"
+        android:id="@+id/Edit"/>
+    </LinearLayout>
     <ViewFlipper
         android:id="@+id/viewflipper"
         android:layout_width="fill_parent"
@@ -24,27 +45,19 @@
             android:orientation="vertical"
             android:id="@+id/monthview"
             >
-
-
             <CalendarView
                 android:layout_width="wrap_content"
-                android:layout_height="400dp"
+                android:layout_height="300dp"
                 android:layout_marginTop="100dp"
                 android:id="@+id/calendar"
                 >
             </CalendarView>
             <TextView
-
                 android:layout_width="wrap_content"
-
                 android:layout_height="wrap_content"
-
-                android:layout_marginTop="-500dp"
-
+                android:layout_marginTop="-400dp"
                 android:text="Month View"
-
                 android:textColor="#b7102f"
-
                 android:textSize="25sp">
 
             </TextView>
@@ -54,24 +67,16 @@
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:gravity="center"
-            android:orientation="vertical" >
-
+            android:orientation="vertical"
+            android:id="@+id/weeklayout">
             <TextView
-
                 android:layout_marginTop="-250dp"
-
                 android:layout_width="wrap_content"
-
                 android:layout_height="wrap_content"
-
                 android:text="Week View"
-
                 android:textColor="#191975"
-
                 android:textSize="25dp"
-
                 android:textStyle="italic" >
-
             </TextView>
 
         </LinearLayout>
@@ -79,24 +84,25 @@
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:gravity="center"
-            android:orientation="vertical" >
+            android:orientation="vertical"
+            android:id="@+id/daylayout">
 
-             <TextView
+            <ListView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/dayevents"
+                android:layout_marginTop="-100dp"
+                >
 
-               android:layout_marginTop="-250dp"
-
-               android:layout_width="wrap_content"
-
-               android:layout_height="wrap_content"
-
-               android:text="Day View"
-
-               android:textColor="#191975"
-
-               android:textSize="25dp"
-
-               android:textStyle="italic" >
-
+            </ListView>
+            <TextView
+                android:layout_marginTop="-300dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Day View"
+                android:textColor="#191975"
+                android:textSize="25dp"
+                android:textStyle="italic" >
             </TextView>
         </LinearLayout>
     </ViewFlipper>
