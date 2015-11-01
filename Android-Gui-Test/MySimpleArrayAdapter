@@ -1,0 +1,53 @@
+package com.example.jason_000.test4;
+
+/**
+ * Created by jason_000 on 11/1/2015.
+ */
+import android.content.Context;
+import android.graphics.Color;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+public class MySimpleArrayAdapter<S> extends ArrayAdapter<String> {
+    private final Context context;
+    private final String[] values;
+    private final Events[] events;
+    public MySimpleArrayAdapter(Context context,int test, String[] values, Events[] ev) {//change to array of events?
+        super(context, test, values);
+        this.context = context;
+        this.values = values;
+        events=ev;
+    }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            View view = super.getView(position, convertView, parent);
+            int i=0;
+            TextView mytext = (TextView)view;
+            while(!(events[i].getName().equals(mytext.getText())))
+            {
+                i++;
+            }
+            if (events[i].getCategory()==1)
+            {
+                mytext.setTextColor(Color.BLUE);
+            } else if(events[i].getCategory()==2)
+            {
+                mytext.setTextColor(Color.RED);
+            }
+            else if(events[i].getCategory()==3)
+            {
+                mytext.setTextColor(Color.GREEN);
+            }
+            else
+            {
+                mytext.setTextColor(Color.YELLOW);
+            }
+            return view;
+        }
+    }
+
