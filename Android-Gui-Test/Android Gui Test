@@ -1,28 +1,14 @@
-package com.example.jason_000.test4; //Change this line
+package com.example.jason_000.test4;
 
-import java.util.ArrayList;
-import java.util.List;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
-import android.os.Handler;
-import android.support.v4.view.ViewPager;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.ViewGroup.LayoutParams;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.PopupWindow;
-import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
-import android.widget.AdapterView.OnItemSelectedListener;
-import android.widget.Button;
 import android.widget.CalendarView;
 import android.widget.CalendarView.OnDateChangeListener;
 import android.view.MotionEvent;
@@ -35,7 +21,7 @@ public class MainActivity extends Activity {
     LinearLayout layout;
     private ViewFlipper viewFlipper;
     private float lastX;
-
+    String[] names;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,18 +44,28 @@ public class MainActivity extends Activity {
         viewFlipper = (ViewFlipper) findViewById(R.id.viewflipper);
 
     }
-    public void popUpEvent() {
-        String names[] = {"A", "B", "C", "D"}; //Set Events Here
+    public void popUpEvent() { //This is where we put the Month Events
+        Events t1= new Events("test",1);
+        Events t2= new Events("test2",2);
+        Events t3= new Events("test3",3);
+        Events t5= new Events("test4",4);
+        Events events[] = {t1, t2, t3, t5};
+         names = new String [events.length];//Set Events Here
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(MainActivity.this);
         LayoutInflater inflater = getLayoutInflater();
         View convertView = (View) inflater.inflate(R.layout.custom, null);
         alertDialog.setView(convertView);
-        alertDialog.setTitle("List");
+        alertDialog.setTitle("Todays Events");
         ListView lv = (ListView) convertView.findViewById(R.id.listView1);
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, names);
+        for (int i=0;i<events.length;i++)
+        {
+            names[i]=events[i].getName();
+        }
+        ArrayAdapter<String> adapter = new MySimpleArrayAdapter<>(this, android.R.layout.simple_list_item_1, names,events);
         lv.setAdapter(adapter);
         alertDialog.show();
     }
+
     public boolean onTouchEvent(MotionEvent touchevent) {
 
         switch (touchevent.getAction()) {
