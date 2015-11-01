@@ -1,0 +1,142 @@
+package com.example.jason_000.test2; //Change This
+
+import java.util.ArrayList;
+import java.util.List;
+import android.app.Activity;
+import android.os.Bundle;
+import android.os.Handler;
+import android.support.v4.view.ViewPager;
+import android.view.Gravity;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
+import android.widget.PopupWindow;
+import android.widget.Spinner;
+import android.widget.TextView;
+import android.widget.Toast;
+import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.Button;
+import android.widget.CalendarView;
+import android.widget.CalendarView.OnDateChangeListener;
+import android.view.MotionEvent;
+import android.widget.ViewFlipper;
+
+
+public class MainActivity extends Activity {
+    PopupWindow popUp;
+    LinearLayout mainLayout;
+    TextView tv;
+    LayoutParams params;
+    LinearLayout layout;
+    private ViewFlipper viewFlipper;
+    private float lastX;
+
+    @Override
+ public void onCreate(Bundle savedInstanceState) {
+super.onCreate(savedInstanceState);
+setContentView(R.layout.activity_main);
+
+    popUp = new PopupWindow(this);
+    mainLayout = (LinearLayout) findViewById(R.id.main);
+    layout = new LinearLayout(this);
+   tv = new TextView(this);
+    CalendarView calendar = (CalendarView) findViewById(R.id.calendar);
+    calendar.setOnDateChangeListener(new OnDateChangeListener() {@Override
+        public void onSelectedDayChange(CalendarView view, int year, int month, int day) {
+            popUp.showAtLocation(mainLayout, Gravity.TOP, 200, 200);
+            popUp.update(100, 100, 500, 500); //This changes size and location
+            tv.setText("Events for that day go here");
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+
+            @Override
+            public void run() {
+                // close your dialog
+                popUp.dismiss();
+            }
+
+        }, 10000); // 10,000 ms delay
+        }
+
+//test
+    });
+       viewFlipper = (ViewFlipper) findViewById(R.id.viewflipper);
+    params = new ViewGroup.LayoutParams(LayoutParams.WRAP_CONTENT,
+            LayoutParams.WRAP_CONTENT);
+    layout.setOrientation(LinearLayout.VERTICAL);
+
+   layout.addView(tv, params);
+    popUp.setContentView(layout);
+
+}
+    public boolean onTouchEvent(MotionEvent touchevent) {
+
+        switch (touchevent.getAction()) {
+
+            case MotionEvent.ACTION_DOWN:
+                                lastX = touchevent.getX();
+
+                break;
+
+            case MotionEvent.ACTION_UP:
+
+                float currentX = touchevent.getX();
+
+
+
+                // Handling left to right screen swap.
+
+                if (lastX < currentX) {
+
+
+
+                    // If there aren't any other children, just break.
+
+                    if (viewFlipper.getDisplayedChild() == 0)
+                    break;
+
+
+
+                    // Next screen comes in from left.
+
+                    viewFlipper.setInAnimation(this, R.anim.slide_in_from_left);
+
+                    // Current screen goes out from right.
+
+                    viewFlipper.setOutAnimation(this, R.anim.slide_out_to_right);
+
+
+
+                    // Display next screen.
+
+                    viewFlipper.showNext();
+
+                }
+
+
+
+                // Handling right to left screen swap.
+
+                if (lastX > currentX) {
+
+
+
+                    // If there is a child (to the left), kust break.
+                    if (viewFlipper.getDisplayedChild() == 1)
+                    break;
+                    // Next screen comes in from right.
+                    viewFlipper.setInAnimation(this, R.anim.slide_in_from_right);
+                    // Current screen goes out from left.
+                   viewFlipper.setOutAnimation(this, R.anim.slide_out_to_left);
+                    // Display previous screen.
+                    viewFlipper.showPrevious();
+                }
+                break;
+        }
+        return false;
+    }
+
+}
