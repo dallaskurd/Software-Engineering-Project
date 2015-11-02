@@ -1,567 +1,241 @@
-package com.example.jason_000.test4; //CHANGE THIS FOR YOUR PROJECT
 
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.Intent;
-import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.CalendarView;
-import android.widget.CalendarView.OnDateChangeListener;
-import android.view.MotionEvent;
-import android.widget.ViewFlipper;
+    package com.example.jason_000.test4; //Change this line
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Locale;
+    import android.app.Activity;
+    import android.app.AlertDialog;
+    import android.content.Intent;
+    import android.os.Bundle;
+    import android.view.LayoutInflater;
+    import android.view.View;
+    import android.widget.ArrayAdapter;
+    import android.widget.Button;
+    import android.widget.LinearLayout;
+    import android.widget.ListView;
+    import android.widget.TextView;
+    import android.widget.CalendarView;
+    import android.widget.CalendarView.OnDateChangeListener;
+    import android.view.MotionEvent;
+    import android.widget.ViewFlipper;
+
+    import java.text.SimpleDateFormat;
+    import java.util.Calendar;
+    import java.util.Date;
+    import java.util.Locale;
 
 
-public class MainActivity extends Activity {
-    LinearLayout mainLayout;
-    TextView tv;
-    LinearLayout layout;
-    private ViewFlipper viewFlipper;
-    private float lastX;
-    String[] names;
-    String[] daynames;
-    Events[] dayevents; //Put Day events here
-    Events[] event; //Blank array to use for month and week
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+    public class MainActivity extends Activity {
+        LinearLayout mainLayout;
+        TextView tv;
+        LinearLayout layout;
+        private ViewFlipper viewFlipper;
+        private float lastX;
+        String[] names;
+        String[] daynames;
+        Events[] dayevents; //Put Day events here
+        Events[] event; //Blank array to use for month and week
+        Calendar ci;
+        @Override
+        public void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            setContentView(R.layout.activity_main);
 
-        mainLayout = (LinearLayout) findViewById(R.id.main);
-        layout = new LinearLayout(this);
-        //This is the Month View Code
-        tv = new TextView(this);
-        final CalendarView calendar = (CalendarView) findViewById(R.id.calendar);
-        calendar.setOnDateChangeListener(new OnDateChangeListener() {
-            @Override
-            public void onSelectedDayChange(CalendarView view, int year, int month, int day)
+            mainLayout = (LinearLayout) findViewById(R.id.main);
+            layout = new LinearLayout(this);
+            //This is the Month View Code
+            tv = new TextView(this);
+            final CalendarView calendar = (CalendarView) findViewById(R.id.calendar);
+            calendar.setOnDateChangeListener(new OnDateChangeListener() {
+                @Override
+                public void onSelectedDayChange(CalendarView view, int year, int month, int day) {
+                    //Find Events at the date givin by the paramters put into event
+                    popUpEvent(event);
+
+                }
+
+
+            });
+            viewFlipper = (ViewFlipper) findViewById(R.id.viewflipper);
+            //Day View Code
+            ListView lv2 = (ListView) findViewById(R.id.dayevents);
+            dayevents = setdayevents();
+            daynames = new String[dayevents.length];
+            for (int i = 0; i < dayevents.length; i++) {
+                daynames[i] = dayevents[i].getName();
+            }
+            ArrayAdapter<String> adapter = new MySimpleArrayAdapter<>(this, android.R.layout.simple_list_item_1, daynames, dayevents);
+            lv2.setAdapter(adapter);
+            //Week View Code
+            Button sun = (Button) findViewById(R.id.Sundayevents);
+            Button mon = (Button) findViewById(R.id.Mondayyevents);
+            Button tues = (Button) findViewById(R.id.Tuesdayevents);
+            Button wed = (Button) findViewById(R.id.Wednesdayevents);
+            Button thurs = (Button) findViewById(R.id.Thursdayevents);
+            Button fri = (Button) findViewById(R.id.Fridayevents);
+            Button sat = (Button) findViewById(R.id.Saturdayevents);
+            sun.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View arg0) {
+                    setWeekEvents(1);
+                }
+            });
+            mon.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View arg0) {
+                    setWeekEvents (2);
+                }
+            });
+            tues.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View arg0) {
+                    setWeekEvents (3);
+                }
+            });
+            wed.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View arg0) {
+                    setWeekEvents (4);
+                }
+            });
+            thurs.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View arg0) {
+                    setWeekEvents (5);
+                }
+            });
+            fri.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View arg0) {
+                    setWeekEvents (6);
+                }
+            });
+
+            sat.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View arg0) {
+                    setWeekEvents (7);
+                }
+            });
+        }
+       public void setWeekEvents (int d) // day we want
+       {
+           ci= Calendar.getInstance();
+           int month = ci.get(Calendar.MONTH)+1;
+           int year = ci.get(Calendar.YEAR);
+           int dow =ci.get(Calendar.DAY_OF_WEEK);
+           int day = ci.get(Calendar.DAY_OF_MONTH);
+           if(dow<d)//We want a later day
+           {
+               while(dow<d)
+               {
+                   dow++;
+                   day++;
+               }
+           }
+           else if (dow>d)//We want a eailer then today
+           {
+               while(dow>d)
+               {
+                   dow--;
+                   day--;
+               }
+           }
+           popUpEvent(event);// Our Day is at teh date of events we want
+       }
+        public void popUpEvent(Events [] ev) { //This is where we put the Month Events
+            Events t1= new Events("test",1);
+            Events t2= new Events("test2",2);
+            Events t3= new Events("test3",3);
+            Events t5= new Events("test4",4);
+            Events events[] = {t1, t2, t3, t5}; //Once ev has something in it make events equal to ev; or even replace events with ev in code under here
+            names = new String [events.length];//Adds the Title of events to an array
+            AlertDialog.Builder alertDialog = new AlertDialog.Builder(MainActivity.this);
+            LayoutInflater inflater = getLayoutInflater();
+            View convertView = (View) inflater.inflate(R.layout.custom, null);
+            alertDialog.setView(convertView);
+            alertDialog.setTitle("Todays Events");
+            ListView lv = (ListView) convertView.findViewById(R.id.listView1);
+            for (int i=0;i<events.length;i++)
             {
-                //Find Events at the date givin by the paramters put into event
-                popUpEvent(event);
-
+                names[i]=events[i].getName();
             }
-
-
-        });
-        viewFlipper = (ViewFlipper) findViewById(R.id.viewflipper);
-        //Day View Code
-        ListView lv2 = (ListView) findViewById(R.id.dayevents);
-        dayevents = setdayevents();
-        daynames = new String[dayevents.length];
-        for (int i = 0; i < dayevents.length; i++) {
-            daynames[i] = dayevents[i].getName();
+            ArrayAdapter<String> adapter = new MySimpleArrayAdapter<>(this, android.R.layout.simple_list_item_1, names,events);
+            lv.setAdapter(adapter);
+            alertDialog.show();
         }
-        ArrayAdapter<String> adapter = new MySimpleArrayAdapter<>(this, android.R.layout.simple_list_item_1, daynames, dayevents);
-        lv2.setAdapter(adapter);
-        //Week View Code
-        Button sun = (Button) findViewById(R.id.Sundayevents);
-        Button mon = (Button) findViewById(R.id.Mondayyevents);
-        Button tues = (Button) findViewById(R.id.Tuesdayevents);
-        Button wed = (Button) findViewById(R.id.Wednesdayevents);
-        Button thurs = (Button) findViewById(R.id.Thursdayevents);
-        Button fri = (Button) findViewById(R.id.Fridayevents);
-        Button sat = (Button) findViewById(R.id.Saturdayevents);
-        sun.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View arg0) {
-                int month;
-                int day;
-                int year;
-                Calendar ci = Calendar.getInstance();
-                month = ci.get(Calendar.MONTH) + 1;
-                year = ci.get(Calendar.YEAR);
-                if (ci.get(Calendar.DAY_OF_WEEK) == 1)//If Today is Sunday
-                {
-                    month = ci.get(Calendar.MONTH) + 1;
-                    day = ci.get(Calendar.DAY_OF_MONTH);
-
-                    //Find Events with that date
-                }
-                if (ci.get(Calendar.DAY_OF_WEEK) == 2)//If Today is Monday
-                {
-
-                    day = ci.get(Calendar.DAY_OF_MONTH);
-                    day -= 1;
-                    //Find Events with that date
-                }
-                if (ci.get(Calendar.DAY_OF_WEEK) == 3)//If Today is Tuesday
-                {
-                        ;
-                    day = ci.get(Calendar.DAY_OF_MONTH);
-                    day -= 2;
-                    //Find Events with that date
-                }
-                if (ci.get(Calendar.DAY_OF_WEEK) == 4)//If Today is Wednesday
-                {
-                    day = ci.get(Calendar.DAY_OF_MONTH);
-                    day -= 3;
-                    //Find Events with that date
-                }
-
-                if (ci.get(Calendar.DAY_OF_WEEK) == 5)//If Today is Thursday
-                {
-                    day = ci.get(Calendar.DAY_OF_MONTH);
-                    day -= 4;
-                    //Find Events with that date
-                }
-                if (ci.get(Calendar.DAY_OF_WEEK) == 6)//If Today is Friday
-                {
-                    day = ci.get(Calendar.DAY_OF_MONTH);
-                    day -= 5;
-                    //Find Events with that date
-                }
-                else //If today is saturday
-                {
-                    day = ci.get(Calendar.DAY_OF_MONTH);
-                    day -= 6;
-                    //Find Events with that date
-                }
-            }
-        });
-        mon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View arg0) {
-                int month;
-                int day;
-                int year;
-                Calendar ci = Calendar.getInstance();
-                month = ci.get(Calendar.MONTH) + 1;
-                year = ci.get(Calendar.YEAR);
-                if (ci.get(Calendar.DAY_OF_WEEK) == 1)//If Today is Sunday
-                {
-                    month = ci.get(Calendar.MONTH) + 1;
-                    day = ci.get(Calendar.DAY_OF_MONTH);
-                    day+=1;
-                    //Find Events with that date and use PopUp
-                }
-                if (ci.get(Calendar.DAY_OF_WEEK) == 2)//If Today is Monday
-                {
-                    day = ci.get(Calendar.DAY_OF_MONTH);
-                    //Find Events with that date and use PopUp
-                }
-                if (ci.get(Calendar.DAY_OF_WEEK) == 3)//If Today is Tuesday
-                {
-
-                    day = ci.get(Calendar.DAY_OF_MONTH);
-                    day -= 1;
-                    //Find Events with that date and use PopUp
-                }
-                if (ci.get(Calendar.DAY_OF_WEEK) == 4)//If Today is Wednesday
-                {
-                    day = ci.get(Calendar.DAY_OF_MONTH);
-                    day -= 2;
-                    //Find Events with that date and use PopUp
-                }
-
-                if (ci.get(Calendar.DAY_OF_WEEK) == 5)//If Today is Thursday
-                {
-                    day = ci.get(Calendar.DAY_OF_MONTH);
-                    day -= 3;
-                    //Find Events with that date and use PopUp
-                }
-                if (ci.get(Calendar.DAY_OF_WEEK) == 6)//If Today is Friday
-                {
-                    day = ci.get(Calendar.DAY_OF_MONTH);
-                    day -= 4;
-                    //Find Events with that date and use PopUp
-                }
-                else //If today is saturday
-                {
-                    day = ci.get(Calendar.DAY_OF_MONTH);
-                    day -= 5;
-                    //Find Events with that date and use PopUp
-                }
-            }
-        });
-        tues.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View arg0) {
-                int month;
-                int day;
-                int year;
-                Calendar ci = Calendar.getInstance();
-                month = ci.get(Calendar.MONTH) + 1;
-                year = ci.get(Calendar.YEAR);
-                if (ci.get(Calendar.DAY_OF_WEEK) == 1)//If Today is Sunday
-                {
-                    month = ci.get(Calendar.MONTH) + 1;
-                    day = ci.get(Calendar.DAY_OF_MONTH);
-                    day+=2;
-                    //Find Events with that date and use PopUp
-                }
-                if (ci.get(Calendar.DAY_OF_WEEK) == 2)//If Today is Monday
-                {
-                    day = ci.get(Calendar.DAY_OF_MONTH);
-                    day+=1;
-                    //Find Events with that date and use PopUp
-                }
-                if (ci.get(Calendar.DAY_OF_WEEK) == 3)//If Today is Tuesday
-                {
-
-                    day = ci.get(Calendar.DAY_OF_MONTH);
-                    //Find Events with that date and use PopUp
-                }
-                if (ci.get(Calendar.DAY_OF_WEEK) == 4)//If Today is Wednesday
-                {
-                    day = ci.get(Calendar.DAY_OF_MONTH);
-                    day -= 1;
-                    //Find Events with that date and use PopUp
-                }
-
-                if (ci.get(Calendar.DAY_OF_WEEK) == 5)//If Today is Thursday
-                {
-                    day = ci.get(Calendar.DAY_OF_MONTH);
-                    day -= 2;
-                    //Find Events with that date and use PopUp
-                }
-                if (ci.get(Calendar.DAY_OF_WEEK) == 6)//If Today is Friday
-                {
-                    day = ci.get(Calendar.DAY_OF_MONTH);
-                    day -= 3;
-                    //Find Events with that date and use PopUp
-                }
-                else //If today is saturday
-                {
-                    day = ci.get(Calendar.DAY_OF_MONTH);
-                    day -= 4;
-                    //Find Events with that date and use PopUp
-                }
-            }
-        });
-        wed.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View arg0) {
-                int month;
-                int day;
-                int year;
-                Calendar ci = Calendar.getInstance();
-                month = ci.get(Calendar.MONTH) + 1;
-                year = ci.get(Calendar.YEAR);
-                if (ci.get(Calendar.DAY_OF_WEEK) == 1)//If Today is Sunday
-                {
-                    month = ci.get(Calendar.MONTH) + 1;
-                    day = ci.get(Calendar.DAY_OF_MONTH);
-                    day+=3;
-                    //Find Events with that date and use PopUp
-                }
-                if (ci.get(Calendar.DAY_OF_WEEK) == 2)//If Today is Monday
-                {
-                    day = ci.get(Calendar.DAY_OF_MONTH);
-                    day+=2;
-                    //Find Events with that date and use PopUp
-                }
-                if (ci.get(Calendar.DAY_OF_WEEK) == 3)//If Today is Tuesday
-                {
-
-                    day = ci.get(Calendar.DAY_OF_MONTH);
-                    day+=1;
-                    //Find Events with that date and use PopUp
-                }
-                if (ci.get(Calendar.DAY_OF_WEEK) == 4)//If Today is Wednesday
-                {
-                    day = ci.get(Calendar.DAY_OF_MONTH);
-                    //Find Events with that date and use PopUp
-                }
-
-                if (ci.get(Calendar.DAY_OF_WEEK) == 5)//If Today is Thursday
-                {
-                    day = ci.get(Calendar.DAY_OF_MONTH);
-                    day -= 1;
-                    //Find Events with that date and use PopUp
-                }
-                if (ci.get(Calendar.DAY_OF_WEEK) == 6)//If Today is Friday
-                {
-                    day = ci.get(Calendar.DAY_OF_MONTH);
-                    day -= 2;
-                    //Find Events with that date and use PopUp
-                }
-                else //If today is saturday
-                {
-                    day = ci.get(Calendar.DAY_OF_MONTH);
-                    day -= 3;
-                    //Find Events with that date and use PopUp
-                }
-            }
-        });
-        thurs.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View arg0) {
-                int month;
-                int day;
-                int year;
-                Calendar ci = Calendar.getInstance();
-                month = ci.get(Calendar.MONTH) + 1;
-                year = ci.get(Calendar.YEAR);
-                if (ci.get(Calendar.DAY_OF_WEEK) == 1)//If Today is Sunday
-                {
-                    month = ci.get(Calendar.MONTH) + 1;
-                    day = ci.get(Calendar.DAY_OF_MONTH);
-                    day+=4;
-                    //Find Events with that date and use PopUp
-                }
-                if (ci.get(Calendar.DAY_OF_WEEK) == 2)//If Today is Monday
-                {
-                    day = ci.get(Calendar.DAY_OF_MONTH);
-                    day+=3;
-                    //Find Events with that date and use PopUp
-                }
-                if (ci.get(Calendar.DAY_OF_WEEK) == 3)//If Today is Tuesday
-                {
-
-                    day = ci.get(Calendar.DAY_OF_MONTH);
-                    day+=2;
-                    //Find Events with that date and use PopUp
-                }
-                if (ci.get(Calendar.DAY_OF_WEEK) == 4)//If Today is Wednesday
-                {
-                    day = ci.get(Calendar.DAY_OF_MONTH);
-                    day+=1;
-                    //Find Events with that date and use PopUp
-                }
-
-                if (ci.get(Calendar.DAY_OF_WEEK) == 5)//If Today is Thursday
-                {
-                    day = ci.get(Calendar.DAY_OF_MONTH);
-                    //Find Events with that date and use PopUp
-                }
-                if (ci.get(Calendar.DAY_OF_WEEK) == 6)//If Today is Friday
-                {
-                    day = ci.get(Calendar.DAY_OF_MONTH);
-                    day -= 1;
-                    //Find Events with that date and use PopUp
-                }
-                else //If today is saturday
-                {
-                    day = ci.get(Calendar.DAY_OF_MONTH);
-                    day -= 2;
-                    //Find Events with that date and use PopUp
-                }
-            }
-        });
-        fri.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View arg0) {
-                int month;
-                int day;
-                int year;
-                Calendar ci = Calendar.getInstance();
-                month = ci.get(Calendar.MONTH) + 1;
-                year = ci.get(Calendar.YEAR);
-                if (ci.get(Calendar.DAY_OF_WEEK) == 1)//If Today is Sunday
-                {
-                    month = ci.get(Calendar.MONTH) + 1;
-                    day = ci.get(Calendar.DAY_OF_MONTH);
-                    day+=5;
-                    //Find Events with that date and use PopUp
-                }
-                if (ci.get(Calendar.DAY_OF_WEEK) == 2)//If Today is Monday
-                {
-                    day = ci.get(Calendar.DAY_OF_MONTH);
-                    day+=4;
-                    //Find Events with that date and use PopUp
-                }
-                if (ci.get(Calendar.DAY_OF_WEEK) == 3)//If Today is Tuesday
-                {
-
-                    day = ci.get(Calendar.DAY_OF_MONTH);
-                    day+=3;
-                    //Find Events with that date and use PopUp
-                }
-                if (ci.get(Calendar.DAY_OF_WEEK) == 4)//If Today is Wednesday
-                {
-                    day = ci.get(Calendar.DAY_OF_MONTH);
-                    day+=2;
-                    //Find Events with that date and use PopUp
-                }
-
-                if (ci.get(Calendar.DAY_OF_WEEK) == 5)//If Today is Thursday
-                {
-                    day = ci.get(Calendar.DAY_OF_MONTH);
-                    day += 1;
-                    //Find Events with that date and use PopUp
-                }
-                if (ci.get(Calendar.DAY_OF_WEEK) == 6)//If Today is Friday
-                {
-                    day = ci.get(Calendar.DAY_OF_MONTH);
-                    //Find Events with that date and use PopUp
-                }
-                else //If today is saturday
-                {
-                    day = ci.get(Calendar.DAY_OF_MONTH);
-                    day -= 1;
-                    //Find Events with that date and use PopUp
-                }
-            }
-        });
-        sat.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View arg0) {
-                int month;
-                int day;
-                int year;
-                Calendar ci = Calendar.getInstance();
-                month = ci.get(Calendar.MONTH) + 1;
-                year = ci.get(Calendar.YEAR);
-                if (ci.get(Calendar.DAY_OF_WEEK) == 1)//If Today is Sunday
-                {
-                    month = ci.get(Calendar.MONTH) + 1;
-                    day = ci.get(Calendar.DAY_OF_MONTH);
-                    day+=6;
-                    //Find Events with that date and use PopUp
-                    popUpEvent(event);
-                }
-                if (ci.get(Calendar.DAY_OF_WEEK) == 2)//If Today is Monday
-                {
-                    day = ci.get(Calendar.DAY_OF_MONTH);
-                    day+=5;
-                    //Find Events with that date and use PopUp
-                    popUpEvent(event);
-                }
-                if (ci.get(Calendar.DAY_OF_WEEK) == 3)//If Today is Tuesday
-                {
-
-                    day = ci.get(Calendar.DAY_OF_MONTH);
-                    day+=4;
-                    //Find Events with that date and use PopUp
-                    popUpEvent(event);
-                }
-                if (ci.get(Calendar.DAY_OF_WEEK) == 4)//If Today is Wednesday
-                {
-                    day = ci.get(Calendar.DAY_OF_MONTH);
-                    day+=3;
-                    //Find Events with that date and use PopUp
-                    popUpEvent(event);
-                }
-
-                if (ci.get(Calendar.DAY_OF_WEEK) == 5)//If Today is Thursday
-                {
-                    day = ci.get(Calendar.DAY_OF_MONTH);
-                    day += 2;
-                    //Find Events with that date and use PopUp
-                    popUpEvent(event);
-                }
-                if (ci.get(Calendar.DAY_OF_WEEK) == 6)//If Today is Friday
-                {
-                    day = ci.get(Calendar.DAY_OF_MONTH);
-                    day+=1;
-                    //Find Events with that date and use PopUp
-                    popUpEvent(event);
-                }
-                else //If today is saturday
-                {
-                    day = ci.get(Calendar.DAY_OF_MONTH);
-                    //Find Events with that date and use PopUp
-                    popUpEvent(event);
-                }
-            }
-        });
-    }
-    public void popUpEvent(Events [] ev) { //This is where we put the Month Events
-        Events t1= new Events("test",1);
-        Events t2= new Events("test2",2);
-        Events t3= new Events("test3",3);
-        Events t5= new Events("test4",4);
-        Events events[] = {t1, t2, t3, t5}; //Once ev has something in it make events equal to ev; or even replace events with ev in code under here
-         names = new String [events.length];//Adds the Title of events to an array
-        AlertDialog.Builder alertDialog = new AlertDialog.Builder(MainActivity.this);
-        LayoutInflater inflater = getLayoutInflater();
-        View convertView = (View) inflater.inflate(R.layout.custom, null);
-        alertDialog.setView(convertView);
-        alertDialog.setTitle("Todays Events");
-        ListView lv = (ListView) convertView.findViewById(R.id.listView1);
-        for (int i=0;i<events.length;i++)
+        public Events[] setdayevents()
         {
-            names[i]=events[i].getName();
+            Events t1= new Events("day",1);
+            Events t2= new Events("day2",2);
+            Events t3= new Events("day3",3);
+            Events t5= new Events("day4",4);
+            Events[] eve = {t1,t2,t3,t5}; //Just a placeholder
+            return eve;
         }
-        ArrayAdapter<String> adapter = new MySimpleArrayAdapter<>(this, android.R.layout.simple_list_item_1, names,events);
-        lv.setAdapter(adapter);
-        alertDialog.show();
-    }
-    public Events[] setdayevents()
-    {
-        Events t1= new Events("day",1);
-        Events t2= new Events("day2",2);
-        Events t3= new Events("day3",3);
-        Events t5= new Events("day4",4);
-         Events[] eve = {t1,t2,t3,t5}; //Just a placeholder
-         return eve;
-    }
-    public boolean onTouchEvent(MotionEvent touchevent) {
+        public boolean onTouchEvent(MotionEvent touchevent) {
 
-        switch (touchevent.getAction()) {
+            switch (touchevent.getAction()) {
 
-            case MotionEvent.ACTION_DOWN:
-                lastX = touchevent.getX();
+                case MotionEvent.ACTION_DOWN:
+                    lastX = touchevent.getX();
 
-                break;
+                    break;
 
-            case MotionEvent.ACTION_UP:
+                case MotionEvent.ACTION_UP:
 
-                float currentX = touchevent.getX();
+                    float currentX = touchevent.getX();
 
 
 
-                // Handling left to right screen swap.
+                    // Handling left to right screen swap.
 
-                if (lastX < currentX) {
-
-
-
-                    // If there aren't any other children, just break.
-
-                    if (viewFlipper.getDisplayedChild() == 0)
-                        break;
+                    if (lastX < currentX) {
 
 
 
-                    // Next screen comes in from left.
+                        // If there aren't any other children, just break.
 
-                    viewFlipper.setInAnimation(this, R.anim.slide_in_from_left);
-
-                    // Current screen goes out from right.
-
-                    viewFlipper.setOutAnimation(this, R.anim.slide_out_to_right);
+                        if (viewFlipper.getDisplayedChild() == 0)
+                            break;
 
 
 
-                    // Display next screen.
+                        // Next screen comes in from left.
 
-                    viewFlipper.showNext();
+                        viewFlipper.setInAnimation(this, R.anim.slide_in_from_left);
 
-                }
+                        // Current screen goes out from right.
 
-
-
-                // Handling right to left screen swap.
-
-                if (lastX > currentX) {
+                        viewFlipper.setOutAnimation(this, R.anim.slide_out_to_right);
 
 
 
-                    // If there is a child (to the left), kust break.
-                    if (viewFlipper.getDisplayedChild() == 1)
-                        break;
-                    // Next screen comes in from right.
-                    viewFlipper.setInAnimation(this, R.anim.slide_in_from_right);
-                    // Current screen goes out from left.
-                    viewFlipper.setOutAnimation(this, R.anim.slide_out_to_left);
-                    // Display previous screen.
-                    viewFlipper.showPrevious();
-                }
-                break;
+                        // Display next screen.
+
+                        viewFlipper.showNext();
+
+                    }
+
+
+
+                    // Handling right to left screen swap.
+
+                    if (lastX > currentX) {
+
+
+
+                        // If there is a child (to the left), kust break.
+                        if (viewFlipper.getDisplayedChild() == 1)
+                            break;
+                        // Next screen comes in from right.
+                        viewFlipper.setInAnimation(this, R.anim.slide_in_from_right);
+                        // Current screen goes out from left.
+                        viewFlipper.setOutAnimation(this, R.anim.slide_out_to_left);
+                        // Display previous screen.
+                        viewFlipper.showPrevious();
+                    }
+                    break;
+            }
+            return false;
         }
-        return false;
-    }
 
-}
+    }
