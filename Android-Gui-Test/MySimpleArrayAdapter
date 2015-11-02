@@ -48,6 +48,7 @@ public class MySimpleArrayAdapter<S> extends ArrayAdapter<String> {
                 mytext.setTextColor(Color.YELLOW);
             }
             return view;
+            //Put Holiday coloring here different from catagories
         }
     }
 
