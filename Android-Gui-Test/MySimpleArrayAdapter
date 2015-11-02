@@ -5,6 +5,7 @@ package com.example.jason_000.test4;
  */
 import android.content.Context;
 import android.graphics.Color;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,11 +13,14 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import static android.view.View.TEXT_ALIGNMENT_CENTER;
+
 public class MySimpleArrayAdapter<S> extends ArrayAdapter<String> {
     private final Context context;
     private final String[] values;
     private final Events[] events;
-    public MySimpleArrayAdapter(Context context,int test, String[] values, Events[] ev) {//change to array of events?
+    public MySimpleArrayAdapter(Context context,int test, String[] values, Events[] ev)
+    {
         super(context, test, values);
         this.context = context;
         this.values = values;
@@ -24,31 +28,29 @@ public class MySimpleArrayAdapter<S> extends ArrayAdapter<String> {
     }
 
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
+        public View getView(int position, View convertView, ViewGroup parent)
+        {
             View view = super.getView(position, convertView, parent);
             int i=0;
-            TextView mytext = (TextView)view;
-            while(!(events[i].getName().equals(mytext.getText())))
-            {
-                i++;
-            }
-            if (events[i].getCategory()==1)
-            {
-                mytext.setTextColor(Color.BLUE);
-            } else if(events[i].getCategory()==2)
-            {
-                mytext.setTextColor(Color.RED);
-            }
-            else if(events[i].getCategory()==3)
-            {
-                mytext.setTextColor(Color.GREEN);
-            }
-            else
-            {
-                mytext.setTextColor(Color.YELLOW);
-            }
-            return view;
-            //Put Holiday coloring here different from catagories
+            TextView myText = (TextView)view;
+            myText.setGravity(Gravity.CENTER);
+                while (!(events[i].getName().equals(myText.getText())))
+                {
+                    i++;
+                }
+                if (events[i].getCategory() == 1)
+                {
+                    myText.setTextColor(Color.BLUE);
+                } else if (events[i].getCategory() == 2)
+                {
+                    myText.setTextColor(Color.RED);
+                } else if (events[i].getCategory() == 3)
+                {
+                    myText.setTextColor(Color.MAGENTA);
+                } else {
+                    myText.setTextColor(Color.DKGRAY);
+                }
+                return view;
         }
     }
 
