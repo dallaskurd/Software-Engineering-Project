@@ -1,5 +1,5 @@
 
-    package com.example.jason_000.test4; //Change This
+    package com.example.jason_000.test4;//Change this!
 
     import android.app.Activity;
     import android.app.AlertDialog;
@@ -23,69 +23,71 @@
     import java.util.Calendar;
 
 
-    public class MainActivity extends Activity {
-        private  LinearLayout mainLayout;
-        private TextView tv;
-        private LinearLayout layout;
+    public class MainActivity extends Activity
+    {
         private ViewFlipper viewFlipper;
         private float lastX;
-        private String[] names;
-        private String[] daynames;
         private Events[] dayevents; //Put Day events here
         private  Events[] event; //Blank array to use for month and week
-        private Events changeEvents; //only used to change delete and add events
         private Calendar ci;
 
         @Override
-        public void onCreate(Bundle savedInstanceState) {
+        public void onCreate(Bundle savedInstanceState)
+        {
             super.onCreate(savedInstanceState);
             setContentView(R.layout.activity_main);
-            changeEvents=new Events("temp",0);
-            mainLayout = (LinearLayout) findViewById(R.id.main);
-            layout = new LinearLayout(this);
             //This is the Month View Code
-            tv = new TextView(this);
             final CalendarView calendar = (CalendarView) findViewById(R.id.calendar);
             calendar.setOnDateChangeListener(new OnDateChangeListener() {
                 @Override
                 public void onSelectedDayChange(CalendarView view, int year, int month, int day) {
-                    //Find Events at the date givin by the paramters put into event
+                    //Find Events at the date givin by the parameters put into event
                     popUpEvent(event);
-
                 }
 
 
             });
+            ci = Calendar.getInstance();
             viewFlipper = (ViewFlipper) findViewById(R.id.viewflipper);
-            //Day View Code
-            ListView lv2 = (ListView) findViewById(R.id.dayevents);
-            dayevents = setdayevents();
-            daynames = new String[dayevents.length];
-            for (int i = 0; i < dayevents.length; i++)
-            {
-                daynames[i] = dayevents[i].getName();
-            }
-            final ArrayAdapter<String> adapter = new MySimpleArrayAdapter<>(this, android.R.layout.simple_list_item_1, daynames, dayevents);
-            lv2.setAdapter(adapter);
-            lv2.setEnabled(true);
-            lv2.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> myAdapter, View myView, int pos, long mylng)
-                {
-                    deleteOrEdit(dayevents,adapter,pos);
-                }
-
-            });
 
             //ADD
-            Button add =(Button) findViewById(R.id.add);
+            Button add = (Button) findViewById(R.id.add);
             add.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View arg0) {
                     add();
                 }
             });
+
             //Week View Code
+            setWeekView();
+
+            //Day View
+            setDayView();
+        }
+        public void setDayView()
+        {
+            ListView lv2 = (ListView) findViewById(R.id.dayevents);
+            dayevents = setDayEvents();
+            String[] dayNames = new String[dayevents.length];
+            for (int i = 0; i < dayevents.length; i++)
+            {
+                dayNames[i] = dayevents[i].getName();
+            }
+            final ArrayAdapter<String> adapter = new MySimpleArrayAdapter<>(this, android.R.layout.simple_list_item_1, dayNames, dayevents);
+            lv2.setAdapter(adapter);
+          //  lv2.setEnabled(true);
+            lv2.setOnItemClickListener(new AdapterView.OnItemClickListener()
+            {
+                @Override
+                public void onItemClick(AdapterView<?> myAdapter, View myView, int pos, long mylng)
+                {
+                    deleteOrEdit(dayevents, adapter, pos);
+                }
+            });
+        }
+        public void setWeekView()
+        {
             Button sun = (Button) findViewById(R.id.Sundayevents);
             Button mon = (Button) findViewById(R.id.Mondayyevents);
             Button tues = (Button) findViewById(R.id.Tuesdayevents);
@@ -114,15 +116,13 @@
                 @Override
                 public void onClick(View arg0)
                 {
-                    setWeekEvents (3);
+                    setWeekEvents(3);
                 }
             });
-            wed.setOnClickListener(new View.OnClickListener()
-            {
+            wed.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View arg0)
-                {
-                    setWeekEvents (4);
+                public void onClick(View arg0) {
+                    setWeekEvents(4);
                 }
             });
             thurs.setOnClickListener(new View.OnClickListener()
@@ -141,22 +141,18 @@
                     setWeekEvents (6);
                 }
             });
-
-            sat.setOnClickListener(new View.OnClickListener()
-            {
+            sat.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View arg0)
-                {
-                    setWeekEvents (7);
-                }
+                public void onClick(View arg0) {
+                    setWeekEvents (7);}
             });
         }
-       public void setWeekEvents (int d) // day we want
-       {
-           ci= Calendar.getInstance();
+        public void setWeekEvents (int d)
+        {
+
            int month = ci.get(Calendar.MONTH)+1;
            int year = ci.get(Calendar.YEAR);
-           int dow =ci.get(Calendar.DAY_OF_WEEK);
+           int dow = ci.get(Calendar.DAY_OF_WEEK);
            int day = ci.get(Calendar.DAY_OF_MONTH);
            if(dow<d)//We want a later day
            {
@@ -166,7 +162,7 @@
                    day++;
                }
            }
-           else if (dow>d)//We want a eailer then today
+           else if (dow>d)//We want a earlier then today
            {
                while(dow>d)
                {
@@ -174,14 +170,13 @@
                    day--;
                }
            }
-           popUpEvent(event);// Our Day is at teh date of events we want
+           popUpEvent(event);// Call getDayEvents
        }
         public void deleteOrEdit(Events [] ev,ArrayAdapter<String> ad,int pos)
         {
             final Events [] evs=ev;
             final AlertDialog.Builder alertDialog = new AlertDialog.Builder(MainActivity.this);
             alertDialog.setTitle("Edit or Delete");
-            // alertDialog.setMessage("");
             String selectedFromList = (String) ad.getItem(pos);
             int i = 0;
             while (!(selectedFromList.equals(ev[i].getName())))
@@ -260,16 +255,19 @@
             layout.addView(text);
 
             final EditText text2 = new EditText(context);
-            text2.setHint("Catagory");
+            text2.setHint("Category");
             layout.addView(text2);
             alertDialog.setView(layout);
             alertDialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int whichButton) {
-                    String Name = text.getText().toString();
-                    String Catagory = text2.getText().toString();
-                    if (!(Name.equals(""))) {
+                    String name = text.getText().toString();
+                    String category = text2.getText().toString();
+                    if (!(name.equals("")))
+                    {
                         //ev.setName
                     }
+                    //Do the same to category
+                    //etc.
                     dialog.cancel();
                 }
             });
@@ -298,18 +296,19 @@
             });
             alertDialog.show();
         }
-        public void popUpEvent(Events [] ev) { //This is where we put the Month Events
+        public void popUpEvent(Events [] ev)
+        {
             Events t1= new Events("test",1);
             Events t2= new Events("test2",2);
             Events t3= new Events("test3",3);
             Events t5= new Events("test4",4);
             final Events events[] = {t1, t2, t3, t5}; //Once ev has something in it make events equal to ev; or even replace events with ev in code under here
-            names = new String [events.length];//Adds the Title of events to an array
+            String[] names = new String[events.length];
             AlertDialog.Builder alertDialog = new AlertDialog.Builder(MainActivity.this);
             LayoutInflater inflater = getLayoutInflater();
             View convertView = (View) inflater.inflate(R.layout.custom, null);
             alertDialog.setView(convertView);
-            alertDialog.setTitle("Today's Events");
+            alertDialog.setTitle("Events");
             ListView lv = (ListView) convertView.findViewById(R.id.listView1);
             for (int i=0;i<events.length;i++)
             {
@@ -322,71 +321,49 @@
                 public void onItemClick(AdapterView<?> myAdapter, View myView, int pos, long mylng) {
                     deleteOrEdit(events,adapter,pos);
                 }
-
             });
             alertDialog.show();
         }
-        public Events[] setdayevents()
+        public Events[] setDayEvents()
         {
+            //Mabye put in param
+            int day=ci.get(Calendar.DAY_OF_MONTH);
+            int month=ci.get(Calendar.MONTH)+1;
+            int year=ci.get(Calendar.YEAR);
+
             Events t1= new Events("day",1);
             Events t2= new Events("day2",2);
             Events t3= new Events("day3",3);
             Events t5= new Events("day4",4);
-            Events[] eve = {t1,t2,t3,t5}; //Just a placeholder
+            Events[] eve = {t1,t2,t3,t5}; //Use day month and year to find today's events
             return eve;
         }
-        public boolean onTouchEvent(MotionEvent touchevent) {
-
-            switch (touchevent.getAction()) {
-
+        //Deals with the sliding DON NOT TOUCH
+        public boolean onTouchEvent(MotionEvent touchevent)
+        {
+            switch (touchevent.getAction())
+            {
                 case MotionEvent.ACTION_DOWN:
                     lastX = touchevent.getX();
-
                     break;
-
                 case MotionEvent.ACTION_UP:
-
                     float currentX = touchevent.getX();
-
-
-
                     // Handling left to right screen swap.
-
-                    if (lastX < currentX) {
-
-
-
+                    if (lastX < currentX)
+                    {
                         // If there aren't any other children, just break.
-
                         if (viewFlipper.getDisplayedChild() == 0)
                             break;
-
-
-
                         // Next screen comes in from left.
-
                         viewFlipper.setInAnimation(this, R.anim.slide_in_from_left);
-
                         // Current screen goes out from right.
-
                         viewFlipper.setOutAnimation(this, R.anim.slide_out_to_right);
-
-
-
                         // Display next screen.
-
                         viewFlipper.showNext();
-
                     }
-
-
-
                     // Handling right to left screen swap.
-
-                    if (lastX > currentX) {
-
-
-
+                    if (lastX > currentX)
+                    {
                         // If there is a child (to the left), kust break.
                         if (viewFlipper.getDisplayedChild() == 1)
                             break;
