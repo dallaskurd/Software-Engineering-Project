@@ -4,7 +4,7 @@ Java based app for android OS;
 List of things to be done: 
 Dynamically add events
 
-Make Add/Delte/Edit buttons work
+Make Add/Delte/Edit buttons work Jason: working on putting the skeleton of it
 
  Making holidays a unique color/visable
   
