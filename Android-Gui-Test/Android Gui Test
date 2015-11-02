@@ -1,14 +1,17 @@
 
-    package com.example.jason_000.test4; //Change this line
+    package com.example.jason_000.test4;//Change this
 
     import android.app.Activity;
     import android.app.AlertDialog;
+    import android.content.Context;
+    import android.content.DialogInterface;
     import android.content.Intent;
     import android.os.Bundle;
     import android.view.LayoutInflater;
     import android.view.View;
     import android.widget.ArrayAdapter;
     import android.widget.Button;
+    import android.widget.EditText;
     import android.widget.LinearLayout;
     import android.widget.ListView;
     import android.widget.TextView;
@@ -21,24 +24,27 @@
     import java.util.Calendar;
     import java.util.Date;
     import java.util.Locale;
+    import java.util.logging.Handler;
 
 
     public class MainActivity extends Activity {
-        LinearLayout mainLayout;
-        TextView tv;
-        LinearLayout layout;
+        private  LinearLayout mainLayout;
+        private TextView tv;
+        private LinearLayout layout;
         private ViewFlipper viewFlipper;
         private float lastX;
-        String[] names;
-        String[] daynames;
-        Events[] dayevents; //Put Day events here
-        Events[] event; //Blank array to use for month and week
-        Calendar ci;
+        private String[] names;
+        private String[] daynames;
+        private Events[] dayevents; //Put Day events here
+        private  Events[] event; //Blank array to use for month and week
+        private Events changeEvents; //only used to change delete and add events
+        private Calendar ci;
+
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             setContentView(R.layout.activity_main);
-
+            changeEvents=new Events("temp",0);
             mainLayout = (LinearLayout) findViewById(R.id.main);
             layout = new LinearLayout(this);
             //This is the Month View Code
@@ -64,6 +70,24 @@
             }
             ArrayAdapter<String> adapter = new MySimpleArrayAdapter<>(this, android.R.layout.simple_list_item_1, daynames, dayevents);
             lv2.setAdapter(adapter);
+            //ADD
+            Button add =(Button) findViewById(R.id.add);
+            add.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View arg0) {
+                    add();
+                }
+            });
+            //EDIT
+            Button edit =(Button) findViewById(R.id.Edit);
+            edit.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View arg0)
+                {
+                    edit();
+                }
+            });
             //Week View Code
             Button sun = (Button) findViewById(R.id.Sundayevents);
             Button mon = (Button) findViewById(R.id.Mondayyevents);
@@ -72,46 +96,60 @@
             Button thurs = (Button) findViewById(R.id.Thursdayevents);
             Button fri = (Button) findViewById(R.id.Fridayevents);
             Button sat = (Button) findViewById(R.id.Saturdayevents);
-            sun.setOnClickListener(new View.OnClickListener() {
+            sun.setOnClickListener(new View.OnClickListener()
+            {
                 @Override
-                public void onClick(View arg0) {
+                public void onClick(View arg0)
+                {
                     setWeekEvents(1);
                 }
             });
-            mon.setOnClickListener(new View.OnClickListener() {
+            mon.setOnClickListener(new View.OnClickListener()
+            {
                 @Override
-                public void onClick(View arg0) {
+                public void onClick(View arg0)
+                {
                     setWeekEvents (2);
                 }
             });
-            tues.setOnClickListener(new View.OnClickListener() {
+            tues.setOnClickListener(new View.OnClickListener()
+            {
                 @Override
-                public void onClick(View arg0) {
+                public void onClick(View arg0)
+                {
                     setWeekEvents (3);
                 }
             });
-            wed.setOnClickListener(new View.OnClickListener() {
+            wed.setOnClickListener(new View.OnClickListener()
+            {
                 @Override
-                public void onClick(View arg0) {
+                public void onClick(View arg0)
+                {
                     setWeekEvents (4);
                 }
             });
-            thurs.setOnClickListener(new View.OnClickListener() {
+            thurs.setOnClickListener(new View.OnClickListener()
+            {
                 @Override
-                public void onClick(View arg0) {
+                public void onClick(View arg0)
+                {
                     setWeekEvents (5);
                 }
             });
-            fri.setOnClickListener(new View.OnClickListener() {
+            fri.setOnClickListener(new View.OnClickListener()
+            {
                 @Override
-                public void onClick(View arg0) {
+                public void onClick(View arg0)
+                {
                     setWeekEvents (6);
                 }
             });
 
-            sat.setOnClickListener(new View.OnClickListener() {
+            sat.setOnClickListener(new View.OnClickListener()
+            {
                 @Override
-                public void onClick(View arg0) {
+                public void onClick(View arg0)
+                {
                     setWeekEvents (7);
                 }
             });
@@ -141,6 +179,90 @@
            }
            popUpEvent(event);// Our Day is at teh date of events we want
        }
+        public void add()
+        {
+            final AlertDialog.Builder alertDialog = new AlertDialog.Builder(MainActivity.this);
+            alertDialog.setTitle("Edit Event");
+            alertDialog.setMessage("What is the date of the even you want to edit");
+            Context context = MainActivity.this;
+            LinearLayout layout = new LinearLayout(context);
+            layout.setOrientation(LinearLayout.VERTICAL);
+
+            final EditText text = new EditText(context);
+            text.setHint("DD/MM/YYY");
+            layout.addView(text);
+
+            final EditText text2 = new EditText(context);
+            text2.setHint("Description");
+            layout.addView(text2);
+            alertDialog.setView(layout);
+            alertDialog.setPositiveButton("Ok", new DialogInterface.OnClickListener()
+            {
+                public void onClick(DialogInterface dialog, int whichButton) {
+                    String name = text.getText().toString();
+                    String cat = text2.getText().toString();
+                    //Call an event.add method here
+                    dialog.cancel();
+            }
+                    });
+            alertDialog.show();
+        }
+        public void edit()
+        {
+            final AlertDialog.Builder alertDialog = new AlertDialog.Builder(MainActivity.this);
+            alertDialog.setTitle("Edit Event");
+            alertDialog.setMessage("What is the event you want to edit");
+            Context context = MainActivity.this;
+            LinearLayout layout = new LinearLayout(context);
+            layout.setOrientation(LinearLayout.VERTICAL);
+
+            final EditText text = new EditText(context);
+            text.setHint("Date: DD/MM/YYY"); // I don't know a better way then this
+            layout.addView(text);
+
+            final EditText text2 = new EditText(context);
+            text2.setHint("Start Time");
+            layout.addView(text2);
+            alertDialog.setView(layout);
+            alertDialog.setPositiveButton("Ok", new DialogInterface.OnClickListener()
+            {
+                public void onClick(DialogInterface dialog, int whichButton) {
+                    String date = text.getText().toString();
+                    String startTime = text2.getText().toString();
+                    //Call an event.edit method here
+                    dialog.cancel();
+                }
+            });
+            alertDialog.show();
+        }
+        public void delete()
+        {
+            final AlertDialog.Builder alertDialog = new AlertDialog.Builder(MainActivity.this);
+            alertDialog.setTitle("Delete Event");
+            alertDialog.setMessage("What is the event you want to delete");
+            Context context = MainActivity.this;
+            LinearLayout layout = new LinearLayout(context);
+            layout.setOrientation(LinearLayout.VERTICAL);
+
+            final EditText text = new EditText(context);
+            text.setHint("Date: DD/MM/YYY"); // I don't know a better way then this
+            layout.addView(text);
+
+            final EditText text2 = new EditText(context);
+            text2.setHint("Start Time");
+            layout.addView(text2);
+            alertDialog.setView(layout);
+            alertDialog.setPositiveButton("Ok", new DialogInterface.OnClickListener()
+            {
+                public void onClick(DialogInterface dialog, int whichButton) {
+                    String date = text.getText().toString();
+                    String startTime = text2.getText().toString();
+                    //Call an event.delete method here
+                    dialog.cancel();
+                }
+            });
+            alertDialog.show();
+        }
         public void popUpEvent(Events [] ev) { //This is where we put the Month Events
             Events t1= new Events("test",1);
             Events t2= new Events("test2",2);
@@ -152,7 +274,7 @@
             LayoutInflater inflater = getLayoutInflater();
             View convertView = (View) inflater.inflate(R.layout.custom, null);
             alertDialog.setView(convertView);
-            alertDialog.setTitle("Todays Events");
+            alertDialog.setTitle("Today's Events");
             ListView lv = (ListView) convertView.findViewById(R.id.listView1);
             for (int i=0;i<events.length;i++)
             {
