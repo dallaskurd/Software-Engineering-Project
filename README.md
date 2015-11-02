@@ -1,5 +1,5 @@
 # Software-Engineering-Project
-Java based app for android OS; List of things to be done: Dynamically add events
+Java based app for android OS; List of things to be done: Dynamically add events /n
                                                           Make Add/Delte/Edit buttons work
                                                           Making holidays a unique color/visable
                                                           Event catagories
