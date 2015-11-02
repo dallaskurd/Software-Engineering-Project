@@ -1,5 +1,5 @@
 
-    package com.example.jason_000.test4;//Change this
+    package com.example.jason_000.test4; //Change This
 
     import android.app.Activity;
     import android.app.AlertDialog;
@@ -9,6 +9,7 @@
     import android.os.Bundle;
     import android.view.LayoutInflater;
     import android.view.View;
+    import android.widget.AdapterView;
     import android.widget.ArrayAdapter;
     import android.widget.Button;
     import android.widget.EditText;
@@ -19,12 +20,7 @@
     import android.widget.CalendarView.OnDateChangeListener;
     import android.view.MotionEvent;
     import android.widget.ViewFlipper;
-
-    import java.text.SimpleDateFormat;
     import java.util.Calendar;
-    import java.util.Date;
-    import java.util.Locale;
-    import java.util.logging.Handler;
 
 
     public class MainActivity extends Activity {
@@ -65,27 +61,28 @@
             ListView lv2 = (ListView) findViewById(R.id.dayevents);
             dayevents = setdayevents();
             daynames = new String[dayevents.length];
-            for (int i = 0; i < dayevents.length; i++) {
+            for (int i = 0; i < dayevents.length; i++)
+            {
                 daynames[i] = dayevents[i].getName();
             }
-            ArrayAdapter<String> adapter = new MySimpleArrayAdapter<>(this, android.R.layout.simple_list_item_1, daynames, dayevents);
+            final ArrayAdapter<String> adapter = new MySimpleArrayAdapter<>(this, android.R.layout.simple_list_item_1, daynames, dayevents);
             lv2.setAdapter(adapter);
+            lv2.setEnabled(true);
+            lv2.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> myAdapter, View myView, int pos, long mylng)
+                {
+                    deleteOrEdit(dayevents,adapter,pos);
+                }
+
+            });
+
             //ADD
             Button add =(Button) findViewById(R.id.add);
             add.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View arg0) {
                     add();
-                }
-            });
-            //EDIT
-            Button edit =(Button) findViewById(R.id.Edit);
-            edit.setOnClickListener(new View.OnClickListener()
-            {
-                @Override
-                public void onClick(View arg0)
-                {
-                    edit();
                 }
             });
             //Week View Code
@@ -179,85 +176,123 @@
            }
            popUpEvent(event);// Our Day is at teh date of events we want
        }
+        public void deleteOrEdit(Events [] ev,ArrayAdapter<String> ad,int pos)
+        {
+            final Events [] evs=ev;
+            final AlertDialog.Builder alertDialog = new AlertDialog.Builder(MainActivity.this);
+            alertDialog.setTitle("Edit or Delete");
+            // alertDialog.setMessage("");
+            String selectedFromList = (String) ad.getItem(pos);
+            int i = 0;
+            while (!(selectedFromList.equals(ev[i].getName())))
+            {
+                i++;
+            }
+            Context context = MainActivity.this;
+            LinearLayout layout = new LinearLayout(context);
+            layout.setOrientation(LinearLayout.VERTICAL);
+
+            Button delete = new Button(context);
+            delete.setText("Delete");
+            layout.addView(delete);
+            final int a = i;
+            Button edit = new Button(context);
+            edit.setText("Edit");
+            layout.addView(edit);
+            alertDialog.setView(layout);
+            edit.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View arg0) {
+                    edit(evs[a]);
+                }
+            });
+            delete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View arg0) {
+                    delete(evs[a]);
+                }
+            });
+            alertDialog.show();
+        }
         public void add()
         {
             final AlertDialog.Builder alertDialog = new AlertDialog.Builder(MainActivity.this);
-            alertDialog.setTitle("Edit Event");
-            alertDialog.setMessage("What is the date of the even you want to edit");
+            alertDialog.setTitle("Add Event");
+            alertDialog.setMessage("Details of the Event");
             Context context = MainActivity.this;
             LinearLayout layout = new LinearLayout(context);
             layout.setOrientation(LinearLayout.VERTICAL);
 
             final EditText text = new EditText(context);
-            text.setHint("DD/MM/YYY");
+            text.setHint("Name of Event");
             layout.addView(text);
 
             final EditText text2 = new EditText(context);
-            text2.setHint("Description");
+            text2.setHint("Category of Event");
             layout.addView(text2);
             alertDialog.setView(layout);
-            alertDialog.setPositiveButton("Ok", new DialogInterface.OnClickListener()
-            {
+            alertDialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int whichButton) {
                     String name = text.getText().toString();
                     String cat = text2.getText().toString();
                     //Call an event.add method here
                     dialog.cancel();
-            }
-                    });
-            alertDialog.show();
-        }
-        public void edit()
-        {
-            final AlertDialog.Builder alertDialog = new AlertDialog.Builder(MainActivity.this);
-            alertDialog.setTitle("Edit Event");
-            alertDialog.setMessage("What is the event you want to edit");
-            Context context = MainActivity.this;
-            LinearLayout layout = new LinearLayout(context);
-            layout.setOrientation(LinearLayout.VERTICAL);
-
-            final EditText text = new EditText(context);
-            text.setHint("Date: DD/MM/YYY"); // I don't know a better way then this
-            layout.addView(text);
-
-            final EditText text2 = new EditText(context);
-            text2.setHint("Start Time");
-            layout.addView(text2);
-            alertDialog.setView(layout);
-            alertDialog.setPositiveButton("Ok", new DialogInterface.OnClickListener()
-            {
+                }
+            });
+            alertDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int whichButton) {
-                    String date = text.getText().toString();
-                    String startTime = text2.getText().toString();
-                    //Call an event.edit method here
                     dialog.cancel();
                 }
             });
             alertDialog.show();
         }
-        public void delete()
+        public void edit(Events ev)
         {
             final AlertDialog.Builder alertDialog = new AlertDialog.Builder(MainActivity.this);
-            alertDialog.setTitle("Delete Event");
-            alertDialog.setMessage("What is the event you want to delete");
+            alertDialog.setTitle("Edit Event");
+            alertDialog.setMessage("Write what you want to edit");
             Context context = MainActivity.this;
             LinearLayout layout = new LinearLayout(context);
             layout.setOrientation(LinearLayout.VERTICAL);
 
             final EditText text = new EditText(context);
-            text.setHint("Date: DD/MM/YYY"); // I don't know a better way then this
+            text.setHint("Name");
             layout.addView(text);
 
             final EditText text2 = new EditText(context);
-            text2.setHint("Start Time");
+            text2.setHint("Catagory");
             layout.addView(text2);
             alertDialog.setView(layout);
-            alertDialog.setPositiveButton("Ok", new DialogInterface.OnClickListener()
-            {
+            alertDialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int whichButton) {
-                    String date = text.getText().toString();
-                    String startTime = text2.getText().toString();
-                    //Call an event.delete method here
+                    String Name = text.getText().toString();
+                    String Catagory = text2.getText().toString();
+                    if (!(Name.equals(""))) {
+                        //ev.setName
+                    }
+                    dialog.cancel();
+                }
+            });
+            alertDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int whichButton) {
+                    dialog.cancel();
+                }
+            });
+            alertDialog.show();
+        }
+        public void delete(Events ev)
+        {
+            final AlertDialog.Builder alertDialog = new AlertDialog.Builder(MainActivity.this);
+            alertDialog.setTitle("Delete Event");
+            alertDialog.setMessage("Are you sure?");
+            alertDialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int whichButton) {
+                    //Call ev.delete method here
+                    dialog.cancel();
+                }
+            });
+            alertDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int whichButton) {
                     dialog.cancel();
                 }
             });
@@ -268,7 +303,7 @@
             Events t2= new Events("test2",2);
             Events t3= new Events("test3",3);
             Events t5= new Events("test4",4);
-            Events events[] = {t1, t2, t3, t5}; //Once ev has something in it make events equal to ev; or even replace events with ev in code under here
+            final Events events[] = {t1, t2, t3, t5}; //Once ev has something in it make events equal to ev; or even replace events with ev in code under here
             names = new String [events.length];//Adds the Title of events to an array
             AlertDialog.Builder alertDialog = new AlertDialog.Builder(MainActivity.this);
             LayoutInflater inflater = getLayoutInflater();
@@ -280,8 +315,15 @@
             {
                 names[i]=events[i].getName();
             }
-            ArrayAdapter<String> adapter = new MySimpleArrayAdapter<>(this, android.R.layout.simple_list_item_1, names,events);
+          final  ArrayAdapter<String> adapter = new MySimpleArrayAdapter<>(this, android.R.layout.simple_list_item_1, names,events);
             lv.setAdapter(adapter);
+            lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> myAdapter, View myView, int pos, long mylng) {
+                    deleteOrEdit(events,adapter,pos);
+                }
+
+            });
             alertDialog.show();
         }
         public Events[] setdayevents()
