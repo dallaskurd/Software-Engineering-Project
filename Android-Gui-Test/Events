@@ -1,4 +1,4 @@
-package com.example.jason_000.test4; //Change this
+package com.example.jason_000.test4; //Change This
 
 /**
  * Created by jason_000 on 11/1/2015.
@@ -60,11 +60,11 @@ public class Events
     {
         return name;
     }
-    public boolean getholiday()
+    public boolean getHoliday()
     {
         return    holi;
     }
-    public void setholiday()
+    public void setHoliday()
     {
         holi=true;
     }
@@ -170,36 +170,27 @@ public class Events
     public void addEvent(String n, String c,int sHour,int sMinute,int eHour,int eMinute,String eDescription,String ePlace,String date,String eTimeOfDay,String sTimeOfDay,Context con)
     {
         Events event = new Events();
-
-
+        
         event.setEName(n);
-
+        
         event.setCategory(c);
-
+        
         event.setEPlace(ePlace);
-
-
+        
         event.setEDescription(eDescription);
-
-
+        
         event.setSHour(sHour);
-
-
+        
         event.setSMinute(sMinute);
-
-
+        
         event.setDate(date);
-
-
+        
         event.setEHour(eHour);
-
-
+        
         event.setEMinute(eMinute);
-
-
+        
         event.setETimeOfDay(eTimeOfDay);
-
-
+        
         event.setETimeOfDay(sTimeOfDay);
 
         String fileName =  date+ ".txt";
@@ -234,72 +225,70 @@ public class Events
     public void editEvent(String n, String c,int sHour,int sMinute,int eHour,int eMinute,String eDescription,String ePlace,String date,String eTimeOfDay,String sTimeOfDay,Context con,File f)
     {
 
-            Events event = new Events();
+        Events event = new Events();
 
-
+        if(!n.equals(""))
             event.setEName(n);
 
+        if(!c.equals(""))
             event.setCategory(c);
 
+        if(!ePlace.equals(""))
             event.setEPlace(ePlace);
 
 
+        if(!eDescription.equals(""))
             event.setEDescription(eDescription);
 
-
+        if(!(sHour==startingHour))
             event.setSHour(sHour);
 
-
+        if(!(sMinute==startingMinute))
             event.setSMinute(sMinute);
 
-
+        if(!date.equals(""))
             event.setDate(date);
 
-
+        if(!(eHour==endingHour))
             event.setEHour(eHour);
 
-
+        if(!(eMinute==endingMinute))
             event.setEMinute(eMinute);
 
-
+        if(!eTimeOfDay.equals(""))
             event.setETimeOfDay(eTimeOfDay);
 
+        if(!sTimeOfDay.equals(""))
+            event.setETimeOfDay(sTimeOfDay);
 
-            event.setSTimeOfDay(sTimeOfDay);
+        String fileName =  date+ ".txt";
 
-            String fileName =  date+ ".txt";
-
+        try
+        {
+            File path = con.getFilesDir();
+            file = new File(path, fileName);
+            FileOutputStream stream = new FileOutputStream(file);
             try
             {
-                File path = con.getFilesDir();
-                file = new File(path, fileName);
-                FileOutputStream stream = new FileOutputStream(file);
-                try
-                {
-                    stream.write("\nThe following event has been added to your calendar: \n".getBytes());
-                    stream.write(("Event name: " + event.getEName()+"\n").getBytes());
-                    stream.write(("Event location: " + event.getEPlace()+"\n").getBytes());
-                    stream.write(("Event description: " + event.getEDescription()+"\n").getBytes());
-                    if(event.getSMinute()==0)
-                    stream.write(("Event start time: " + event.getSHour() + ":" + event.getSMinute() + event.getSMinute() + " " + event.getSTimeOfDay()+"\n").getBytes());
-                    else
-                        stream.write(("Event start time: " + event.getSHour() + ":" + event.getSMinute() + " " + event.getSTimeOfDay()+"\n").getBytes());
-                    stream.write(("Event date: " + event.getDate()+"\n").getBytes());
-                    if(event.getEMinute()==0)
-                    stream.write(("Event end time: " + event.getEHour() + ":" + event.getEMinute() + event.getEMinute() + " " + event.getETimeOfDay()+"\n").getBytes());
-                    else
-                        stream.write(("Event end time: " + event.getEHour() + ":" + event.getEMinute() + " " + event.getETimeOfDay()+"\n").getBytes());
-                } finally
-                {
-                    stream.close();
-                }
-            }
-            catch(IOException ex)
+                stream.write("\nThe following event has been added to your calendar: \n".getBytes());
+                stream.write(("Event name: " + event.getEName()+"\n").getBytes());
+                stream.write(("Event location: " + event.getEPlace()+"\n").getBytes());
+                stream.write(("Event description: " + event.getEDescription()+"\n").getBytes());
+                stream.write(("Event start time: " + event.getSHour() + ":" + event.getSMinute() + " " + event.getSTimeOfDay()+"\n").getBytes());
+                stream.write(("Event date: " + event.getDate()+"\n").getBytes());
+                stream.write(("Event end time: " + event.getEHour() + ":" + event.getEMinute() + " " + event.getETimeOfDay()+"\n").getBytes());
+            } finally
             {
-                System.out.println(
-                        "Error writing to file '"
-                                + fileName + "'");
+                stream.close();
             }
+        }
+        catch(IOException ex)
+        {
+            System.out.println(
+                    "Error writing to file '"
+                            + fileName + "'");
+        }
+
     }
     public File getFile()
     {
