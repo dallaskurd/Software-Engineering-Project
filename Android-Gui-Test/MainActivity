@@ -234,20 +234,41 @@
             Context context = MainActivity.this;
             LinearLayout layout = new LinearLayout(context);
             layout.setOrientation(LinearLayout.VERTICAL);
-
+            final Events ev= new Events();
             final EditText text = new EditText(context);
-            text.setHint("Name of Event");
+            text.setHint("Name of Event:");
             layout.addView(text);
-
             final EditText text2 = new EditText(context);
-            text2.setHint("Category of Event");
+            text2.setHint("Category of Event:");
             layout.addView(text2);
+            final EditText text3 = new EditText(context);
+            text3.setHint("When does the Event Start? 2:30 PM");
+            layout.addView(text3);
+            final EditText text6 = new EditText(context);
+            text6.setHint("When does the Event End? 2:30 PM");
+            layout.addView(text6);
+            final EditText text9 = new EditText(context);
+            text9.setHint("Event Description:");
+            layout.addView(text9);
+            final EditText text10 = new EditText(context);
+            text10.setHint("Event Place:");
+            layout.addView(text10);
+            final EditText text11 = new EditText(context);
+            text11.setHint("Event Date:");
+            layout.addView(text11);
             alertDialog.setView(layout);
             alertDialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int whichButton) {
-                    String name = text.getText().toString();
-                    String cat = text2.getText().toString();
-                    //Call an event.add method here
+                    String sT=text3.getText().toString().split(":")[0];
+                    String sT2=text3.getText().toString().split(":")[1];
+                    int sTime2= Integer.parseInt(sT2.split(" ")[0]);
+                   int sTime= Integer.parseInt(sT);
+                    String eT=text3.getText().toString().split(":")[0];
+                    String eT2=text3.getText().toString().split(":")[1];
+                    int eTime2= Integer.parseInt(eT2.split(" ")[0]);
+                    int eTime= Integer.parseInt(eT);
+                    ev.addEvent(text.getText().toString(), text2.getText().toString(), sTime, sTime2, eTime,
+                            eTime2, text9.getText().toString(), text10.getText().toString(), text11.getText().toString(), sT2.split(" ")[1], eT2.split(" ")[1], MainActivity.this);
                     dialog.cancel();
                 }
             });
@@ -266,25 +287,54 @@
             Context context = MainActivity.this;
             LinearLayout layout = new LinearLayout(context);
             layout.setOrientation(LinearLayout.VERTICAL);
-
+            final Events ev1=ev;
             final EditText text = new EditText(context);
-            text.setHint("Name");
+            text.setHint("Name of Event:");
+            text.setText("");
             layout.addView(text);
-
             final EditText text2 = new EditText(context);
-            text2.setHint("Category");
+            text2.setHint("Category of Event:");
+            text2.setText("");
             layout.addView(text2);
+            final EditText text3 = new EditText(context);
+            text3.setHint("Time of Start: 2:30 PM");
+            text3.setText("0:00 AM");
+            layout.addView(text3);
+            final EditText text6 = new EditText(context);
+            text6.setHint("Time of End: 2:30 PM");
+            text6.setText("0:00 AM");
+            layout.addView(text6);
+            final EditText text9 = new EditText(context);
+            text9.setHint("Event Description:");
+            text9.setText("");
+            layout.addView(text9);
+            final EditText text10 = new EditText(context);
+            text10.setHint("Event Place:");
+            text10.setText("");
+            layout.addView(text10);
+            final EditText text11 = new EditText(context);
+            text11.setHint("Event Date:");
+            text11.setText("");
+            layout.addView(text11);
             alertDialog.setView(layout);
             alertDialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int whichButton) {
-                    String name = text.getText().toString();
-                    String category = text2.getText().toString();
-                    if (!(name.equals("")))
-                    {
-                        //ev.setName
-                    }
-                    //Do the same to category
-                    //etc.
+                    String sT=text3.getText().toString().split(":")[0];
+                    String sT2=(text3.getText().toString().split(":")[1]);
+
+                    int sTime2= Integer.parseInt(sT2.split(" ")[0]);
+                    int sTime= Integer.parseInt(sT);
+
+                    String eT=text3.getText().toString().split(":")[0];
+                    String eT2=text3.getText().toString().split(":")[1];
+                    int eTime2= Integer.parseInt(eT2.split(" ")[0]);
+                    int eTime= Integer.parseInt(eT);
+                    System.out.println(eT2.split(" ")[1]);
+                    System.out.println(sT2.split(" ")[1]);
+                    ev1.editEvent(text.getText().toString(), text2.getText().toString(), sTime, sTime2, eTime,
+                            eTime2, text9.getText().toString(), text10.getText().toString(), text11.getText().toString(), eT2.split(" ")[1],
+                            sT2.split(" ")[1], MainActivity.this,ev1.getFile());
+                    System.out.println(ev1.getEvents(ev1.getFile()));
                     dialog.cancel();
                 }
             });
@@ -315,10 +365,10 @@
         }
         public void popUpEvent(Events [] ev, String to)
         {
-            Events t1= new Events("test",1);
-            Events t2= new Events("test2",2);
-            Events t3= new Events("test3",3);
-            Events t5= new Events("test4",4);
+            Events t1= new Events("test","1");
+            Events t2= new Events("test2","2");
+            Events t3= new Events("test3","3");
+            Events t5= new Events("test4","4");
             final Events events[] = {t1, t2, t3, t5}; //Once ev has something in it make events equal to ev; or even replace events with ev in code under here
             String[] names = new String[events.length];
             AlertDialog.Builder alertDialog = new AlertDialog.Builder(MainActivity.this);
@@ -348,10 +398,10 @@
             int month=ci.get(Calendar.MONTH)+1;
             int year=ci.get(Calendar.YEAR);
 
-            Events t1= new Events("day",1);
-            Events t2= new Events("day2",2);
-            Events t3= new Events("day3",3);
-            Events t5= new Events("day4",4);
+            Events t1= new Events("day","1");
+            Events t2= new Events("day2","2");
+            Events t3= new Events("day3","3");
+            Events t5= new Events("day4","4");
             Events[] eve = {t1,t2,t3,t5}; //Use day month and year to find today's events
             return eve;
         }
