@@ -1,0 +1,336 @@
+package com.example.jason_000.test4; //Change this
+
+/**
+ * Created by jason_000 on 11/1/2015.
+ */
+import android.content.Context;
+
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.*;
+public class Events
+{
+    private String name;
+    private String category;
+    private boolean holi;
+    private int startingHour;
+    private int startingMinute;
+    private int endingMinute;
+    private int endingHour;
+    private String eventName;
+    private String eventDescription;
+    private String eventPlace;
+    private String date;
+    private String endingTimeOfDay;
+    private String startingTimeOfDay;
+   private File file;
+    public Events(String n, String c,int sHour,int eHour,int sMinute,int eMinute,String eDescription,String ePlace,String d,String eTimeOfDay,String sTimeOfDay)
+    {
+        name=n;
+        category=c;
+        holi=false;
+        startingHour=sHour;
+        endingHour=eHour;
+        startingMinute=sMinute;
+        endingMinute=eMinute;
+        eventName=n;
+        eventDescription=eDescription;
+        eventPlace=ePlace;
+        date=d;
+        endingTimeOfDay=eTimeOfDay;
+        startingTimeOfDay=sTimeOfDay;
+    }
+    public Events(String n,String c)
+    {
+        name="n";
+        category="c";
+    }
+    public Events()
+    {
+        name="";
+        category="";
+        holi=false;
+    }
+    public String getName()
+    {
+        return name;
+    }
+    public boolean getholiday()
+    {
+        return    holi;
+    }
+    public void setholiday()
+    {
+        holi=true;
+    }
+    public String getCategory()
+    {
+        return category;
+    }
+
+    public void setSHour(int h)
+    {
+        startingHour = h;
+    }
+    public int getSHour()
+    {
+        return startingHour;
+    }
+
+    public void setSMinute(int h)
+    {
+        startingMinute = h;
+    }
+    public int getSMinute()
+    {
+        return startingMinute;
+    }
+
+    public void setEHour(int h)
+    {
+        endingHour = h;
+    }
+    public int getEHour()
+    {
+        return endingHour;
+    }
+    public void setEMinute(int h)
+    {
+        endingMinute = h;
+    }
+    public int getEMinute()
+    {
+        return endingMinute;
+    }
+
+    public void setEName(String n)
+    {
+        eventName = n;
+    }
+    public String getEName()
+    {
+        return eventName;
+    }
+
+    public void setEDescription(String d)
+    {
+        eventDescription = d;
+    }
+    public String getEDescription()
+    {
+        return eventDescription;
+    }
+
+    public void setEPlace(String p)
+    {
+        eventPlace = p;
+    }
+    public String getEPlace()
+    {
+        return eventPlace;
+    }
+
+    public void setDate(String t)
+    {
+        date = t;
+    }
+    public String getDate()
+    {
+        return date;
+    }
+
+    public void setETimeOfDay(String t)
+    {
+        endingTimeOfDay = t;
+    }
+    public String getETimeOfDay()
+    {
+        return endingTimeOfDay;
+    }
+    public String getSTimeOfDay()
+    {
+        return startingTimeOfDay;
+    }
+    public void setSTimeOfDay(String t)
+    {
+        startingTimeOfDay = t;
+    }
+    public void setCategory(String t)
+    {
+        category = t;
+    }
+
+
+
+    public void addEvent(String n, String c,int sHour,int sMinute,int eHour,int eMinute,String eDescription,String ePlace,String date,String eTimeOfDay,String sTimeOfDay,Context con)
+    {
+        Events event = new Events();
+
+
+        event.setEName(n);
+
+        event.setCategory(c);
+
+        event.setEPlace(ePlace);
+
+
+        event.setEDescription(eDescription);
+
+
+        event.setSHour(sHour);
+
+
+        event.setSMinute(sMinute);
+
+
+        event.setDate(date);
+
+
+        event.setEHour(eHour);
+
+
+        event.setEMinute(eMinute);
+
+
+        event.setETimeOfDay(eTimeOfDay);
+
+
+        event.setETimeOfDay(sTimeOfDay);
+
+        String fileName =  date+ ".txt";
+
+        try
+        {
+            File path = con.getFilesDir();
+            file = new File(path, fileName);
+            FileOutputStream stream = new FileOutputStream(file);
+            try
+            {
+                stream.write("\nThe following event has been added to your calendar: \n".getBytes());
+                stream.write(("Event name: " + event.getEName()+"\n").getBytes());
+                stream.write(("Event location: " + event.getEPlace()+"\n").getBytes());
+                stream.write(("Event description: " + event.getEDescription()+"\n").getBytes());
+                stream.write(("Event start time: " + event.getSHour() + ":" + event.getSMinute() + " " + event.getSTimeOfDay()+"\n").getBytes());
+                stream.write(("Event date: " + event.getDate()+"\n").getBytes());
+                stream.write(("Event end time: " + event.getEHour() + ":" + event.getEMinute() + " " + event.getETimeOfDay()+"\n").getBytes());
+            } finally
+            {
+                stream.close();
+            }
+        }
+        catch(IOException ex)
+        {
+            System.out.println(
+                    "Error writing to file '"
+                            + fileName + "'");
+        }
+
+    }
+    public void editEvent(String n, String c,int sHour,int sMinute,int eHour,int eMinute,String eDescription,String ePlace,String date,String eTimeOfDay,String sTimeOfDay,Context con,File f)
+    {
+
+            Events event = new Events();
+
+
+            event.setEName(n);
+
+            event.setCategory(c);
+
+            event.setEPlace(ePlace);
+
+
+            event.setEDescription(eDescription);
+
+
+            event.setSHour(sHour);
+
+
+            event.setSMinute(sMinute);
+
+
+            event.setDate(date);
+
+
+            event.setEHour(eHour);
+
+
+            event.setEMinute(eMinute);
+
+
+            event.setETimeOfDay(eTimeOfDay);
+
+
+            event.setSTimeOfDay(sTimeOfDay);
+
+            String fileName =  date+ ".txt";
+
+            try
+            {
+                File path = con.getFilesDir();
+                file = new File(path, fileName);
+                FileOutputStream stream = new FileOutputStream(file);
+                try
+                {
+                    stream.write("\nThe following event has been added to your calendar: \n".getBytes());
+                    stream.write(("Event name: " + event.getEName()+"\n").getBytes());
+                    stream.write(("Event location: " + event.getEPlace()+"\n").getBytes());
+                    stream.write(("Event description: " + event.getEDescription()+"\n").getBytes());
+                    if(event.getSMinute()==0)
+                    stream.write(("Event start time: " + event.getSHour() + ":" + event.getSMinute() + event.getSMinute() + " " + event.getSTimeOfDay()+"\n").getBytes());
+                    else
+                        stream.write(("Event start time: " + event.getSHour() + ":" + event.getSMinute() + " " + event.getSTimeOfDay()+"\n").getBytes());
+                    stream.write(("Event date: " + event.getDate()+"\n").getBytes());
+                    if(event.getEMinute()==0)
+                    stream.write(("Event end time: " + event.getEHour() + ":" + event.getEMinute() + event.getEMinute() + " " + event.getETimeOfDay()+"\n").getBytes());
+                    else
+                        stream.write(("Event end time: " + event.getEHour() + ":" + event.getEMinute() + " " + event.getETimeOfDay()+"\n").getBytes());
+                } finally
+                {
+                    stream.close();
+                }
+            }
+            catch(IOException ex)
+            {
+                System.out.println(
+                        "Error writing to file '"
+                                + fileName + "'");
+            }
+    }
+    public File getFile()
+    {
+        return file;
+    }
+    public String getEvents(File f)
+    {
+        File file=f;
+        int length = (int) file.length();
+
+        byte[] bytes = new byte[length];
+
+        try
+        {
+
+        FileInputStream in = new FileInputStream(file);
+
+            try {
+                in.read(bytes);
+
+            } finally {
+                in.close();
+            }
+        }
+        catch(IOException ex)
+        {
+            System.out.println(
+                    "Error writing to file ");
+        }
+        return new String(bytes);
+    }
+}
+
+
