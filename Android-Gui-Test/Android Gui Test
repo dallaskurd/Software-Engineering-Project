@@ -1,5 +1,5 @@
 
-    package com.example.jason_000.test4;//Change this!
+    package com.example.jason_000.test4;
 
     import android.app.Activity;
     import android.app.AlertDialog;
@@ -20,7 +20,11 @@
     import android.widget.CalendarView.OnDateChangeListener;
     import android.view.MotionEvent;
     import android.widget.ViewFlipper;
+    import java.text.SimpleDateFormat;
     import java.util.Calendar;
+    import java.util.Date;
+    import java.util.GregorianCalendar;
+    import java.util.Locale;
 
 
     public class MainActivity extends Activity
@@ -30,10 +34,15 @@
         private Events[] dayevents; //Put Day events here
         private  Events[] event; //Blank array to use for month and week
         private Calendar ci;
-
+        private Calendar ci2;
+        private String todaysDate;
         @Override
         public void onCreate(Bundle savedInstanceState)
         {
+
+
+            ci = new GregorianCalendar();
+            ci2 = new GregorianCalendar();
             super.onCreate(savedInstanceState);
             setContentView(R.layout.activity_main);
             //This is the Month View Code
@@ -42,12 +51,16 @@
                 @Override
                 public void onSelectedDayChange(CalendarView view, int year, int month, int day) {
                     //Find Events at the date givin by the parameters put into event
-                    popUpEvent(event);
+                    ci2.set(year,month,day);
+                    SimpleDateFormat date = new SimpleDateFormat("MMMMMM dd yyyy", Locale.US);
+                    Date today = ci2.getTime();
+                    todaysDate= date.format(today);
+                    popUpEvent(event,todaysDate);
                 }
 
 
             });
-            ci = Calendar.getInstance();
+
             viewFlipper = (ViewFlipper) findViewById(R.id.viewflipper);
 
             //ADD
@@ -149,8 +162,8 @@
         }
         public void setWeekEvents (int d)
         {
-
-           int month = ci.get(Calendar.MONTH)+1;
+            ci = new GregorianCalendar();
+           int month = ci.get(Calendar.MONTH);
            int year = ci.get(Calendar.YEAR);
            int dow = ci.get(Calendar.DAY_OF_WEEK);
            int day = ci.get(Calendar.DAY_OF_MONTH);
@@ -170,7 +183,11 @@
                    day--;
                }
            }
-           popUpEvent(event);// Call getDayEvents
+            ci.set(year,(month),day);
+            SimpleDateFormat date = new SimpleDateFormat("MMMMMM dd yyyy", Locale.US);
+            Date today = ci.getTime();
+            todaysDate= date.format(today);
+           popUpEvent(event,todaysDate);// Call getDayEvents
        }
         public void deleteOrEdit(Events [] ev,ArrayAdapter<String> ad,int pos)
         {
@@ -296,7 +313,7 @@
             });
             alertDialog.show();
         }
-        public void popUpEvent(Events [] ev)
+        public void popUpEvent(Events [] ev, String to)
         {
             Events t1= new Events("test",1);
             Events t2= new Events("test2",2);
@@ -308,7 +325,7 @@
             LayoutInflater inflater = getLayoutInflater();
             View convertView = (View) inflater.inflate(R.layout.custom, null);
             alertDialog.setView(convertView);
-            alertDialog.setTitle("Events");
+            alertDialog.setTitle(to+" Events");
             ListView lv = (ListView) convertView.findViewById(R.id.listView1);
             for (int i=0;i<events.length;i++)
             {
