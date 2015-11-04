@@ -3,6 +3,8 @@ Java based app for android OS;
 
 List of things to be done: 
 
+Conflict of events
+
 Make Delte/Edit buttons work; Jason 
 
 Making holidays a unique color/visable
