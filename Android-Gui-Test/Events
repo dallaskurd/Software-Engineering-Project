@@ -1,4 +1,4 @@
-package com.example.jason_000.test4; //Change This
+package com.example.jason_000.test4;
 
 /**
  * Created by jason_000 on 11/1/2015.
@@ -29,7 +29,7 @@ public class Events
     private String endingTimeOfDay;
     private String startingTimeOfDay;
    private File file;
-    public Events(String n, String c,int sHour,int eHour,int sMinute,int eMinute,String eDescription,String ePlace,String d,String eTimeOfDay,String sTimeOfDay)
+    public Events(String n,String ePlace,String eDescription, String c,int sHour,int sMinute,String sTimeOfDay,String d,int eHour,int eMinute,String eTimeOfDay)
     {
         name=n;
         category=c;
@@ -47,8 +47,8 @@ public class Events
     }
     public Events(String n,String c)
     {
-        name="n";
-        category="c";
+        name=n;
+        category=c;
     }
     public Events()
     {
@@ -170,45 +170,42 @@ public class Events
     public void addEvent(String n, String c,int sHour,int sMinute,int eHour,int eMinute,String eDescription,String ePlace,String date,String eTimeOfDay,String sTimeOfDay,Context con)
     {
         Events event = new Events();
-        
-        event.setEName(n);
-        
-        event.setCategory(c);
-        
-        event.setEPlace(ePlace);
-        
-        event.setEDescription(eDescription);
-        
-        event.setSHour(sHour);
-        
-        event.setSMinute(sMinute);
-        
-        event.setDate(date);
-        
-        event.setEHour(eHour);
-        
-        event.setEMinute(eMinute);
-        
-        event.setETimeOfDay(eTimeOfDay);
-        
-        event.setETimeOfDay(sTimeOfDay);
 
-        String fileName =  date+ ".txt";
+        event.setEName(n);
+
+        event.setCategory(c);
+
+        event.setEPlace(ePlace);
+
+        event.setEDescription(eDescription);
+
+        event.setSHour(sHour);
+
+        event.setSMinute(sMinute);
+
+        event.setDate(date);
+
+        event.setEHour(eHour);
+
+        event.setEMinute(eMinute);
+
+        event.setETimeOfDay(eTimeOfDay);
+
+        event.setSTimeOfDay(sTimeOfDay);
+        String[] write=date.split("/");
+        String fileName =  write[0]+"_"+write[1]+"_"+write[2]+"_"+sHour+"_"+sMinute+"_"+sTimeOfDay+".txt";
 
         try
         {
-            File path = con.getFilesDir();
-            file = new File(path, fileName);
-            FileOutputStream stream = new FileOutputStream(file);
+            FileOutputStream stream = con.openFileOutput(fileName,0);
             try
             {
-                stream.write("\nThe following event has been added to your calendar: \n".getBytes());
-                stream.write(("Event name: " + event.getEName()+"\n").getBytes());
-                stream.write(("Event location: " + event.getEPlace()+"\n").getBytes());
-                stream.write(("Event description: " + event.getEDescription()+"\n").getBytes());
-                stream.write(("Event start time: " + event.getSHour() + ":" + event.getSMinute() + " " + event.getSTimeOfDay()+"\n").getBytes());
-                stream.write(("Event date: " + event.getDate()+"\n").getBytes());
-                stream.write(("Event end time: " + event.getEHour() + ":" + event.getEMinute() + " " + event.getETimeOfDay()+"\n").getBytes());
+                stream.write((""+ event.getEName()+"\n").getBytes());//Event name:
+                stream.write(("," + event.getEPlace()+"\n").getBytes());//Event location:
+                stream.write(("," + event.getEDescription()+"\n").getBytes());//Event description:
+                stream.write(("," + event.getSHour() + "," + event.getSMinute() + "," + event.getSTimeOfDay()+"\n").getBytes());//Event start time:
+                stream.write(("," + event.getDate()+"\n").getBytes());//Event date:
+                stream.write(("," + event.getEHour() + "," + event.getEMinute() + "," + event.getETimeOfDay()+"\n").getBytes());//Event end time:
             } finally
             {
                 stream.close();
@@ -270,13 +267,12 @@ public class Events
             FileOutputStream stream = new FileOutputStream(file);
             try
             {
-                stream.write("\nThe following event has been added to your calendar: \n".getBytes());
-                stream.write(("Event name: " + event.getEName()+"\n").getBytes());
-                stream.write(("Event location: " + event.getEPlace()+"\n").getBytes());
-                stream.write(("Event description: " + event.getEDescription()+"\n").getBytes());
-                stream.write(("Event start time: " + event.getSHour() + ":" + event.getSMinute() + " " + event.getSTimeOfDay()+"\n").getBytes());
-                stream.write(("Event date: " + event.getDate()+"\n").getBytes());
-                stream.write(("Event end time: " + event.getEHour() + ":" + event.getEMinute() + " " + event.getETimeOfDay()+"\n").getBytes());
+                stream.write((""+ event.getEName()+"\n").getBytes());//Event name:
+                stream.write(("," + event.getEPlace()+"\n").getBytes());//Event location:
+                stream.write(("," + event.getEDescription()+"\n").getBytes());//Event description:
+                stream.write(("," + event.getSHour() + "," + event.getSMinute() + "," + event.getSTimeOfDay()+"\n").getBytes());//Event start time:
+                stream.write(("," + event.getDate()+"\n").getBytes());//Event date:
+                stream.write(("," + event.getEHour() + "," + event.getEMinute() + "," + event.getETimeOfDay()+"\n").getBytes());//Event end time:
             } finally
             {
                 stream.close();
@@ -294,32 +290,7 @@ public class Events
     {
         return file;
     }
-    public String getEvents(File f)
-    {
-        File file=f;
-        int length = (int) file.length();
 
-        byte[] bytes = new byte[length];
-
-        try
-        {
-
-        FileInputStream in = new FileInputStream(file);
-
-            try {
-                in.read(bytes);
-
-            } finally {
-                in.close();
-            }
-        }
-        catch(IOException ex)
-        {
-            System.out.println(
-                    "Error writing to file ");
-        }
-        return new String(bytes);
-    }
 }
 
 
