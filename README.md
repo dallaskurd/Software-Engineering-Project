@@ -4,7 +4,7 @@ Java based app for android OS;
 List of things to be done: 
 Dynamically add events
 
-Make Add/Delte/Edit buttons work; Basically Done just need to hook up with the event class
+Make Delte/Edit buttons work; Jason 
 
 Making holidays a unique color/visable
 
