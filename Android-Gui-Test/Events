@@ -28,7 +28,7 @@ public class Events
     private String date;
     private String endingTimeOfDay;
     private String startingTimeOfDay;
-   private File file;
+    private File file;
     public Events(String n,String ePlace,String eDescription, String c,int sHour,int sMinute,String sTimeOfDay,String d,int eHour,int eMinute,String eTimeOfDay)
     {
         name=n;
@@ -167,7 +167,7 @@ public class Events
 
 
 
-    public void addEvent(String n, String c,int sHour,int sMinute,int eHour,int eMinute,String eDescription,String ePlace,String date,String eTimeOfDay,String sTimeOfDay,Context con)
+    public void addEvent(String n, String c,int sHour,int sMinute,int eHour,int eMinute,String eDescription,String ePlace,String d,String eTimeOfDay,String sTimeOfDay,Context con)
     {
         Events event = new Events();
 
@@ -183,7 +183,7 @@ public class Events
 
         event.setSMinute(sMinute);
 
-        event.setDate(date);
+        event.setDate(d);
 
         event.setEHour(eHour);
 
@@ -192,105 +192,91 @@ public class Events
         event.setETimeOfDay(eTimeOfDay);
 
         event.setSTimeOfDay(sTimeOfDay);
+        String[] write=d.split("/");
+        String fileName = n+"_"+write[0]+"_"+write[1]+"_"+write[2]+"_"+".txt";
+        try
+        {
+            FileOutputStream stream = con.openFileOutput(fileName,Context.MODE_PRIVATE);
+            try
+            {
+                stream.write((""+ event.getEName()+"\n").getBytes());//Event name:
+                stream.write(("," + event.getEPlace() + "\n").getBytes());//Event location:
+                stream.write(("," + event.getEDescription() + "\n").getBytes());//Event description:
+                stream.write(("," + event.getSHour() + "," + event.getSMinute() + "," + event.getSTimeOfDay() + "\n").getBytes());//Event start time:
+                stream.write(("," + event.getDate() + "\n").getBytes());//Event date:
+                stream.write(("," + event.getEHour() + "," + event.getEMinute() + "," + event.getETimeOfDay() + "\n").getBytes());//Event end time:
+            } finally
+            {
+                stream.close();
+            }
+        }
+        catch(IOException ex)
+        {
+            System.out.println(
+                    "Error writing to file '"
+                            + fileName + "'");
+        }
+
+    }
+    public void editEvent(String n, String c,int sHour,int sMinute,int eHour,int eMinute,String eDescription,String ePlace,String d,String eTimeOfDay,String sTimeOfDay,Context con)
+    {
+
+        if(n.equals(""))
+            n=getEName();
+
+        if(c.equals(""))
+            c=getCategory();
+
+        if(ePlace.equals(""))
+            ePlace=getEPlace();
+
+        if(eDescription.equals(""))
+            eDescription=getEDescription();
+
+        if(sHour==0)
+        {
+            sHour = getSHour();
+        }
+        if(sMinute==78)
+        {
+            sMinute = getSMinute();
+        }
+
+        if(d.equals(""))
+        {
+            d = getDate();
+        }
+
+        if(eHour==0)
+            eHour=getEHour();
+
+        if(eMinute==78)
+            eMinute=getEMinute();
+
+        if(eTimeOfDay.equals("AM/PM"))
+            eTimeOfDay=getETimeOfDay();
+
+        if(sTimeOfDay.equals("AM/PM")) {
+            sTimeOfDay = getSTimeOfDay();
+        }
+            deleteEvent(getFileName()+"_.txt",con);
+            addEvent(n,c,sHour,sMinute,eHour,eMinute,eDescription,ePlace,d,eTimeOfDay,sTimeOfDay,con);
+    }
+    public String getFileName()
+    {
         String[] write=date.split("/");
-        String fileName =  write[0]+"_"+write[1]+"_"+write[2]+"_"+sHour+"_"+sMinute+"_"+sTimeOfDay+".txt";
-
-        try
-        {
-            FileOutputStream stream = con.openFileOutput(fileName,0);
-            try
-            {
-                stream.write((""+ event.getEName()+"\n").getBytes());//Event name:
-                stream.write(("," + event.getEPlace()+"\n").getBytes());//Event location:
-                stream.write(("," + event.getEDescription()+"\n").getBytes());//Event description:
-                stream.write(("," + event.getSHour() + "," + event.getSMinute() + "," + event.getSTimeOfDay()+"\n").getBytes());//Event start time:
-                stream.write(("," + event.getDate()+"\n").getBytes());//Event date:
-                stream.write(("," + event.getEHour() + "," + event.getEMinute() + "," + event.getETimeOfDay()+"\n").getBytes());//Event end time:
-            } finally
-            {
-                stream.close();
-            }
-        }
-        catch(IOException ex)
-        {
-            System.out.println(
-                    "Error writing to file '"
-                            + fileName + "'");
-        }
-
+        String beforeFix=  ""+eventName+"_"+write[0]+"_"+write[1]+"_"+write[2]+"_"+".txt";
+        String afterFix1=(beforeFix.split("_")[0].substring(0,beforeFix.split("_")[0].length()-1));
+        String afterFix2=afterFix1+"_"+(beforeFix.split("_")[1].substring(0, beforeFix.split("_")[1].length()));
+        String afterFix3=afterFix2+"_"+(beforeFix.split("_")[2].substring(0, beforeFix.split("_")[2].length()));
+        String afterFix4=afterFix3+"_"+(beforeFix.split("_")[3].substring(0, beforeFix.split("_")[3].length() - 1));
+        return afterFix4;
     }
-    public void editEvent(String n, String c,int sHour,int sMinute,int eHour,int eMinute,String eDescription,String ePlace,String date,String eTimeOfDay,String sTimeOfDay,Context con,File f)
+    public boolean deleteEvent(String fn,Context con)
     {
-
-        Events event = new Events();
-
-        if(!n.equals(""))
-            event.setEName(n);
-
-        if(!c.equals(""))
-            event.setCategory(c);
-
-        if(!ePlace.equals(""))
-            event.setEPlace(ePlace);
-
-
-        if(!eDescription.equals(""))
-            event.setEDescription(eDescription);
-
-        if(!(sHour==startingHour))
-            event.setSHour(sHour);
-
-        if(!(sMinute==startingMinute))
-            event.setSMinute(sMinute);
-
-        if(!date.equals(""))
-            event.setDate(date);
-
-        if(!(eHour==endingHour))
-            event.setEHour(eHour);
-
-        if(!(eMinute==endingMinute))
-            event.setEMinute(eMinute);
-
-        if(!eTimeOfDay.equals(""))
-            event.setETimeOfDay(eTimeOfDay);
-
-        if(!sTimeOfDay.equals(""))
-            event.setETimeOfDay(sTimeOfDay);
-
-        String fileName =  date+ ".txt";
-
-        try
-        {
-            File path = con.getFilesDir();
-            file = new File(path, fileName);
-            FileOutputStream stream = new FileOutputStream(file);
-            try
-            {
-                stream.write((""+ event.getEName()+"\n").getBytes());//Event name:
-                stream.write(("," + event.getEPlace()+"\n").getBytes());//Event location:
-                stream.write(("," + event.getEDescription()+"\n").getBytes());//Event description:
-                stream.write(("," + event.getSHour() + "," + event.getSMinute() + "," + event.getSTimeOfDay()+"\n").getBytes());//Event start time:
-                stream.write(("," + event.getDate()+"\n").getBytes());//Event date:
-                stream.write(("," + event.getEHour() + "," + event.getEMinute() + "," + event.getETimeOfDay()+"\n").getBytes());//Event end time:
-            } finally
-            {
-                stream.close();
-            }
-        }
-        catch(IOException ex)
-        {
-            System.out.println(
-                    "Error writing to file '"
-                            + fileName + "'");
-        }
+        File dir = con.getFilesDir().getAbsoluteFile();
+        File file = new File(dir, fn);
+       return file.delete();
 
     }
-    public File getFile()
-    {
-        return file;
-    }
-
 }
-
-
