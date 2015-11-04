@@ -17,4 +17,4 @@ User Manuel
 
 JavaDocs
 
-Poerpoint Slides
+Powerpoint Slides
