@@ -40,7 +40,6 @@
         private ViewFlipper viewFlipper;
         private float lastX;
         private Events[] dayevents; //Put Day events here
-        private  Events[] event; //Blank array to use for month and week
         private Calendar ci;
         private Calendar ci2;
         private String todaysDate;
@@ -64,7 +63,7 @@
                     SimpleDateFormat date = new SimpleDateFormat("MMMMMM dd yyyy", Locale.US);
                     Date today = ci2.getTime();
                     todaysDate = date.format(today);
-                    popUpEvent(event, todaysDate);
+                    popUpEvent(todaysDate,month,day,year);
                 }
 
 
@@ -92,7 +91,11 @@
         public void setDayView()
         {
             ListView lv2 = (ListView) findViewById(R.id.dayevents);
-            dayevents = setDayEvents();
+            ci= new GregorianCalendar();
+            int day=ci.get(Calendar.DAY_OF_MONTH);
+            int month=ci.get(Calendar.MONTH)+1;
+            int year=ci.get(Calendar.YEAR);
+            dayevents = setDayEvents(month,day,year);
             String[] dayNames;
             dayNames = new String[dayevents.length];
                 for (int i = 0; i < dayevents.length; i++)
@@ -195,10 +198,13 @@
                }
            }
             ci.set(year, (month), day);
+            month = ci.get(Calendar.MONTH);
+            year = ci.get(Calendar.YEAR);
+            day = ci.get(Calendar.DAY_OF_MONTH);
             SimpleDateFormat date = new SimpleDateFormat("MMMMMM dd yyyy", Locale.US);
             Date today = ci.getTime();
             todaysDate= date.format(today);
-           popUpEvent(event, todaysDate);// Call getDayEvents
+           popUpEvent(todaysDate,month,day,year);
        }
         public void deleteOrEdit(Events [] ev,ArrayAdapter<String> ad,int pos)
         {
@@ -374,40 +380,33 @@
             });
             alertDialog.show();
         }
-        public void popUpEvent(Events [] ev, String to)
+        public void popUpEvent( String to,int m,int d,int y)
         {
-            Events t1= new Events("test","1");
-            Events t2= new Events("test2","2");
-            Events t3= new Events("test3","3");
-            Events t5= new Events("test4","4");
-            final Events events[] = {t1, t2, t3, t5}; //Once ev has something in it make events equal to ev; or even replace events with ev in code under here
-            String[] names = new String[events.length];
+           final Events[] ev=setDayEvents(m+1,d,y);
+            String[] names = new String[ev.length];
             AlertDialog.Builder alertDialog = new AlertDialog.Builder(MainActivity.this);
             LayoutInflater inflater = getLayoutInflater();
             View convertView = (View) inflater.inflate(R.layout.custom, null);
             alertDialog.setView(convertView);
             alertDialog.setTitle(to+" Events");
             ListView lv = (ListView) convertView.findViewById(R.id.listView1);
-            for (int i=0;i<events.length;i++)
+            for (int i=0;i<ev.length;i++)
             {
-                names[i]=events[i].getName();
+                names[i]=ev[i].getName();
             }
-          final  ArrayAdapter<String> adapter = new MySimpleArrayAdapter<>(this, android.R.layout.simple_list_item_1, names,events);
+          final  ArrayAdapter<String> adapter = new MySimpleArrayAdapter<>(this, android.R.layout.simple_list_item_1, names,ev);
             lv.setAdapter(adapter);
+            adapter.notifyDataSetChanged();
             lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> myAdapter, View myView, int pos, long mylng) {
-                    deleteOrEdit(events,adapter,pos);
+                    deleteOrEdit(ev,adapter,pos);
                 }
             });
             alertDialog.show();
         }
-        public Events[] setDayEvents()
+        public Events[] setDayEvents(int month,int day,int year)
         {
-            ci= new GregorianCalendar();
-            int day=ci.get(Calendar.DAY_OF_MONTH);
-            int month=ci.get(Calendar.MONTH)+1;
-            int year=ci.get(Calendar.YEAR);
             String[] list = fileList();
             Events[] eve = new Events[1000];
             int a=0;
