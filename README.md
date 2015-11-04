@@ -2,7 +2,6 @@
 Java based app for android OS;
 
 List of things to be done: 
-Dynamically add events
 
 Make Delte/Edit buttons work; Jason 
 
