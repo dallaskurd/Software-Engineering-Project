@@ -3,9 +3,11 @@
 
     import android.app.Activity;
     import android.app.AlertDialog;
+    import android.app.LoaderManager;
     import android.content.Context;
     import android.content.DialogInterface;
     import android.content.Intent;
+    import android.database.Cursor;
     import android.os.Bundle;
     import android.view.LayoutInflater;
     import android.view.View;
@@ -15,11 +17,17 @@
     import android.widget.EditText;
     import android.widget.LinearLayout;
     import android.widget.ListView;
+    import android.widget.SimpleCursorAdapter;
     import android.widget.TextView;
     import android.widget.CalendarView;
     import android.widget.CalendarView.OnDateChangeListener;
     import android.view.MotionEvent;
     import android.widget.ViewFlipper;
+
+    import java.io.File;
+    import java.io.FileInputStream;
+    import java.io.IOException;
+    import java.lang.reflect.Array;
     import java.text.SimpleDateFormat;
     import java.util.Calendar;
     import java.util.Date;
@@ -41,6 +49,7 @@
         {
 
 
+
             ci = new GregorianCalendar();
             ci2 = new GregorianCalendar();
             super.onCreate(savedInstanceState);
@@ -51,11 +60,11 @@
                 @Override
                 public void onSelectedDayChange(CalendarView view, int year, int month, int day) {
                     //Find Events at the date givin by the parameters put into event
-                    ci2.set(year,month,day);
+                    ci2.set(year, month, day);
                     SimpleDateFormat date = new SimpleDateFormat("MMMMMM dd yyyy", Locale.US);
                     Date today = ci2.getTime();
-                    todaysDate= date.format(today);
-                    popUpEvent(event,todaysDate);
+                    todaysDate = date.format(today);
+                    popUpEvent(event, todaysDate);
                 }
 
 
@@ -69,9 +78,11 @@
                 @Override
                 public void onClick(View arg0) {
                     add();
+
                 }
             });
-
+            Events e = new Events();
+            e.addEvent("Test", "1",2,22,3,25,"test D","Test Place","11/3/2015","AM","PM",MainActivity.this);
             //Week View Code
             setWeekView();
 
@@ -82,19 +93,20 @@
         {
             ListView lv2 = (ListView) findViewById(R.id.dayevents);
             dayevents = setDayEvents();
-            String[] dayNames = new String[dayevents.length];
-            for (int i = 0; i < dayevents.length; i++)
-            {
-                dayNames[i] = dayevents[i].getName();
-            }
+            String[] dayNames;
+            dayNames = new String[dayevents.length];
+                for (int i = 0; i < dayevents.length; i++)
+                {
+                    dayNames[i] = dayevents[i].getName();
+                }
+
             final ArrayAdapter<String> adapter = new MySimpleArrayAdapter<>(this, android.R.layout.simple_list_item_1, dayNames, dayevents);
             lv2.setAdapter(adapter);
+            adapter.notifyDataSetChanged();
           //  lv2.setEnabled(true);
-            lv2.setOnItemClickListener(new AdapterView.OnItemClickListener()
-            {
+            lv2.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
-                public void onItemClick(AdapterView<?> myAdapter, View myView, int pos, long mylng)
-                {
+                public void onItemClick(AdapterView<?> myAdapter, View myView, int pos, long mylng) {
                     deleteOrEdit(dayevents, adapter, pos);
                 }
             });
@@ -146,18 +158,17 @@
                     setWeekEvents (5);
                 }
             });
-            fri.setOnClickListener(new View.OnClickListener()
-            {
+            fri.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View arg0)
-                {
-                    setWeekEvents (6);
+                public void onClick(View arg0) {
+                    setWeekEvents(6);
                 }
             });
             sat.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View arg0) {
-                    setWeekEvents (7);}
+                    setWeekEvents(7);
+                }
             });
         }
         public void setWeekEvents (int d)
@@ -183,11 +194,11 @@
                    day--;
                }
            }
-            ci.set(year,(month),day);
+            ci.set(year, (month), day);
             SimpleDateFormat date = new SimpleDateFormat("MMMMMM dd yyyy", Locale.US);
             Date today = ci.getTime();
             todaysDate= date.format(today);
-           popUpEvent(event,todaysDate);// Call getDayEvents
+           popUpEvent(event, todaysDate);// Call getDayEvents
        }
         public void deleteOrEdit(Events [] ev,ArrayAdapter<String> ad,int pos)
         {
@@ -270,6 +281,7 @@
                     ev.addEvent(text.getText().toString(), text2.getText().toString(), sTime, sTime2, eTime,
                             eTime2, text9.getText().toString(), text10.getText().toString(), text11.getText().toString(), sT2.split(" ")[1], eT2.split(" ")[1], MainActivity.this);
                     dialog.cancel();
+                    setDayView();
                 }
             });
             alertDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -313,8 +325,8 @@
             text10.setText("");
             layout.addView(text10);
             final EditText text11 = new EditText(context);
-            text11.setHint("Event Date:");
-            text11.setText("");
+            text11.setHint("Event Date: ");
+            text11.setText("month/day/year");
             layout.addView(text11);
             alertDialog.setView(layout);
             alertDialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
@@ -333,8 +345,7 @@
                     System.out.println(sT2.split(" ")[1]);
                     ev1.editEvent(text.getText().toString(), text2.getText().toString(), sTime, sTime2, eTime,
                             eTime2, text9.getText().toString(), text10.getText().toString(), text11.getText().toString(), eT2.split(" ")[1],
-                            sT2.split(" ")[1], MainActivity.this,ev1.getFile());
-                    System.out.println(ev1.getEvents(ev1.getFile()));
+                            sT2.split(" ")[1], MainActivity.this, ev1.getFile());
                     dialog.cancel();
                 }
             });
@@ -393,19 +404,57 @@
         }
         public Events[] setDayEvents()
         {
-            //Mabye put in param
+            ci= new GregorianCalendar();
             int day=ci.get(Calendar.DAY_OF_MONTH);
             int month=ci.get(Calendar.MONTH)+1;
             int year=ci.get(Calendar.YEAR);
-
-            Events t1= new Events("day","1");
-            Events t2= new Events("day2","2");
-            Events t3= new Events("day3","3");
-            Events t5= new Events("day4","4");
-            Events[] eve = {t1,t2,t3,t5}; //Use day month and year to find today's events
-            return eve;
+            String[] list = fileList();
+            Events[] eve = new Events[1000];
+            int a=0;
+            for (int i=0;i<list.length;i++)
+            {
+                System.out.print(list[i]+" "+month+"_"+day+"_"+year+"\n");
+                if (list[i].contains(month + "_" + day + "_" + year))
+                {
+                    eve[a]=getEvents(list[i]);
+                    a++;
+                }
+            }
+            Events[] eves;
+                eves = new Events[a];
+                for (int i = 0; i < eves.length; i++)
+                {
+                    eves[i] = eve[i];
+                    System.out.println(eves[i].getEName());
+                }
+                return eves;
         }
-        //Deals with the sliding DON NOT TOUCH
+        public Events getEvents(String fileName)
+        {
+
+            try
+            {
+                FileInputStream in = MainActivity.this.openFileInput(fileName);
+                byte[] buffer = new byte[(int) in.getChannel().size()];
+
+                try {
+                    in.read(buffer);
+                    String buf=new String(buffer);
+                    String [] buff = buf.split(",");
+                    Events eve=new Events(buff[0],buff[1],buff[2],"1",Integer.parseInt(buff[3]),Integer.parseInt(buff[4]),buff[5],buff[6],Integer.parseInt(buff[7]),Integer.parseInt(buff[8]),buff[9]);
+                    return eve;
+                }
+                finally {
+                    in.close();
+                }
+            }
+            catch(IOException ex)
+            {
+                Events eve= new Events();
+                return eve;
+            }
+
+        }
         public boolean onTouchEvent(MotionEvent touchevent)
         {
             switch (touchevent.getAction())
