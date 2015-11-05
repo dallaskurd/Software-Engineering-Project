@@ -81,15 +81,12 @@ public class MainActivity extends Activity
             }
         });
         Events e = new Events();
-        e.addEvent("TestJUSTHEREFORITTOSTARTWELL", "1", 2, 22, 3, 25, "test D", "Test Place", "11/4/2015", "AM", "PM", MainActivity.this);
+       
         //Week View Code
         setWeekView();
 
         //Day View
         setDayView();
-        if(dayevents.length>0)
-        if(dayevents[0].getName().equals("TestJUSTHEREFORITTOSTARTWELL"))
-        delete(dayevents[0].getFileName());
     }
     public void setDayView()
     {
