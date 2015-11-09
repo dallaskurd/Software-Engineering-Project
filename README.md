@@ -13,8 +13,8 @@ Share events (If we want to, i think this was optional)
 
 Zoom in if we need it, i doubt we do
 
-User Manuel
+User Manuel     (Safer Muhammet)
 
-JavaDocs
+JavaDocs       (Safer Muhammet)
 
-Powerpoint Slides
+Powerpoint Slides      (Safer Muhammet)
