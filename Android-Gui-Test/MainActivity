@@ -1,46 +1,41 @@
+package com.example.zach.myapplication_helloworld;
 
-        package com.example.jason_000.test4;
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.CalendarView;
+import android.widget.CalendarView.OnDateChangeListener;
+import android.view.MotionEvent;
+import android.widget.ViewFlipper;
 
-        import android.app.Activity;
-        import android.app.AlertDialog;
-        import android.app.LoaderManager;
-        import android.content.Context;
-        import android.content.DialogInterface;
-        import android.content.Intent;
-        import android.database.Cursor;
-        import android.os.Bundle;
-        import android.view.LayoutInflater;
-        import android.view.View;
-        import android.widget.AdapterView;
-        import android.widget.ArrayAdapter;
-        import android.widget.Button;
-        import android.widget.EditText;
-        import android.widget.LinearLayout;
-        import android.widget.ListView;
-        import android.widget.SimpleCursorAdapter;
-        import android.widget.TextView;
-        import android.widget.CalendarView;
-        import android.widget.CalendarView.OnDateChangeListener;
-        import android.view.MotionEvent;
-        import android.widget.ViewFlipper;
-
-        import java.io.File;
-        import java.io.FileInputStream;
-        import java.io.IOException;
-        import java.lang.reflect.Array;
-        import java.text.SimpleDateFormat;
-        import java.util.Calendar;
-        import java.util.Date;
-        import java.util.GregorianCalendar;
-        import java.util.Locale;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.Locale;
 
 
-public class MainActivity extends Activity
+public class CalendarTest extends Activity
 {
     private ViewFlipper viewFlipper;
     private float lastX;
     private Events[] dayevents; //Put Day events here
     private Calendar ci;
+    // why do we need to calendars?
+
     private Calendar ci2;
     private String todaysDate;
     @Override
@@ -52,7 +47,7 @@ public class MainActivity extends Activity
         ci = new GregorianCalendar();
         ci2 = new GregorianCalendar();
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_calendar_test);
         //This is the Month View Code
         final CalendarView calendar = (CalendarView) findViewById(R.id.calendar);
         calendar.setOnDateChangeListener(new OnDateChangeListener() {
@@ -81,7 +76,7 @@ public class MainActivity extends Activity
             }
         });
         Events e = new Events();
-       
+
         //Week View Code
         setWeekView();
 
@@ -206,7 +201,7 @@ public class MainActivity extends Activity
     public void deleteOrEdit(Events [] ev,ArrayAdapter<String> ad,int pos)
     {
         final Events [] evs=ev;
-        final AlertDialog.Builder alertDialog = new AlertDialog.Builder(MainActivity.this);
+        final AlertDialog.Builder alertDialog = new AlertDialog.Builder(CalendarTest.this);
         alertDialog.setTitle("Edit or Delete");
         String selectedFromList = (String) ad.getItem(pos);
         int i = 0;
@@ -214,7 +209,7 @@ public class MainActivity extends Activity
         {
             i++;
         }
-        Context context = MainActivity.this;
+        Context context = CalendarTest.this;
         LinearLayout layout = new LinearLayout(context);
         layout.setOrientation(LinearLayout.VERTICAL);
 
@@ -242,10 +237,10 @@ public class MainActivity extends Activity
     }
     public void add()
     {
-        final AlertDialog.Builder alertDialog = new AlertDialog.Builder(MainActivity.this);
+        final AlertDialog.Builder alertDialog = new AlertDialog.Builder(CalendarTest.this);
         alertDialog.setTitle("Add Event");
         alertDialog.setMessage("Details of the Event");
-        Context context = MainActivity.this;
+        Context context = CalendarTest.this;
         LinearLayout layout = new LinearLayout(context);
         layout.setOrientation(LinearLayout.VERTICAL);
         final Events ev= new Events();
@@ -282,7 +277,7 @@ public class MainActivity extends Activity
                 int eTime2= Integer.parseInt(eT2.split(" ")[0]);
                 int eTime= Integer.parseInt(eT);
                 ev.addEvent(text.getText().toString(), text2.getText().toString(), sTime, sTime2, eTime,
-                        eTime2, text9.getText().toString(), text10.getText().toString(), text11.getText().toString(), sT2.split(" ")[1], eT2.split(" ")[1], MainActivity.this);
+                        eTime2, text9.getText().toString(), text10.getText().toString(), text11.getText().toString(), sT2.split(" ")[1], eT2.split(" ")[1], CalendarTest.this);
                 dialog.cancel();
                 setDayView();
             }
@@ -296,10 +291,10 @@ public class MainActivity extends Activity
     }
     public void edit(Events ev)
     {
-        final AlertDialog.Builder alertDialog = new AlertDialog.Builder(MainActivity.this);
+        final AlertDialog.Builder alertDialog = new AlertDialog.Builder(CalendarTest.this);
         alertDialog.setTitle("Edit Event");
         alertDialog.setMessage("Write what you want to edit");
-        Context context = MainActivity.this;
+        Context context = CalendarTest.this;
         LinearLayout layout = new LinearLayout(context);
         layout.setOrientation(LinearLayout.VERTICAL);
         final Events ev1=ev;
@@ -348,7 +343,7 @@ public class MainActivity extends Activity
                 System.out.println(sT2.split(" ")[1]);
                 ev1.editEvent(text.getText().toString(), text2.getText().toString(), sTime, sTime2, eTime,
                         eTime2, text9.getText().toString(), text10.getText().toString(), text11.getText().toString(), eT2.split(" ")[1],
-                        sT2.split(" ")[1], MainActivity.this);
+                        sT2.split(" ")[1], CalendarTest.this);
                 dialog.cancel();
                 setDayView();
             }
@@ -366,13 +361,13 @@ public class MainActivity extends Activity
         {
             Events ev = new Events();
             String[] list = fileList();
-            ev.deleteEvent(list[1], MainActivity.this);
+            ev.deleteEvent(list[1], CalendarTest.this);
             setDayView();
         }
         else {
-        final AlertDialog.Builder alertDialog = new AlertDialog.Builder(MainActivity.this);
-        alertDialog.setTitle("Delete Event");
-        alertDialog.setMessage("Are you sure?");
+            final AlertDialog.Builder alertDialog = new AlertDialog.Builder(CalendarTest.this);
+            alertDialog.setTitle("Delete Event");
+            alertDialog.setMessage("Are you sure?");
 
 
             alertDialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
@@ -383,7 +378,7 @@ public class MainActivity extends Activity
                         //   System.out.println(list[i] + " test 1= " +  "a " + list[i].split("_")[0].substring(0,2).equals(fn.split("_")[0].substring(0,2))+" "+list[i].split("_")[0].substring(2,3).equals(fn.split("_")[0].substring(2,3)));
                         System.out.println(fn + " " + list[i]);
                         if (list[i].contains(fn)) {
-                            ev.deleteEvent(list[i], MainActivity.this);
+                            ev.deleteEvent(list[i], CalendarTest.this);
                             dialog.cancel();
                             setDayView();
                             i = list.length;
@@ -404,9 +399,9 @@ public class MainActivity extends Activity
     }
     public void popUpEvent( String to,int m,int d,int y)
     {
-        final Events[] ev=setDayEvents(m+1,d,y);
+        final Events[] ev=setDayEvents(m + 1, d, y);
         String[] names = new String[ev.length];
-        final AlertDialog.Builder alertDialog = new AlertDialog.Builder(MainActivity.this);
+        final AlertDialog.Builder alertDialog = new AlertDialog.Builder(CalendarTest.this);
         LayoutInflater inflater = getLayoutInflater();
         View convertView = (View) inflater.inflate(R.layout.custom, null);
         alertDialog.setView(convertView);
@@ -429,34 +424,263 @@ public class MainActivity extends Activity
         alertDialog.show();
         adapter.notifyDataSetChanged();
     }
-    public Events[] setDayEvents(int month,int day,int year)
-    {
+    public Events[] setDayEvents(int month,int day,int year) {
         String[] list = fileList();
         Events[] eve = new Events[1000];
-        int a=0;
+        int a = 0;
         File dir = getFilesDir().getAbsoluteFile();
-        for (int i=0;i<list.length;i++)
-        {
-            if (list[i].contains(month + "_" + day + "_" + year))
-            {
-                eve[a]=getEvents(list[i]);
+        for (int i = 0; i < list.length; i++) {
+            if (list[i].contains(month + "_" + day + "_" + year)) {
+                eve[a] = getEvents(list[i]);
                 a++;
+
+
             }
         }
+
+
+            if (month == 1 && day == 1) // New Years
+            {
+                a++;
+                eve[a].addEvent("New Years", "Holiday", 0, 0, 23, 59, "", "", "", "", "", CalendarTest.this);
+            }
+
+            // MLK Day is the 3rd Monday of January
+            GregorianCalendar calendar = new GregorianCalendar();
+            calendar.set(year, month, 1); //set first day of month in this year
+            int MLKDay;
+
+            if (month == 1) {
+                if (calendar.get(calendar.DAY_OF_WEEK) == 3) {
+                    MLKDay = 7 + 14;
+                } else if (calendar.get(calendar.DAY_OF_WEEK) == 4) {
+                    MLKDay = 6 + 14;
+                } else if (calendar.get(calendar.DAY_OF_WEEK) == 5) {
+                    MLKDay = 5 + 14;
+                } else if (calendar.get(calendar.DAY_OF_WEEK) == 6) {
+                    MLKDay = 4 + 14;
+                } else if (calendar.get(calendar.DAY_OF_WEEK) == 7) {
+                    MLKDay = 3 + 14;
+                } else if (calendar.get(calendar.DAY_OF_WEEK) == 1) {
+                    MLKDay = 2 + 14;
+                } else {
+                    MLKDay = 15;
+                }
+
+                if (day == MLKDay) {
+                   a++;
+                    eve[a].addEvent("Martin Luther King Jr, Day", "Holiday", 0, 0, 23, 59, "", "", "", "", "", CalendarTest.this);
+                }
+            }
+
+            // Valentine's Day
+            if (month == 1 && day == 14) {
+                a++;
+                eve[a].addEvent("Valentine's Day", "Holiday", 0, 0, 23, 59, "", "", "", "", "", CalendarTest.this);
+            }
+
+            // Presidents Day is 3rd Monday in February
+            if (month == 2) {
+                calendar.set(year, month, 1); //set the first day of the month in this year
+                int PresidentsDay;
+
+
+                if (calendar.get(calendar.DAY_OF_WEEK) == 3) {
+                    PresidentsDay = 7 + 14;
+                } else if (calendar.get(calendar.DAY_OF_WEEK) == 4) {
+                    PresidentsDay = 6 + 14;
+                } else if (calendar.get(calendar.DAY_OF_WEEK) == 5) {
+                    PresidentsDay = 5 + 14;
+                } else if (calendar.get(calendar.DAY_OF_WEEK) == 6) {
+                    PresidentsDay = 4 + 14;
+                } else if (calendar.get(calendar.DAY_OF_WEEK) == 7) {
+                    PresidentsDay = 3 + 14;
+                } else if (calendar.get(calendar.DAY_OF_WEEK) == 1) {
+                    PresidentsDay = 2 + 14;
+                } else {
+                    PresidentsDay = 15;
+                }
+
+                if (day == PresidentsDay) {
+                    eve[a].addEvent("Presidents Day", "Holiday", 0, 0, 23, 59, "", "", "", "", "", CalendarTest.this);
+                    a++;
+                }
+            }
+
+            // Memorial Day
+            // is LAST Monday in May
+
+            if (month == 5) {
+                calendar.set(year, month, 31); //set the first day of the month in this year
+                int MemorialDay;
+
+
+                if (calendar.get(calendar.DAY_OF_WEEK) == 1) {
+                    MemorialDay = 25;
+                } else if (calendar.get(calendar.DAY_OF_WEEK) == 2) {
+                    MemorialDay = 31;
+                } else if (calendar.get(calendar.DAY_OF_WEEK) == 3) {
+                    MemorialDay = 30;
+                } else if (calendar.get(calendar.DAY_OF_WEEK) == 4) {
+                    MemorialDay = 29;
+                } else if (calendar.get(calendar.DAY_OF_WEEK) == 5) {
+                    MemorialDay = 28;
+                } else if (calendar.get(calendar.DAY_OF_WEEK) == 6) {
+                    MemorialDay = 27;
+                } else {
+                    MemorialDay = 26;
+                }
+
+                if (day == MemorialDay) {
+                    eve[a].addEvent("Memorial Day", "Holiday", 0, 0, 23, 59, "", "", "", "", "", CalendarTest.this);
+                    a++;
+                }
+            }
+
+            // Independence Day
+            // is always the 4th of  July
+            if (month == 7 && day == 4) {
+                eve[a].addEvent("Independence Day", "Holiday", 0, 0, 23, 59, "", "", "", "", "", CalendarTest.this);
+                a++;
+            }
+
+            // Labor Day
+            // is the first Monday in September
+            if (month == 9) {
+                calendar.set(year, month, 1); //set the first day of the month in this year
+                int LaborDay;
+
+
+                if (calendar.get(calendar.DAY_OF_WEEK) == 1) {
+                    LaborDay = 2;
+                } else if (calendar.get(calendar.DAY_OF_WEEK) == 2) {
+                    LaborDay = 1;
+                } else if (calendar.get(calendar.DAY_OF_WEEK) == 3) {
+                    LaborDay = 7;
+                } else if (calendar.get(calendar.DAY_OF_WEEK) == 4) {
+                    LaborDay = 6;
+                } else if (calendar.get(calendar.DAY_OF_WEEK) == 5) {
+                    LaborDay = 5;
+                } else if (calendar.get(calendar.DAY_OF_WEEK) == 6) {
+                    LaborDay = 4;
+                } else {
+                    LaborDay = 3;
+                }
+                if (day == LaborDay) {
+                    eve[a].addEvent("Labor Day", "Holiday", 0, 0, 23, 59, "", "", "", "", "", CalendarTest.this);
+                    a++;
+                }
+            }
+            // Columbus Day
+            // is the second Monday in October
+
+            if (month == 10) {
+                calendar.set(year, month, 1); //set the first day of the month in this year
+                int ColumbusDay;
+
+
+                if (calendar.get(calendar.DAY_OF_WEEK) == 1) {
+                    ColumbusDay = 9;
+                } else if (calendar.get(calendar.DAY_OF_WEEK) == 2) {
+                    ColumbusDay = 8;
+                } else if (calendar.get(calendar.DAY_OF_WEEK) == 3) {
+                    ColumbusDay = 14;
+                } else if (calendar.get(calendar.DAY_OF_WEEK) == 4) {
+                    ColumbusDay = 13;
+                } else if (calendar.get(calendar.DAY_OF_WEEK) == 5) {
+                    ColumbusDay = 12;
+                } else if (calendar.get(calendar.DAY_OF_WEEK) == 6) {
+                    ColumbusDay = 11;
+                } else {
+                    ColumbusDay = 10;
+                }
+                if (day == ColumbusDay) {
+                    a++;
+                    eve[a].addEvent("Columbus Day", "Holiday", 0, 0, 23, 59, "", "", "", "", "", CalendarTest.this);
+                }
+
+            }
+            // Halloween
+            // October 31st
+            if (month == 10 && day == 31) {
+                eve[a].addEvent("Halloween", "Holiday", 0, 0, 23, 59, "", "", "", "", "", CalendarTest.this);
+                a++;
+            }
+
+            // Veterans Day
+            // is always the 11th of November
+            if (month == 11 && day == 11) {
+                a++;
+                eve[a].addEvent("Veteran's Day", "Holiday", 0, 0, 23, 59, "", "", "", "", "", CalendarTest.this);
+            }
+
+
+            //Thanksgiving day
+            // the 4th Thursday of november
+            if (month == 11) {
+                calendar.set(year, month, 1); //set the first day of the month in this year
+                int Thanksgiving;
+
+
+                if (calendar.get(calendar.DAY_OF_WEEK) == 1) {
+                    Thanksgiving = 26;
+                } else if (calendar.get(calendar.DAY_OF_WEEK) == 2) {
+                    Thanksgiving = 25;
+                } else if (calendar.get(calendar.DAY_OF_WEEK) == 3) {
+                    Thanksgiving = 24;
+                } else if (calendar.get(calendar.DAY_OF_WEEK) == 4) {
+                    Thanksgiving = 23;
+                } else if (calendar.get(calendar.DAY_OF_WEEK) == 5) {
+                    Thanksgiving = 22;
+                } else if (calendar.get(calendar.DAY_OF_WEEK) == 6) {
+                    Thanksgiving = 28;
+                } else {
+                    Thanksgiving = 27;
+                }
+                if (day == Thanksgiving) {
+                    eve[a].addEvent("Thanksgiving", "Holiday", 0, 0, 23, 59, "", "", "", "", "", CalendarTest.this);
+                    a++;
+                }
+                }
+
+                //Christmas Eve
+                if (month == 12 && day == 24) {
+                    a++;
+                    eve[a].addEvent("Christmas Eve", "Holiday", 0, 0, 23, 59, "", "", "", "", "", CalendarTest.this);
+                }
+
+                // Christmas Day
+                if (month == 12 && day == 25) {
+                a++;
+                    eve[a].addEvent("Christmas Day", "Holiday", 0, 0, 23, 59, "", "", "", "", "", CalendarTest.this);
+                }
+
+                // New Years Eve
+                if (month == 12 && day == 31) {
+                    a++;
+                    eve[a].addEvent("New Years Eve", "Holiday", 0, 0, 23, 59, "", "", "", "", "", CalendarTest.this);
+                }
+
+
+
+
+
         Events[] eves;
         eves = new Events[a];
-        for (int i = 0; i < eves.length; i++)
-        {
-            eves[i] = eve[i];
+        for (int i = 0; i < eves.length; i++) {
+
+                eves[i] = eve[i];
+            }
+
+            return eves;
         }
-        return eves;
-    }
+
     public Events getEvents(String fileName)
     {
 
         try
         {
-            FileInputStream in = MainActivity.this.openFileInput(fileName);
+            FileInputStream in = CalendarTest.this.openFileInput(fileName);
             byte[] buffer = new byte[(int) in.getChannel().size()];
 
             try {
@@ -506,7 +730,7 @@ public class MainActivity extends Activity
                     if (viewFlipper.getDisplayedChild() == 1)
                         break;
                     // Next screen comes in from right.
-                    viewFlipper.setInAnimation(this, R.anim.slide_in_from_right);
+                    viewFlipper.setInAnimation(this, R.anim.slide_out_to_right);
                     // Current screen goes out from left.
                     viewFlipper.setOutAnimation(this, R.anim.slide_out_to_left);
                     // Display previous screen.
