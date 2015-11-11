@@ -424,257 +424,262 @@ public class CalendarTest extends Activity
         alertDialog.show();
         adapter.notifyDataSetChanged();
     }
-    public Events[] setDayEvents(int month,int day,int year) {
+    public Events[] setDayEvents(int month,int day,int year)
+    {
         String[] list = fileList();
-        Events[] eve = new Events[1000];
-        int a = 0;
-        File dir = getFilesDir().getAbsoluteFile();
-        for (int i = 0; i < list.length; i++) {
-            if (list[i].contains(month + "_" + day + "_" + year)) {
-                eve[a] = getEvents(list[i]);
-                a++;
-
-
-            }
-        }
-
-
-            if (month == 1 && day == 1) // New Years
+        Events[] evetemp = new Events[1000];
+        int number_of_events_today=0;
+        for (int i=0;i<list.length;i++)
+        {
+            if (list[i].contains(month + "_" + day + "_" + year))
             {
-                a++;
-                eve[a].addEvent("New Years", "Holiday", 0, 0, 23, 59, "", "", "", "", "", CalendarTest.this);
+                evetemp[number_of_events_today]=getEvents(list[i]);
+                number_of_events_today++;
             }
-
-            // MLK Day is the 3rd Monday of January
-            GregorianCalendar calendar = new GregorianCalendar();
-            calendar.set(year, month, 1); //set first day of month in this year
-            int MLKDay;
-
-            if (month == 1) {
-                if (calendar.get(calendar.DAY_OF_WEEK) == 3) {
-                    MLKDay = 7 + 14;
-                } else if (calendar.get(calendar.DAY_OF_WEEK) == 4) {
-                    MLKDay = 6 + 14;
-                } else if (calendar.get(calendar.DAY_OF_WEEK) == 5) {
-                    MLKDay = 5 + 14;
-                } else if (calendar.get(calendar.DAY_OF_WEEK) == 6) {
-                    MLKDay = 4 + 14;
-                } else if (calendar.get(calendar.DAY_OF_WEEK) == 7) {
-                    MLKDay = 3 + 14;
-                } else if (calendar.get(calendar.DAY_OF_WEEK) == 1) {
-                    MLKDay = 2 + 14;
-                } else {
-                    MLKDay = 15;
-                }
-
-                if (day == MLKDay) {
-                   a++;
-                    eve[a].addEvent("Martin Luther King Jr, Day", "Holiday", 0, 0, 23, 59, "", "", "", "", "", CalendarTest.this);
-                }
-            }
-
-            // Valentine's Day
-            if (month == 1 && day == 14) {
-                a++;
-                eve[a].addEvent("Valentine's Day", "Holiday", 0, 0, 23, 59, "", "", "", "", "", CalendarTest.this);
-            }
-
-            // Presidents Day is 3rd Monday in February
-            if (month == 2) {
-                calendar.set(year, month, 1); //set the first day of the month in this year
-                int PresidentsDay;
-
-
-                if (calendar.get(calendar.DAY_OF_WEEK) == 3) {
-                    PresidentsDay = 7 + 14;
-                } else if (calendar.get(calendar.DAY_OF_WEEK) == 4) {
-                    PresidentsDay = 6 + 14;
-                } else if (calendar.get(calendar.DAY_OF_WEEK) == 5) {
-                    PresidentsDay = 5 + 14;
-                } else if (calendar.get(calendar.DAY_OF_WEEK) == 6) {
-                    PresidentsDay = 4 + 14;
-                } else if (calendar.get(calendar.DAY_OF_WEEK) == 7) {
-                    PresidentsDay = 3 + 14;
-                } else if (calendar.get(calendar.DAY_OF_WEEK) == 1) {
-                    PresidentsDay = 2 + 14;
-                } else {
-                    PresidentsDay = 15;
-                }
-
-                if (day == PresidentsDay) {
-                    eve[a].addEvent("Presidents Day", "Holiday", 0, 0, 23, 59, "", "", "", "", "", CalendarTest.this);
-                    a++;
-                }
-            }
-
-            // Memorial Day
-            // is LAST Monday in May
-
-            if (month == 5) {
-                calendar.set(year, month, 31); //set the first day of the month in this year
-                int MemorialDay;
-
-
-                if (calendar.get(calendar.DAY_OF_WEEK) == 1) {
-                    MemorialDay = 25;
-                } else if (calendar.get(calendar.DAY_OF_WEEK) == 2) {
-                    MemorialDay = 31;
-                } else if (calendar.get(calendar.DAY_OF_WEEK) == 3) {
-                    MemorialDay = 30;
-                } else if (calendar.get(calendar.DAY_OF_WEEK) == 4) {
-                    MemorialDay = 29;
-                } else if (calendar.get(calendar.DAY_OF_WEEK) == 5) {
-                    MemorialDay = 28;
-                } else if (calendar.get(calendar.DAY_OF_WEEK) == 6) {
-                    MemorialDay = 27;
-                } else {
-                    MemorialDay = 26;
-                }
-
-                if (day == MemorialDay) {
-                    eve[a].addEvent("Memorial Day", "Holiday", 0, 0, 23, 59, "", "", "", "", "", CalendarTest.this);
-                    a++;
-                }
-            }
-
-            // Independence Day
-            // is always the 4th of  July
-            if (month == 7 && day == 4) {
-                eve[a].addEvent("Independence Day", "Holiday", 0, 0, 23, 59, "", "", "", "", "", CalendarTest.this);
-                a++;
-            }
-
-            // Labor Day
-            // is the first Monday in September
-            if (month == 9) {
-                calendar.set(year, month, 1); //set the first day of the month in this year
-                int LaborDay;
-
-
-                if (calendar.get(calendar.DAY_OF_WEEK) == 1) {
-                    LaborDay = 2;
-                } else if (calendar.get(calendar.DAY_OF_WEEK) == 2) {
-                    LaborDay = 1;
-                } else if (calendar.get(calendar.DAY_OF_WEEK) == 3) {
-                    LaborDay = 7;
-                } else if (calendar.get(calendar.DAY_OF_WEEK) == 4) {
-                    LaborDay = 6;
-                } else if (calendar.get(calendar.DAY_OF_WEEK) == 5) {
-                    LaborDay = 5;
-                } else if (calendar.get(calendar.DAY_OF_WEEK) == 6) {
-                    LaborDay = 4;
-                } else {
-                    LaborDay = 3;
-                }
-                if (day == LaborDay) {
-                    eve[a].addEvent("Labor Day", "Holiday", 0, 0, 23, 59, "", "", "", "", "", CalendarTest.this);
-                    a++;
-                }
-            }
-            // Columbus Day
-            // is the second Monday in October
-
-            if (month == 10) {
-                calendar.set(year, month, 1); //set the first day of the month in this year
-                int ColumbusDay;
-
-
-                if (calendar.get(calendar.DAY_OF_WEEK) == 1) {
-                    ColumbusDay = 9;
-                } else if (calendar.get(calendar.DAY_OF_WEEK) == 2) {
-                    ColumbusDay = 8;
-                } else if (calendar.get(calendar.DAY_OF_WEEK) == 3) {
-                    ColumbusDay = 14;
-                } else if (calendar.get(calendar.DAY_OF_WEEK) == 4) {
-                    ColumbusDay = 13;
-                } else if (calendar.get(calendar.DAY_OF_WEEK) == 5) {
-                    ColumbusDay = 12;
-                } else if (calendar.get(calendar.DAY_OF_WEEK) == 6) {
-                    ColumbusDay = 11;
-                } else {
-                    ColumbusDay = 10;
-                }
-                if (day == ColumbusDay) {
-                    a++;
-                    eve[a].addEvent("Columbus Day", "Holiday", 0, 0, 23, 59, "", "", "", "", "", CalendarTest.this);
-                }
-
-            }
-            // Halloween
-            // October 31st
-            if (month == 10 && day == 31) {
-                eve[a].addEvent("Halloween", "Holiday", 0, 0, 23, 59, "", "", "", "", "", CalendarTest.this);
-                a++;
-            }
-
-            // Veterans Day
-            // is always the 11th of November
-            if (month == 11 && day == 11) {
-                a++;
-                eve[a].addEvent("Veteran's Day", "Holiday", 0, 0, 23, 59, "", "", "", "", "", CalendarTest.this);
-            }
-
-
-            //Thanksgiving day
-            // the 4th Thursday of november
-            if (month == 11) {
-                calendar.set(year, month, 1); //set the first day of the month in this year
-                int Thanksgiving;
-
-
-                if (calendar.get(calendar.DAY_OF_WEEK) == 1) {
-                    Thanksgiving = 26;
-                } else if (calendar.get(calendar.DAY_OF_WEEK) == 2) {
-                    Thanksgiving = 25;
-                } else if (calendar.get(calendar.DAY_OF_WEEK) == 3) {
-                    Thanksgiving = 24;
-                } else if (calendar.get(calendar.DAY_OF_WEEK) == 4) {
-                    Thanksgiving = 23;
-                } else if (calendar.get(calendar.DAY_OF_WEEK) == 5) {
-                    Thanksgiving = 22;
-                } else if (calendar.get(calendar.DAY_OF_WEEK) == 6) {
-                    Thanksgiving = 28;
-                } else {
-                    Thanksgiving = 27;
-                }
-                if (day == Thanksgiving) {
-                    eve[a].addEvent("Thanksgiving", "Holiday", 0, 0, 23, 59, "", "", "", "", "", CalendarTest.this);
-                    a++;
-                }
-                }
-
-                //Christmas Eve
-                if (month == 12 && day == 24) {
-                    a++;
-                    eve[a].addEvent("Christmas Eve", "Holiday", 0, 0, 23, 59, "", "", "", "", "", CalendarTest.this);
-                }
-
-                // Christmas Day
-                if (month == 12 && day == 25) {
-                a++;
-                    eve[a].addEvent("Christmas Day", "Holiday", 0, 0, 23, 59, "", "", "", "", "", CalendarTest.this);
-                }
-
-                // New Years Eve
-                if (month == 12 && day == 31) {
-                    a++;
-                    eve[a].addEvent("New Years Eve", "Holiday", 0, 0, 23, 59, "", "", "", "", "", CalendarTest.this);
-                }
-
-
-
-
-
-        Events[] eves;
-        eves = new Events[a];
-        for (int i = 0; i < eves.length; i++) {
-
-                eves[i] = eve[i];
-            }
-
-            return eves;
+        }
+        if (month == 1 && day == 1) // New Years
+        {
+            Events temp =new Events("New Years", "Holiday", "place","description", 0, 0, "AM", month+"/"+day+"/"+year, 23, 59, "PM");
+            number_of_events_today++;
+            evetemp[number_of_events_today-1]=temp;
         }
 
+        // MLK Day is the 3rd Monday of January
+        GregorianCalendar calendar = new GregorianCalendar();
+        calendar.set(year, month-1, 1); //set first day of month in this year
+        int MLKDay;
+
+        if (month == 1) {
+            if (calendar.get(calendar.DAY_OF_WEEK) == 3) {
+                MLKDay = 7 + 14;
+            } else if (calendar.get(calendar.DAY_OF_WEEK) == 4) {
+                MLKDay = 6 + 14;
+            } else if (calendar.get(calendar.DAY_OF_WEEK) == 5) {
+                MLKDay = 5 + 14;
+            } else if (calendar.get(calendar.DAY_OF_WEEK) == 6) {
+                MLKDay = 4 + 14;
+            } else if (calendar.get(calendar.DAY_OF_WEEK) == 7) {
+                MLKDay = 3 + 14;
+            } else if (calendar.get(calendar.DAY_OF_WEEK) == 1) {
+                MLKDay = 2 + 14;
+            } else {
+                MLKDay = 15;
+            }
+
+            if (day == MLKDay) {
+                Events temp =new Events("MLK Day", "Holiday", "place","description", 0, 0, "AM", month+"/"+day+"/"+year, 23, 59, "PM");
+                number_of_events_today++;
+                evetemp[number_of_events_today-1]=temp;
+            }
+        }
+
+        // Valentine's Day
+        if (month == 2 && day == 14) {
+            Events temp =new Events("Valentine's Day", "Holiday", "place","description", 0, 0, "AM", month+"/"+day+"/"+year, 23, 59, "PM");
+            number_of_events_today++;
+            evetemp[number_of_events_today-1]=temp;
+        }
+
+        // Presidents Day is 3rd Monday in February
+        if (month == 2) {
+            calendar.set(year, month-1, 1); //set the first day of the month in this year
+            int PresidentsDay;
+
+
+            if (calendar.get(calendar.DAY_OF_WEEK) == 3) {
+                PresidentsDay = 7 + 14;
+            } else if (calendar.get(calendar.DAY_OF_WEEK) == 4) {
+                PresidentsDay = 6 + 14;
+            } else if (calendar.get(calendar.DAY_OF_WEEK) == 5) {
+                PresidentsDay = 5 + 14;
+            } else if (calendar.get(calendar.DAY_OF_WEEK) == 6) {
+                PresidentsDay = 4 + 14;
+            } else if (calendar.get(calendar.DAY_OF_WEEK) == 7) {
+                PresidentsDay = 3 + 14;
+            } else if (calendar.get(calendar.DAY_OF_WEEK) == 1) {
+                PresidentsDay = 2 + 14;
+            } else {
+                PresidentsDay = 15;
+            }
+
+            if (day == PresidentsDay) {
+                Events temp =new Events("Presidents Day", "Holiday", "place","description", 0, 0, "AM", month+"/"+day+"/"+year, 23, 59, "PM");
+                number_of_events_today++;
+                evetemp[number_of_events_today-1]=temp;
+            }
+        }
+
+        // Memorial Day
+        // is LAST Monday in May
+
+        if (month == 5) {
+            calendar.set(year, month - 1, 31); //set the first day of the month in this year
+            int MemorialDay;
+
+
+            if (calendar.get(calendar.DAY_OF_WEEK) == 1) {
+                MemorialDay = 25;
+            } else if (calendar.get(calendar.DAY_OF_WEEK) == 2) {
+                MemorialDay = 31;
+            } else if (calendar.get(calendar.DAY_OF_WEEK) == 3) {
+                MemorialDay = 30;
+            } else if (calendar.get(calendar.DAY_OF_WEEK) == 4) {
+                MemorialDay = 29;
+            } else if (calendar.get(calendar.DAY_OF_WEEK) == 5) {
+                MemorialDay = 28;
+            } else if (calendar.get(calendar.DAY_OF_WEEK) == 6) {
+                MemorialDay = 27;
+            } else {
+                MemorialDay = 26;
+            }
+
+            if (day == MemorialDay) {
+                Events temp =new Events("Memorial Day", "Holiday", "place","description", 0, 0, "AM", month+"/"+day+"/"+year, 23, 59, "PM");
+                number_of_events_today++;
+                evetemp[number_of_events_today-1]=temp;
+            }
+        }
+
+        // Independence Day
+        // is always the 4th of  July
+        if (month == 7 && day == 4) {
+            Events temp =new Events("Independence Day", "Holiday", "place","description", 0, 0, "AM", month+"/"+day+"/"+year, 23, 59, "PM");
+            number_of_events_today++;
+            evetemp[number_of_events_today-1]=temp;
+        }
+
+        // Labor Day
+        // is the first Monday in September
+        if (month == 9) {
+            calendar.set(year, month-1, 1); //set the first day of the month in this year
+            int LaborDay;
+
+
+            if (calendar.get(calendar.DAY_OF_WEEK) == 1) {
+                LaborDay = 2;
+            } else if (calendar.get(calendar.DAY_OF_WEEK) == 2) {
+                LaborDay = 1;
+            } else if (calendar.get(calendar.DAY_OF_WEEK) == 3) {
+                LaborDay = 7;
+            } else if (calendar.get(calendar.DAY_OF_WEEK) == 4) {
+                LaborDay = 6;
+            } else if (calendar.get(calendar.DAY_OF_WEEK) == 5) {
+                LaborDay = 5;
+            } else if (calendar.get(calendar.DAY_OF_WEEK) == 6) {
+                LaborDay = 4;
+            } else {
+                LaborDay = 3;
+            }
+            if (day == LaborDay) {
+                Events temp =new Events("Labor Day", "Holiday", "place","description", 0, 0, "AM", month+"/"+day+"/"+year, 23, 59, "PM");
+                number_of_events_today++;
+                evetemp[number_of_events_today-1]=temp;
+            }
+        }
+        // Columbus Day
+        // is the second Monday in October
+
+        if (month == 10) {
+            calendar.set(year, month - 1, 1); //set the first day of the month in this year
+            int ColumbusDay;
+
+
+            if (calendar.get(calendar.DAY_OF_WEEK) == 1) {
+                ColumbusDay = 9;
+            } else if (calendar.get(calendar.DAY_OF_WEEK) == 2) {
+                ColumbusDay = 8;
+            } else if (calendar.get(calendar.DAY_OF_WEEK) == 3) {
+                ColumbusDay = 14;
+            } else if (calendar.get(calendar.DAY_OF_WEEK) == 4) {
+                ColumbusDay = 13;
+            } else if (calendar.get(calendar.DAY_OF_WEEK) == 5) {
+                ColumbusDay = 12;
+            } else if (calendar.get(calendar.DAY_OF_WEEK) == 6) {
+                ColumbusDay = 11;
+            } else {
+                ColumbusDay = 10;
+            }
+            if (day == ColumbusDay) {
+                Events temp =new Events("Columbus Day", "Holiday", "place","description", 0, 0, "AM", month+"/"+day+"/"+year, 23, 59, "PM");
+                number_of_events_today++;
+                evetemp[number_of_events_today-1]=temp;
+            }
+
+        }
+        // Halloween
+        // October 31st
+        if (month == 10 && day == 31) {
+            Events temp =new Events("Halloween", "Holiday", "place","description", 0, 0, "AM", month+"/"+day+"/"+year, 23, 59, "PM");
+            number_of_events_today++;
+            evetemp[number_of_events_today-1]=temp;
+        }
+
+        // Veterans Day
+        // is always the 11th of November
+        if (month == 11 && day == 11) {
+            Events temp =new Events("Veterans Day", "Holiday", "place","description", 0, 0, "AM", month+"/"+day+"/"+year, 23, 59, "PM");
+            number_of_events_today++;
+            evetemp[number_of_events_today-1]=temp;
+        }
+
+
+        //Thanksgiving day
+        // the 4th Thursday of november
+        if (month == 11) {
+            calendar.set(year, month-1, 1); //set the first day of the month in this year
+            int Thanksgiving;
+
+
+            if (calendar.get(calendar.DAY_OF_WEEK) == 1) {
+                Thanksgiving = 26;
+            } else if (calendar.get(calendar.DAY_OF_WEEK) == 2) {
+                Thanksgiving = 25;
+            } else if (calendar.get(calendar.DAY_OF_WEEK) == 3) {
+                Thanksgiving = 24;
+            } else if (calendar.get(calendar.DAY_OF_WEEK) == 4) {
+                Thanksgiving = 23;
+            } else if (calendar.get(calendar.DAY_OF_WEEK) == 5) {
+                Thanksgiving = 22;
+            } else if (calendar.get(calendar.DAY_OF_WEEK) == 6) {
+                Thanksgiving = 28;
+            } else {
+                Thanksgiving = 27;
+            }
+            if (day == Thanksgiving) {
+                Events temp =new Events("Thanksgiving", "Holiday", "","", 0, 0, "AM", "11/"+day+"/"+year, 23, 59, "PM");
+                number_of_events_today++;
+                evetemp[number_of_events_today-1]=temp;
+            }
+        }
+
+        //Christmas Eve
+        if (month == 12 && day == 24) {
+            Events temp =new Events("Christmas Eve", "Holiday", "place","description", 0, 0, "AM", month+"/"+day+"/"+year, 23, 59, "PM");
+            number_of_events_today++;
+            evetemp[number_of_events_today-1]=temp;
+        }
+
+        // Christmas Day
+        if (month == 12 && day == 25) {
+            Events temp =new Events("Christmas Day", "Holiday", "place","description", 0, 0, "AM", month+"/"+day+"/"+year, 23, 59, "PM");
+            number_of_events_today++;
+            evetemp[number_of_events_today-1]=temp;
+        }
+
+        // New Years Eve
+        if (month == 12 && day == 31) {
+            Events temp =new Events("New Years Eve", "Holiday", "place","description", 0, 0, "AM", month+"/"+day+"/"+year, 23, 59, "PM");
+            number_of_events_today++;
+            evetemp[number_of_events_today-1]=temp;
+        }
+        Events[] eves;
+        eves = new Events[number_of_events_today];
+        for (int i = 0; i < eves.length; i++)
+        {
+            eves[i] = evetemp[i];
+        }
+        return eves;
+    }
     public Events getEvents(String fileName)
     {
 
