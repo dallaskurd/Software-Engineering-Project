@@ -27,30 +27,63 @@ public class MySimpleArrayAdapter<S> extends ArrayAdapter<String> {
         events=ev;
     }
 
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent)
-        {
-            View view = super.getView(position, convertView, parent);
-            int i=0;
-            TextView myText = (TextView)view;
-            myText.setGravity(Gravity.CENTER);
-                while (!(events[i].getName().equals(myText.getText())))
-                {
-                    i++;
-                }
-                if (events[i].getCategory() == 1)
-                {
-                    myText.setTextColor(Color.BLUE);
-                } else if (events[i].getCategory() == 2)
-                {
-                    myText.setTextColor(Color.RED);
-                } else if (events[i].getCategory() == 3)
-                {
-                    myText.setTextColor(Color.MAGENTA);
-                } else {
-                    myText.setTextColor(Color.DKGRAY);
-                }
-                return view;
+          @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+        View view = super.getView(position, convertView, parent);
+        int i = 0;
+        TextView myText = (TextView) view;
+        myText.setGravity(Gravity.CENTER);
+        while (!(events[i].getName().equals(myText.getText()))) {
+            i++;
         }
+        while (!(events[i].getCategory().equals(""))) {
+            i++;
+            if (events[i].getCategory() == "Family") {
+                myText.setTextColor(Color.BLUE);
+            } else if (events[i].getCategory() == "School") {
+                myText.setTextColor(Color.RED);
+            } else if (events[i].getCategory() == "Work") {
+                myText.setTextColor(Color.MAGENTA);
+            } else {
+                myText.setTextColor(Color.DKGRAY);
+            }
+        }
+        return view;
+    }
+
+    public void Categories(String category) {
+
+        FileOutputStream fop = null;
+        File file;
+
+        try {
+
+            file = new File(category + ".txt");
+            fop = new FileOutputStream(file);
+
+            // if file doesn't exists, then create it
+            if (!file.exists()) {
+                file.createNewFile();
+            }
+
+            // get the content in bytes
+            byte[] contentInBytes = category.getBytes();
+
+            fop.write(contentInBytes);
+            fop.flush();
+            fop.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (fop != null) {
+                    fop.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
     }
 
