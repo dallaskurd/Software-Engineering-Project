@@ -267,9 +267,16 @@ public class MainActivity extends Activity
         final EditText text10 = new EditText(context);
         text10.setHint("Event Place:");
         layout.addView(text10);
-        final EditText text11 = new EditText(context);
-        text11.setHint("Event Date:");
+        final Button text11 = new Button(context);
+        text11.setText("Date");
         layout.addView(text11);
+        text11.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View arg0) {
+
+                selectedDate = popupCalender();
+            }
+        });
         alertDialog.setView(layout);
         alertDialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
@@ -327,9 +334,16 @@ public class MainActivity extends Activity
         text10.setHint("Event Place:");
         text10.setText("");
         layout.addView(text10);
-        final EditText text11 = new EditText(context);
-        text11.setHint("Event Date: (month/day/year)");
-        text11.setText("");
+        final Button text11 = new Button(context);
+        text11.setText("Date");
+        layout.addView(text11);
+        text11.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View arg0) {
+
+                selectedDate = popupCalender();
+            }
+        });
         layout.addView(text11);
         alertDialog.setView(layout);
         alertDialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
@@ -428,6 +442,29 @@ public class MainActivity extends Activity
 
         alertDialog.show();
         adapter.notifyDataSetChanged();
+    }
+    public String popupCalender() {
+        final AlertDialog.Builder alertDialog2 = new AlertDialog.Builder(MainActivity.this);
+        LayoutInflater inflater = getLayoutInflater();
+        View convertView = (View) inflater.inflate(R.layout.custom2, null);
+        alertDialog2.setView(convertView);
+        final CalendarView calendar2 = (CalendarView) convertView.findViewById(R.id.calendar);
+        String test;
+        alertDialog2.setPositiveButton("Ok", new DialogInterface.OnClickListener() { public void onClick(DialogInterface dialog, int whichButton) {dialog.cancel();}});
+        calendar2.setOnDateChangeListener(new OnDateChangeListener()
+        {
+            @Override
+            public void onSelectedDayChange(CalendarView view, int year, int month, int day) {
+                //Find Events at the date givin by the parameters put into event
+                ci2.set(year, month, day);
+                SimpleDateFormat date = new SimpleDateFormat("MM/dd/yyyy", Locale.US);
+                Date today = ci2.getTime();
+                selectedDate = date.format(today);
+            }
+        });
+        alertDialog2.show();
+        test=selectedDate;
+        return test;
     }
     public Events[] setDayEvents(int month,int day,int year)
     {
