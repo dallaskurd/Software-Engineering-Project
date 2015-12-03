@@ -4,15 +4,9 @@ package com.example.jason_000.test4;
  * Created by jason_000 on 11/1/2015.
  */
 import android.content.Context;
-
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.*;
 public class Events
 {
     private String name;
@@ -28,7 +22,7 @@ public class Events
     private String date;
     private String endingTimeOfDay;
     private String startingTimeOfDay;
-    private File file;
+    private String recurrence;
     public Events(String n,String ePlace,String eDescription, String c,int sHour,int sMinute,String sTimeOfDay,String d,int eHour,int eMinute,String eTimeOfDay)
     {
         name=n;
@@ -52,8 +46,7 @@ public class Events
     }
     public Events()
     {
-        name="";
-        category="";
+        name="test5";
         holi=false;
     }
     public String getName()
@@ -165,14 +158,28 @@ public class Events
         category = t;
     }
 
-
-
+    public String getSTime()
+    {
+        return startingHour+":"+startingMinute+" "+startingTimeOfDay;
+    }
+    public String getETime()
+    {
+        return endingHour+":"+endingMinute+" "+endingTimeOfDay;
+    }
+    public void setRecurrence(String r)
+    {
+        recurrence = r;
+    }
+    public String getRecurrence()
+    {
+        return recurrence;
+    }
     public void addEvent(String n, String c,int sHour,int sMinute,int eHour,int eMinute,String eDescription,String ePlace,String d,String eTimeOfDay,String sTimeOfDay,Context con)
     {
         Events event = new Events();
 
         event.setEName(n);
-
+        System.out.println(c);
         event.setCategory(c);
 
         event.setEPlace(ePlace);
@@ -194,12 +201,14 @@ public class Events
         event.setSTimeOfDay(sTimeOfDay);
         String[] write=d.split("/");
         String fileName = n+"_"+write[0]+"_"+write[1]+"_"+write[2]+"_"+".txt";
+        System.out.println(fileName);
         try
         {
             FileOutputStream stream = con.openFileOutput(fileName,Context.MODE_PRIVATE);
             try
             {
                 stream.write((""+ event.getEName()+"\n").getBytes());//Event name:
+                stream.write((","+event.getCategory()+"\n").getBytes());
                 stream.write(("," + event.getEPlace() + "\n").getBytes());//Event location:
                 stream.write(("," + event.getEDescription() + "\n").getBytes());//Event description:
                 stream.write(("," + event.getSHour() + "," + event.getSMinute() + "," + event.getSTimeOfDay() + "\n").getBytes());//Event start time:
@@ -233,7 +242,7 @@ public class Events
         if(eDescription.equals(""))
             eDescription=getEDescription();
 
-        if(sHour==0)
+        if(sHour==25)
         {
             sHour = getSHour();
         }
@@ -242,12 +251,11 @@ public class Events
             sMinute = getSMinute();
         }
 
-        if(d.equals(""))
+        if(d.equals("13/10/2015"))
         {
             d = getDate();
         }
-
-        if(eHour==0)
+        if(eHour==25)
             eHour=getEHour();
 
         if(eMinute==78)
@@ -259,17 +267,17 @@ public class Events
         if(sTimeOfDay.equals("AM/PM")) {
             sTimeOfDay = getSTimeOfDay();
         }
-            deleteEvent(getFileName()+"_.txt",con);
+            deleteEvent(getFileName(),con);
             addEvent(n,c,sHour,sMinute,eHour,eMinute,eDescription,ePlace,d,eTimeOfDay,sTimeOfDay,con);
     }
     public String getFileName()
     {
         String[] write=date.split("/");
-        String beforeFix=  ""+eventName+"_"+write[0]+"_"+write[1]+"_"+write[2]+"_"+".txt";
+        String beforeFix=  ""+eventName+"_"+write[0]+"_"+write[1]+"_"+write[2]+"_.txt";
         String afterFix1=(beforeFix.split("_")[0].substring(0,beforeFix.split("_")[0].length()-1));
         String afterFix2=afterFix1+"_"+(beforeFix.split("_")[1].substring(0, beforeFix.split("_")[1].length()));
         String afterFix3=afterFix2+"_"+(beforeFix.split("_")[2].substring(0, beforeFix.split("_")[2].length()));
-        String afterFix4=afterFix3+"_"+(beforeFix.split("_")[3].substring(0, beforeFix.split("_")[3].length() - 1));
+        String afterFix4=afterFix3+"_"+(beforeFix.split("_")[3].substring(0, beforeFix.split("_")[3].length() - 1)+"_.txt");
         return afterFix4;
     }
     public boolean deleteEvent(String fn,Context con)
@@ -280,3 +288,5 @@ public class Events
 
     }
 }
+
+
