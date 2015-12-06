@@ -18,11 +18,23 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 import static android.view.View.TEXT_ALIGNMENT_CENTER;
-
+/**
+ * 
+ * @author Safer
+ *
+ * @param <S>
+ */
 public class MySimpleArrayAdapter<S> extends ArrayAdapter<String> {
     private final Context context;
     private final String[] values;
     private final Events[] events;
+    /**
+     * 
+     * @param context assigned to context
+     * @param test 
+     * @param values assigned to values
+     * @param ev assigned to events
+     */
     public MySimpleArrayAdapter(Context context,int test, String[] values, Events[] ev)
     {
         super(context, test, values);
@@ -30,7 +42,13 @@ public class MySimpleArrayAdapter<S> extends ArrayAdapter<String> {
         this.values = values;
         events=ev;
     }
-
+    /**
+     * 
+     * @param position - where it's located
+     * @param convert - View to convert the view
+     * @param parent 
+     * @return view - returns the value view
+     */
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View view = super.getView(position, convertView, parent);
@@ -53,12 +71,15 @@ public class MySimpleArrayAdapter<S> extends ArrayAdapter<String> {
 
         return view;
     }
-
+    /**
+     * 
+     * @param category - helps create files, 
+     */
     public void Categories(String category) {
 
         FileOutputStream fop = null;
         File file;
-
+        
         try {
 
             file = new File(category + ".txt");
@@ -89,4 +110,3 @@ public class MySimpleArrayAdapter<S> extends ArrayAdapter<String> {
         }
     }
 }
-
