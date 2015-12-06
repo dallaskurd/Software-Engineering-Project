@@ -328,7 +328,12 @@ public class MainActivity extends Activity
                 int eTime2 = Integer.parseInt(eT2.split(" ")[0]);
                 int eTime = Integer.parseInt(eT);
                 // event checking is done here to check for event conflicting
+            	ev.addEvent(text.getText().toString(), text2.getText().toString(), // this is so the data that was just
+            			sTime, sTime2, eTime, eTime2, text9.getText().toString(),  // entered is passed over to the event class
+            			text10.getText().toString(), selectedDate, sT2.split(" ")[1],
+            			eT2.split(" ")[1], MainActivity.this);
                 if(ev.eventConflict()) {
+                	ev.deleteEvent(ev.getFileName(),MainActivity.this); // this deletes the event that was created above, cleaning up basically
                 	final AlertDialog.Builder alertDialog2 = new AlertDialog.Builder(MainActivity.this);
             		alertDialog2.setTitle("Event Conflict");
             		LinearLayout layout = new LinearLayout(MainActivity.this);
