@@ -427,6 +427,32 @@ public class Events
             addEvent(n,c,sHour,sMinute,eHour,eMinute,eDescription,ePlace,d,eTimeOfDay,sTimeOfDay,con);
     }
     /**
+     * @ author Safer, Zach and Jason
+     * @return where the conflict between two events is occurring 
+     */
+    public boolean eventConflict() {
+    	boolean conflict = false;
+	    String[] splitDate = date.split("/");
+	    File dir = new File("."); // search all directories, "." is a wildcard
+	    FileFilter fileFilter = new WildcardFileFilter(("*" + "_" + splitDate[0] + "_" + splitDate[1] + "_" + splitDate[2] + "_" + ".txt")); // this string is considering all events with the same date
+	    File[] files = dir.listFiles(fileFilter);
+	    try {
+		    for(int i = 0; i < files.length; i++) {
+			    // open and parse each file found and compare time to see if conflict happens
+			    // if conflict happens then set conflict to true and break
+			    // else continue
+			    if() {
+				    conflict = true;
+				    break;
+			    } else
+			    	;
+	    	}
+    	} catch(SecurityException e) { // if privileges are not sufficient enough 
+	    		System.out.println("Read Access to the file is denied." + e.printStackTrace());
+    	}
+    	return conflict;
+    }
+    /**
      * @author Jason
      * @return the name of file
      */
