@@ -1,0 +1,112 @@
+package com.example.jason_000.test4;
+
+/**
+ * Created by jason_000 on 11/1/2015.
+ */
+import android.content.Context;
+import android.graphics.Color;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+
+import static android.view.View.TEXT_ALIGNMENT_CENTER;
+/**
+ * 
+ * @author Safer
+ *
+ * @param <S>
+ */
+public class MySimpleArrayAdapter<S> extends ArrayAdapter<String> {
+    private final Context context;
+    private final String[] values;
+    private final Events[] events;
+    /**
+     * 
+     * @param context assigned to context
+     * @param test 
+     * @param values assigned to values
+     * @param ev assigned to events
+     */
+    public MySimpleArrayAdapter(Context context,int test, String[] values, Events[] ev)
+    {
+        super(context, test, values);
+        this.context = context;
+        this.values = values;
+        events=ev;
+    }
+    /**
+     * 
+     * @param position - where it's located
+     * @param convert - View to convert the view
+     * @param parent 
+     * @return view - returns the value view
+     */
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+        View view = super.getView(position, convertView, parent);
+        int i = 0;
+        TextView myText = (TextView) view;
+        myText.setGravity(Gravity.CENTER);
+        while (!(events[i].getName().equals(myText.getText()))) {
+            i++;
+       }
+        System.out.println(events[i].getEPlace());
+            if (events[i].getEPlace() == "Family") {
+                myText.setTextColor(Color.BLUE);
+            } else if (events[i].getEPlace() == "School") {
+                myText.setTextColor(Color.RED);
+            } else if (events[i].getEPlace() == "Work") {
+                myText.setTextColor(Color.MAGENTA);
+            } else {
+                myText.setTextColor(Color.DKGRAY);
+            }
+
+        return view;
+    }
+    /**
+     * 
+     * @param category - helps create files, 
+     */
+    public void Categories(String category) {
+
+        FileOutputStream fop = null;
+        File file;
+        
+        try {
+
+            file = new File(category + ".txt");
+            fop = new FileOutputStream(file);
+
+            // if file doesn't exists, then create it
+            if (!file.exists()) {
+                file.createNewFile();
+            }
+
+            // get the content in bytes
+            byte[] contentInBytes = category.getBytes();
+
+            fop.write(contentInBytes);
+            fop.flush();
+            fop.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (fop != null) {
+                    fop.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+}
