@@ -1,949 +1,302 @@
+package com.example.jason_000.test4;
 
-        package com.example.jason_000.test4;
+/**
+ * Created by jason_000 on 11/1/2015.
+ */
+import android.content.Context;
 
-        import android.app.Activity;
-        import android.app.AlertDialog;
-        import android.app.TimePickerDialog;
-        import android.content.Context;
-        import android.content.DialogInterface;
-        import android.os.Bundle;
-        import android.view.LayoutInflater;
-        import android.view.View;
-        import android.widget.AdapterView;
-        import android.widget.ArrayAdapter;
-        import android.widget.Button;
-        import android.widget.DatePicker;
-        import android.widget.EditText;
-        import android.widget.LinearLayout;
-        import android.widget.ListView;
-        import android.widget.CalendarView;
-        import android.widget.CalendarView.OnDateChangeListener;
-        import android.view.MotionEvent;
-        import android.widget.TimePicker;
-        import android.widget.ViewFlipper;
-        import java.io.FileInputStream;
-        import java.io.IOException;
-        import java.sql.Time;
-        import java.text.SimpleDateFormat;
-        import java.util.Calendar;
-        import java.util.Date;
-        import java.util.GregorianCalendar;
-        import java.util.Locale;
-
-
-public class MainActivity extends Activity
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.*;
+public class Events
 {
-    private ViewFlipper viewFlipper;
-    private float lastX;
-    private Events[] dayevents; //Put Day events here
-    private Calendar ci;
-    private Calendar ci2;
-    private String todaysDate;
-    private String selectedDate;
-    private String selectedSTime;
-    private String selectedETime;
-    private String [] category; // Category Array
-    private String [] categoryColor; // Category Color Array
-    @Override
-    public void onCreate(Bundle savedInstanceState)
+    private String name;
+    private String category;
+    private boolean holi;
+    private int startingHour;
+    private int startingMinute;
+    private int endingMinute;
+    private int endingHour;
+    private String eventName;
+    private String eventDescription;
+    private String eventPlace;
+    private String date;
+    private String endingTimeOfDay;
+    private String startingTimeOfDay;
+    private File file;
+    public Events(String n,String ePlace,String eDescription, String c,int sHour,int sMinute,String sTimeOfDay,String d,int eHour,int eMinute,String eTimeOfDay)
     {
-
-    	/*
-    	 * ************************
-    	 * ************************
-    	 * Load Categories here
-    	 * ************************
-    	 * ************************
-    	 */
-
-        ci = new GregorianCalendar();
-        ci2 = new GregorianCalendar();
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        //This is the Month View Code
-        final CalendarView calendar = (CalendarView) findViewById(R.id.calendar);
-        calendar.setOnDateChangeListener(new OnDateChangeListener() {
-            @Override
-            public void onSelectedDayChange(CalendarView view, int year, int month, int day) {
-                //Find Events at the date givin by the parameters put into event
-                ci2.set(year, month, day);
-                SimpleDateFormat date = new SimpleDateFormat("MMMMMM dd yyyy", Locale.US);
-                Date today = ci2.getTime();
-                todaysDate = date.format(today);
-                popUpEvent(todaysDate,month,day,year);
-            }
-
-
-        });
-
-        viewFlipper = (ViewFlipper) findViewById(R.id.viewflipper);
-
-        //ADD
-        Button add = (Button) findViewById(R.id.add);
-        add.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View arg0) {
-                add();
-
-            }
-        });
-        //Week View Code
-        setWeekView();
-
-        //Day View
-        setDayView();
+        name=n;
+        category=c;
+        holi=false;
+        startingHour=sHour;
+        endingHour=eHour;
+        startingMinute=sMinute;
+        endingMinute=eMinute;
+        eventName=n;
+        eventDescription=eDescription;
+        eventPlace=ePlace;
+        date=d;
+        endingTimeOfDay=eTimeOfDay;
+        startingTimeOfDay=sTimeOfDay;
     }
-    public void setDayView()
+    public Events(String n,String c)
     {
-        ListView lv2 = (ListView) findViewById(R.id.dayevents);
-        ci= new GregorianCalendar();
-        int day=ci.get(Calendar.DAY_OF_MONTH);
-        int month=ci.get(Calendar.MONTH)+1;
-        int year=ci.get(Calendar.YEAR);
-        dayevents = setDayEvents(month,day,year);
-        String[] dayNames;
-        dayNames = new String[dayevents.length];
-        for (int i = 0; i < dayevents.length; i++)
-        {
-            dayNames[i] = dayevents[i].getName();
-        }
-        final ArrayAdapter<String> adapter = new MySimpleArrayAdapter<>(this, android.R.layout.simple_list_item_1, dayNames, dayevents);
-        lv2.setAdapter(adapter);
-        adapter.notifyDataSetChanged();
-        lv2.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> myAdapter, View myView, int pos, long mylng) {
-                fullEvent(dayevents, adapter, pos);
-            }
-        });
+        name=n;
+        category=c;
     }
-    public void setWeekView()
+    public Events()
     {
-        Button sun = (Button) findViewById(R.id.Sundayevents);
-        Button mon = (Button) findViewById(R.id.Mondayyevents);
-        Button tues = (Button) findViewById(R.id.Tuesdayevents);
-        Button wed = (Button) findViewById(R.id.Wednesdayevents);
-        Button thurs = (Button) findViewById(R.id.Thursdayevents);
-        Button fri = (Button) findViewById(R.id.Fridayevents);
-        Button sat = (Button) findViewById(R.id.Saturdayevents);
-        sun.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View arg0) {
-                setWeekEvents(1);
-            }
-        });
-        mon.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View arg0)
-            {
-                setWeekEvents (2);
-            }
-        });
-        tues.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View arg0)
-            {
-                setWeekEvents(3);
-            }
-        });
-        wed.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View arg0) {
-                setWeekEvents(4);
-            }
-        });
-        thurs.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View arg0) {
-                setWeekEvents(5);
-            }
-        });
-        fri.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View arg0) {
-                setWeekEvents(6);
-            }
-        });
-        sat.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View arg0) {
-                setWeekEvents(7);
-            }
-        });
+        name="";
+        category="";
+        holi=false;
     }
-    public void setWeekEvents (int d)
+    public String getName()
     {
-        ci = new GregorianCalendar();
-        int month = ci.get(Calendar.MONTH);
-        int year = ci.get(Calendar.YEAR);
-        int dow = ci.get(Calendar.DAY_OF_WEEK);
-        int day = ci.get(Calendar.DAY_OF_MONTH);
-        if(dow<d)//We want a later day
-        {
-            while(dow<d)
-            {
-                dow++;
-                day++;
-            }
-        }
-        else if (dow>d)//We want a earlier then today
-        {
-            while(dow>d)
-            {
-                dow--;
-                day--;
-            }
-        }
-        ci.set(year, (month), day);
-        month = ci.get(Calendar.MONTH);
-        year = ci.get(Calendar.YEAR);
-        day = ci.get(Calendar.DAY_OF_MONTH);
-        SimpleDateFormat date = new SimpleDateFormat("MMMMMM dd yyyy", Locale.US);
-        Date today = ci.getTime();
-        todaysDate= date.format(today);
-        popUpEvent(todaysDate, month, day, year);
+        return name;
     }
-    public void fullEvent(Events [] ev,ArrayAdapter<String> ad,int pos)
+    public boolean getHoliday()
     {
-        final Events [] evs=ev;
-        final AlertDialog.Builder alertDialog = new AlertDialog.Builder(MainActivity.this);
-        String selectedFromList = (String) ad.getItem(pos);
-        alertDialog.setTitle(selectedFromList);
-        int i = 0;
-        while (!(selectedFromList.equals(ev[i].getName())))
-        {
-            i++;
-        }
-        final int g=i;
-        Context context = MainActivity.this;
-        LinearLayout layout = new LinearLayout(context);
-        layout.setOrientation(LinearLayout.VERTICAL);
-        LayoutInflater inflater = getLayoutInflater();
-        View convertView = (View) inflater.inflate(R.layout.custom, null);
-        alertDialog.setView(convertView);
-        ListView lv = (ListView) convertView.findViewById(R.id.listView1);
-        String [] details = new String[6];
-        details[0]="Category: "+ev[i].getCategory();
-        details[1]="Place of Event: "+ev[i].getEPlace();
-        details[2]="Description: "+ev[i].getEDescription();
-        details[3]="Time Event Starts: "+ev[i].getSTime();
-        details[4]="Time Event Ends: "+ev[i].getETime();
-        details[5]="Date: "+ev[i].getDate();
-        final  ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, details);
-        lv.setAdapter(adapter);
-        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> myAdapter, View myView, int pos, long mylng) {
-                deleteOrEdit(evs[g], adapter, pos);
-            }
-        });
-        alertDialog.show();
+        return    holi;
     }
-    public void deleteOrEdit(Events ev,ArrayAdapter<String> ad,int pos)
+    public void setHoliday()
     {
-        final Events evs=ev;
-        final AlertDialog.Builder alertDialog = new AlertDialog.Builder(MainActivity.this);
-        alertDialog.setTitle("Edit or Delete");
-        Context context = MainActivity.this;
-        LinearLayout layout = new LinearLayout(context);
-        layout.setOrientation(LinearLayout.VERTICAL);
-        Button delete = new Button(context);
-        delete.setText("Delete");
-        layout.addView(delete);
-        Button edit = new Button(context);
-        edit.setText("Edit");
-        layout.addView(edit);
-        alertDialog.setView(layout);
-        edit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View arg0) {
-                edit(evs);
-            }
-        });
-        delete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View arg0) {
-                delete(evs.getFileName());
-            }
-        });
-        alertDialog.show();
+        holi=true;
     }
-    public void add()
+    public String getCategory()
     {
-        final AlertDialog.Builder alertDialog = new AlertDialog.Builder(MainActivity.this);
-        alertDialog.setTitle("Add Event");
-        alertDialog.setMessage("Details of the Event");
-        Context context = MainActivity.this;
-        LinearLayout layout = new LinearLayout(context);
-        layout.setOrientation(LinearLayout.VERTICAL);
-        final Events ev= new Events();
-        final EditText text = new EditText(context);
-        text.setHint("Name of Event:");
-        layout.addView(text);
-        final EditText text2 = new EditText(context);
-        text2.setHint("Category of Event:");
-        layout.addView(text2);
-        final Button text5 = new Button(context);
-        text5.setText("Start Time");
-        layout.addView(text5);
-        text5.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View arg0) {
-                popupSTime();
-            }
-        });
-        final Button text6 = new Button(context);
-        text6.setText("End Time");
-        layout.addView(text6);
-        text6.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View arg0) {
-                popupETime();
-            }
-        });
-        final EditText text9 = new EditText(context);
-        text9.setHint("Event Description:");
-        layout.addView(text9);
-        final EditText text10 = new EditText(context);
-        text10.setHint("Event Place:");
-        layout.addView(text10);
-        final Button text11 = new Button(context);
-        text11.setText("Date");
-        layout.addView(text11);
-        text11.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View arg0) {popupCalender();}});
-        alertDialog.setView(layout);
-        alertDialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int whichButton) {
-                  try {
-                String sT = selectedSTime.split(":")[0];
-                String sT2 = selectedSTime.split(":")[1];
-                int sTime2 = Integer.parseInt(sT2.split(" ")[0]);
-                int sTime = Integer.parseInt(sT);
-                String eT = selectedETime.split(":")[0];
-                String eT2 = selectedETime.split(":")[1];
-                int eTime2 = Integer.parseInt(eT2.split(" ")[0]);
-                int eTime = Integer.parseInt(eT);
-                // event checking is done here to check for event conflicting
-            	ev.addEvent(text.getText().toString(), text2.getText().toString(), // this is so the data that was just
-            			sTime, sTime2, eTime, eTime2, text9.getText().toString(),  // entered is passed over to the event class
-            			text10.getText().toString(), selectedDate, sT2.split(" ")[1],
-            			eT2.split(" ")[1], MainActivity.this);
-                if(ev.eventConflict()) {
-                	ev.deleteEvent(ev.getFileName(),MainActivity.this); // this deletes the event that was created above, cleaning up basically
-                	final AlertDialog.Builder alertDialog2 = new AlertDialog.Builder(MainActivity.this);
-            		alertDialog2.setTitle("Event Conflict");
-            		LinearLayout layout = new LinearLayout(MainActivity.this);
-                    alertDialog2.setView(layout);
-                    alertDialog2.show();
-                    alertDialog2.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                    	public void onClick(DialogInterface dialog, int whichButton) {
-                    		dialog.cancel();
-                    	}
-                     });
-                    }
-                } else {
-                	ev.addEvent(text.getText().toString(), text2.getText().toString(),
-                			sTime, sTime2, eTime, eTime2, text9.getText().toString(),
-                			text10.getText().toString(), selectedDate, sT2.split(" ")[1],
-                			eT2.split(" ")[1], MainActivity.this);
-                	}
-                } catch (Exception e) {
-                    final AlertDialog.Builder alertDialog2 = new AlertDialog.Builder(MainActivity.this);
-                    alertDialog2.setTitle("Error in adding event");
-                    LinearLayout layout = new LinearLayout(MainActivity.this);
-                    alertDialog2.setView(layout);
-                    alertDialog2.show();
-                    alertDialog2.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int whichButton) {
-                            dialog.cancel();
-                        }
-                    });
-                } finally {
-                dialog.cancel();
-                setDayView();
-                 }
-
-            }
-        });
-        alertDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int whichButton) {
-                dialog.cancel();
-            }
-        });
-        alertDialog.show();
+        return category;
     }
-    public void edit(Events ev)
+
+    public void setSHour(int h)
     {
-
-        final AlertDialog.Builder alertDialog = new AlertDialog.Builder(MainActivity.this);
-        alertDialog.setTitle("Edit Event");
-        alertDialog.setMessage("Write what you want to edit");
-        Context context = MainActivity.this;
-        LinearLayout layout = new LinearLayout(context);
-        layout.setOrientation(LinearLayout.VERTICAL);
-        final Events ev1=ev;
-        final EditText text = new EditText(context);
-        text.setHint("Name of Event:");
-        text.setText("");
-        layout.addView(text);
-        final EditText text2 = new EditText(context);
-        text2.setHint("Category of Event:");
-        text2.setText("");
-        layout.addView(text2);
-        final Button text5 = new Button(context);
-        text5.setText("Start Time");
-        layout.addView(text5);
-        selectedSTime="25:78 AM/PM";
-        text5.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View arg0) {
-                popupSTime();
-            }
-        });
-        final Button text6 = new Button(context);
-        text6.setText("End Time");
-        layout.addView(text6);
-        selectedETime="25:78 AM/PM";
-        text6.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View arg0) {
-                popupETime();
-            }
-        });
-        final EditText text9 = new EditText(context);
-        text9.setHint("Event Description:");
-        text9.setText("");
-        layout.addView(text9);
-        final EditText text10 = new EditText(context);
-        text10.setHint("Event Place:");
-        text10.setText("");
-        layout.addView(text10);
-        final Button text11 = new Button(context);
-        text11.setText("Date");
-        layout.addView(text11);
-        text11.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View arg0) {
-                popupCalender();
-            }
-        });
-        alertDialog.setView(layout);
-        alertDialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int whichButton) {
-                      try {
-                String sT = selectedSTime.split(":")[0];
-                String sT2 = (selectedSTime.split(":")[1]);
-                int sTime2 = Integer.parseInt(sT2.split(" ")[0]);
-                int sTime = Integer.parseInt(sT);
-                String eT = selectedETime.split(":")[0];
-                String eT2 = selectedETime.split(":")[1];
-                int eTime2 = Integer.parseInt(eT2.split(" ")[0]);
-                int eTime = Integer.parseInt(eT);
-                ev1.editEvent(text.getText().toString(), text2.getText().toString(), sTime, sTime2, eTime,
-                        eTime2, text9.getText().toString(), text10.getText().toString(), selectedDate, eT2.split(" ")[1],
-                        sT2.split(" ")[1], MainActivity.this);
-                    }
-                    catch (Exception e)
-                   {
-                 final AlertDialog.Builder alertDialog2 = new AlertDialog.Builder(MainActivity.this);
-                        alertDialog2.setTitle("Error in editing event");
-                        LinearLayout layout = new LinearLayout(MainActivity.this);
-                        alertDialog2.setView(layout);
-                        alertDialog2.show();
-                        alertDialog2.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int whichButton) {
-                                dialog.cancel();
-                            }
-                        });
-                 }
-                 finally {
-                dialog.cancel();
-                setDayView();
-                 }
-            }
-        });
-        alertDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int whichButton) {
-                dialog.cancel();
-            }
-        });
-        alertDialog.show();
+        startingHour = h;
     }
-    public void delete(final String fn)
+    public int getSHour()
     {
-
-        final AlertDialog.Builder alertDialog = new AlertDialog.Builder(MainActivity.this);
-        alertDialog.setTitle("Delete Event");
-        alertDialog.setMessage("Are you sure?");
-
-
-            alertDialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int whichButton) {
-                    Events ev = new Events();
-                    String[] list = fileList();
-                    for (int i = 0; i < list.length; i++) {
-                        if (list[i].contains(fn)) {
-                            ev.deleteEvent(list[i], MainActivity.this);
-                            dialog.cancel();
-                            setDayView();
-                            i = list.length;
-                        }
-                    }
-
-                }
-            });
-
-            alertDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int whichButton) {
-                    dialog.cancel();
-                }
-            });
-
-            alertDialog.show();
-        }
-    public void popupCalender() {
-        final AlertDialog.Builder alertDialog2 = new AlertDialog.Builder(MainActivity.this);
-        LayoutInflater inflater = getLayoutInflater();
-        View convertView = (View) inflater.inflate(R.layout.custom2, null);
-        alertDialog2.setView(convertView);
-        String test;
-        final DatePicker calendar2 = (DatePicker) convertView.findViewById(R.id.calendar);
-        calendar2.setCalendarViewShown(false);
-        calendar2.setSpinnersShown(true);
-        alertDialog2.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int whichButton) {
-                ci2.set(calendar2.getYear(), calendar2.getMonth(), calendar2.getDayOfMonth());
-                SimpleDateFormat date = new SimpleDateFormat("MM/dd/yyyy", Locale.US);
-                Date today = ci2.getTime();
-                selectedDate = date.format(today);
-                System.out.println(selectedDate);
-                dialog.cancel();
-            }
-        });
-
-        alertDialog2.show();
+        return startingHour;
     }
-    public void popupSTime(){
-        final AlertDialog.Builder alertDialog2 = new AlertDialog.Builder(MainActivity.this);
-        LayoutInflater inflater = getLayoutInflater();
-        View convertView = (View) inflater.inflate(R.layout.custom3, null);
 
-        alertDialog2.setView(convertView);
-        final TimePicker time = (TimePicker) convertView.findViewById(R.id.time);
-        alertDialog2.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int whichButton) {
-                dialog.cancel();
-            }
-        });
-        alertDialog2.show();
-                time.setOnTimeChangedListener(new TimePicker.OnTimeChangedListener() {
-                    @Override
-                    public void onTimeChanged(TimePicker view, int hourOfDay, int minute) {
-                        String timeofDay = "";
-                        if (hourOfDay == 0) {
-                            hourOfDay += 12;
-                            timeofDay = "AM";
-                        } else if (hourOfDay == 12) {
-                            timeofDay = "PM";
-                        } else if (hourOfDay > 12) {
-                            hourOfDay -= 12;
-                            timeofDay = "PM";
-                        } else {
-                            timeofDay = "AM";
-                        }
-                        if(minute<10)
-                            selectedSTime = "" + hourOfDay + ":0" + minute + " " + timeofDay;
-                        else selectedSTime = "" + hourOfDay + ":" + minute + " " + timeofDay;
-                        System.out.println(selectedSTime);
-                    }
-                });
-    }
-    public void popupETime(){
-        final AlertDialog.Builder alertDialog2 = new AlertDialog.Builder(MainActivity.this);
-        LayoutInflater inflater = getLayoutInflater();
-        View convertView = (View) inflater.inflate(R.layout.custom3, null);
-
-        alertDialog2.setView(convertView);
-        final TimePicker time = (TimePicker) convertView.findViewById(R.id.time);
-        alertDialog2.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int whichButton) {
-                dialog.cancel();
-            }
-        });
-        alertDialog2.show();
-        time.setOnTimeChangedListener(new TimePicker.OnTimeChangedListener() {
-            @Override
-            public void onTimeChanged(TimePicker view, int hourOfDay, int minute) {
-                String timeofDay = "";
-                if (hourOfDay == 0) {
-                    hourOfDay += 12;
-                    timeofDay = "AM";
-                } else if (hourOfDay == 12) {
-                    timeofDay = "PM";
-                } else if (hourOfDay > 12) {
-                    hourOfDay -= 12;
-                    timeofDay = "PM";
-                } else {
-                    timeofDay = "AM";
-                }
-                if(minute<10)
-                selectedETime = "" + hourOfDay + ":0" + minute + " " + timeofDay;
-                else selectedETime = "" + hourOfDay + ":" + minute + " " + timeofDay;
-                System.out.println(selectedETime);
-            }
-        });
-    }
-    public void popUpEvent( String to,int m,int d,int y)
+    public void setSMinute(int h)
     {
-        final Events[] ev=setDayEvents(m + 1, d, y);
-        String[] names = new String[ev.length];
-        final AlertDialog.Builder alertDialog = new AlertDialog.Builder(MainActivity.this);
-        LayoutInflater inflater = getLayoutInflater();
-        View convertView = (View) inflater.inflate(R.layout.custom, null);
-        alertDialog.setView(convertView);
-        alertDialog.setTitle(to+" Events");
-        ListView lv = (ListView) convertView.findViewById(R.id.listView1);
-        for (int i=0;i<ev.length;i++)
-        {
-            names[i]=ev[i].getName();
-        }
-        final  ArrayAdapter<String> adapter = new MySimpleArrayAdapter<>(this, android.R.layout.simple_list_item_1, names,ev);
-        lv.setAdapter(adapter);
-
-        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> myAdapter, View myView, int pos, long mylng) {
-                fullEvent(ev, adapter, pos);
-            }
-        });
-
-        alertDialog.show();
-        adapter.notifyDataSetChanged();
+        startingMinute = h;
     }
-    public Events[] setDayEvents(int month,int day,int year)
+    public int getSMinute()
     {
-        String[] list = fileList();
-        Events[] evetemp = new Events[1000];
-        int number_of_events_today=0;
-        for (int i=0;i<list.length;i++)
-        {
-            if (list[i].contains(month + "_" + day + "_" + year))
-            {
-                evetemp[number_of_events_today]=getEvents(list[i]);
-                number_of_events_today++;
-            }
-        }
-        if (month == 1 && day == 1) // New Years
-        {
-            Events temp =new Events("New Years", "Holiday", "place","description", 0, 0, "AM", month+"/"+day+"/"+year, 23, 59, "PM");
-            number_of_events_today++;
-            evetemp[number_of_events_today-1]=temp;
-        }
-
-        // MLK Day is the 3rd Monday of January
-        GregorianCalendar calendar = new GregorianCalendar();
-        calendar.set(year, month-1, 1); //set first day of month in this year
-        int MLKDay;
-
-        if (month == 1) {
-            if (calendar.get(calendar.DAY_OF_WEEK) == 3) {
-                MLKDay = 7 + 14;
-            } else if (calendar.get(calendar.DAY_OF_WEEK) == 4) {
-                MLKDay = 6 + 14;
-            } else if (calendar.get(calendar.DAY_OF_WEEK) == 5) {
-                MLKDay = 5 + 14;
-            } else if (calendar.get(calendar.DAY_OF_WEEK) == 6) {
-                MLKDay = 4 + 14;
-            } else if (calendar.get(calendar.DAY_OF_WEEK) == 7) {
-                MLKDay = 3 + 14;
-            } else if (calendar.get(calendar.DAY_OF_WEEK) == 1) {
-                MLKDay = 2 + 14;
-            } else {
-                MLKDay = 15;
-            }
-
-            if (day == MLKDay) {
-                Events temp =new Events("MLK Day", "Holiday", "place","description", 0, 0, "AM", month+"/"+day+"/"+year, 23, 59, "PM");
-                number_of_events_today++;
-                evetemp[number_of_events_today-1]=temp;
-            }
-        }
-
-        // Valentine's Day
-        if (month == 2 && day == 14) {
-            Events temp =new Events("Valentine's Day", "Holiday", "place","description", 0, 0, "AM", month+"/"+day+"/"+year, 23, 59, "PM");
-            number_of_events_today++;
-            evetemp[number_of_events_today-1]=temp;
-        }
-
-        // Presidents Day is 3rd Monday in February
-        if (month == 2) {
-            calendar.set(year, month-1, 1); //set the first day of the month in this year
-            int PresidentsDay;
-
-
-            if (calendar.get(calendar.DAY_OF_WEEK) == 3) {
-                PresidentsDay = 7 + 14;
-            } else if (calendar.get(calendar.DAY_OF_WEEK) == 4) {
-                PresidentsDay = 6 + 14;
-            } else if (calendar.get(calendar.DAY_OF_WEEK) == 5) {
-                PresidentsDay = 5 + 14;
-            } else if (calendar.get(calendar.DAY_OF_WEEK) == 6) {
-                PresidentsDay = 4 + 14;
-            } else if (calendar.get(calendar.DAY_OF_WEEK) == 7) {
-                PresidentsDay = 3 + 14;
-            } else if (calendar.get(calendar.DAY_OF_WEEK) == 1) {
-                PresidentsDay = 2 + 14;
-            } else {
-                PresidentsDay = 15;
-            }
-
-            if (day == PresidentsDay) {
-                Events temp =new Events("Presidents Day", "Holiday", "place","description", 0, 0, "AM", month+"/"+day+"/"+year, 23, 59, "PM");
-                number_of_events_today++;
-                evetemp[number_of_events_today-1]=temp;
-            }
-        }
-
-        // Memorial Day
-        // is LAST Monday in May
-
-        if (month == 5) {
-            calendar.set(year, month - 1, 31); //set the first day of the month in this year
-            int MemorialDay;
-
-
-            if (calendar.get(calendar.DAY_OF_WEEK) == 1) {
-                MemorialDay = 25;
-            } else if (calendar.get(calendar.DAY_OF_WEEK) == 2) {
-                MemorialDay = 31;
-            } else if (calendar.get(calendar.DAY_OF_WEEK) == 3) {
-                MemorialDay = 30;
-            } else if (calendar.get(calendar.DAY_OF_WEEK) == 4) {
-                MemorialDay = 29;
-            } else if (calendar.get(calendar.DAY_OF_WEEK) == 5) {
-                MemorialDay = 28;
-            } else if (calendar.get(calendar.DAY_OF_WEEK) == 6) {
-                MemorialDay = 27;
-            } else {
-                MemorialDay = 26;
-            }
-
-            if (day == MemorialDay) {
-                Events temp =new Events("Memorial Day", "Holiday", "place","description", 0, 0, "AM", month+"/"+day+"/"+year, 23, 59, "PM");
-                number_of_events_today++;
-                evetemp[number_of_events_today-1]=temp;
-            }
-        }
-
-        // Independence Day
-        // is always the 4th of  July
-        if (month == 7 && day == 4) {
-            Events temp =new Events("Independence Day", "Holiday", "place","description", 0, 0, "AM", month+"/"+day+"/"+year, 23, 59, "PM");
-            number_of_events_today++;
-            evetemp[number_of_events_today-1]=temp;
-        }
-
-        // Labor Day
-        // is the first Monday in September
-        if (month == 9) {
-            calendar.set(year, month-1, 1); //set the first day of the month in this year
-            int LaborDay;
-
-
-            if (calendar.get(calendar.DAY_OF_WEEK) == 1) {
-                LaborDay = 2;
-            } else if (calendar.get(calendar.DAY_OF_WEEK) == 2) {
-                LaborDay = 1;
-            } else if (calendar.get(calendar.DAY_OF_WEEK) == 3) {
-                LaborDay = 7;
-            } else if (calendar.get(calendar.DAY_OF_WEEK) == 4) {
-                LaborDay = 6;
-            } else if (calendar.get(calendar.DAY_OF_WEEK) == 5) {
-                LaborDay = 5;
-            } else if (calendar.get(calendar.DAY_OF_WEEK) == 6) {
-                LaborDay = 4;
-            } else {
-                LaborDay = 3;
-            }
-            if (day == LaborDay) {
-                Events temp =new Events("Labor Day", "Holiday", "place","description", 0, 0, "AM", month+"/"+day+"/"+year, 23, 59, "PM");
-                number_of_events_today++;
-                evetemp[number_of_events_today-1]=temp;
-            }
-        }
-        // Columbus Day
-        // is the second Monday in October
-
-        if (month == 10) {
-            calendar.set(year, month - 1, 1); //set the first day of the month in this year
-            int ColumbusDay;
-
-
-            if (calendar.get(calendar.DAY_OF_WEEK) == 1) {
-                ColumbusDay = 9;
-            } else if (calendar.get(calendar.DAY_OF_WEEK) == 2) {
-                ColumbusDay = 8;
-            } else if (calendar.get(calendar.DAY_OF_WEEK) == 3) {
-                ColumbusDay = 14;
-            } else if (calendar.get(calendar.DAY_OF_WEEK) == 4) {
-                ColumbusDay = 13;
-            } else if (calendar.get(calendar.DAY_OF_WEEK) == 5) {
-                ColumbusDay = 12;
-            } else if (calendar.get(calendar.DAY_OF_WEEK) == 6) {
-                ColumbusDay = 11;
-            } else {
-                ColumbusDay = 10;
-            }
-            if (day == ColumbusDay) {
-                Events temp =new Events("Columbus Day", "Holiday", "place","description", 0, 0, "AM", month+"/"+day+"/"+year, 23, 59, "PM");
-                number_of_events_today++;
-                evetemp[number_of_events_today-1]=temp;
-            }
-
-        }
-        // Halloween
-        // October 31st
-        if (month == 10 && day == 31) {
-            Events temp =new Events("Halloween", "Holiday", "place","description", 0, 0, "AM", month+"/"+day+"/"+year, 23, 59, "PM");
-            number_of_events_today++;
-            evetemp[number_of_events_today-1]=temp;
-        }
-
-        // Veterans Day
-        // is always the 11th of November
-        if (month == 11 && day == 11) {
-            Events temp =new Events("Veterans Day", "Holiday", "place","description", 0, 0, "AM", month+"/"+day+"/"+year, 23, 59, "PM");
-            number_of_events_today++;
-            evetemp[number_of_events_today-1]=temp;
-        }
-
-
-        //Thanksgiving day
-        // the 4th Thursday of november
-        if (month == 11) {
-            calendar.set(year, month-1, 1); //set the first day of the month in this year
-            int Thanksgiving;
-
-
-            if (calendar.get(calendar.DAY_OF_WEEK) == 1) {
-                Thanksgiving = 26;
-            } else if (calendar.get(calendar.DAY_OF_WEEK) == 2) {
-                Thanksgiving = 25;
-            } else if (calendar.get(calendar.DAY_OF_WEEK) == 3) {
-                Thanksgiving = 24;
-            } else if (calendar.get(calendar.DAY_OF_WEEK) == 4) {
-                Thanksgiving = 23;
-            } else if (calendar.get(calendar.DAY_OF_WEEK) == 5) {
-                Thanksgiving = 22;
-            } else if (calendar.get(calendar.DAY_OF_WEEK) == 6) {
-                Thanksgiving = 28;
-            } else {
-                Thanksgiving = 27;
-            }
-            if (day == Thanksgiving) {
-                Events temp =new Events("Thanksgiving", "Holiday", "","", 0, 0, "AM", "11/"+day+"/"+year, 23, 59, "PM");
-                number_of_events_today++;
-                evetemp[number_of_events_today-1]=temp;
-            }
-        }
-
-        //Christmas Eve
-        if (month == 12 && day == 24) {
-            Events temp =new Events("Christmas Eve", "Holiday", "place","description", 0, 0, "AM", month+"/"+day+"/"+year, 23, 59, "PM");
-            number_of_events_today++;
-            evetemp[number_of_events_today-1]=temp;
-        }
-
-        // Christmas Day
-        if (month == 12 && day == 25) {
-            Events temp =new Events("Christmas Day", "Holiday", "place","description", 0, 0, "AM", month+"/"+day+"/"+year, 23, 59, "PM");
-            number_of_events_today++;
-            evetemp[number_of_events_today-1]=temp;
-        }
-
-        // New Years Eve
-        if (month == 12 && day == 31) {
-            Events temp =new Events("New Years Eve", "Holiday", "place","description", 0, 0, "AM", month+"/"+day+"/"+year, 23, 59, "PM");
-            number_of_events_today++;
-            evetemp[number_of_events_today-1]=temp;
-        }
-        Events[] eves;
-        eves = new Events[number_of_events_today];
-        for (int i = 0; i < eves.length; i++)
-        {
-            eves[i] = evetemp[i];
-        }
-        return eves;
+        return startingMinute;
     }
-    public Events getEvents(String fileName)
-    {
 
+    public void setEHour(int h)
+    {
+        endingHour = h;
+    }
+    public int getEHour()
+    {
+        return endingHour;
+    }
+    public void setEMinute(int h)
+    {
+        endingMinute = h;
+    }
+    public int getEMinute()
+    {
+        return endingMinute;
+    }
+
+    public void setEName(String n)
+    {
+        eventName = n;
+    }
+    public String getEName()
+    {
+        return eventName;
+    }
+
+    public void setEDescription(String d)
+    {
+        eventDescription = d;
+    }
+    public String getEDescription()
+    {
+        return eventDescription;
+    }
+
+    public void setEPlace(String p)
+    {
+        eventPlace = p;
+    }
+    public String getEPlace()
+    {
+        return eventPlace;
+    }
+
+    public void setDate(String t)
+    {
+        date = t;
+    }
+    public String getDate()
+    {
+        return date;
+    }
+
+    public void setETimeOfDay(String t)
+    {
+        endingTimeOfDay = t;
+    }
+    public String getETimeOfDay()
+    {
+        return endingTimeOfDay;
+    }
+    public String getSTimeOfDay()
+    {
+        return startingTimeOfDay;
+    }
+    public void setSTimeOfDay(String t)
+    {
+        startingTimeOfDay = t;
+    }
+    public void setCategory(String t)
+    {
+        category = t;
+    }
+    public void addEvent(String n, String c,int sHour,int sMinute,int eHour,int eMinute,String eDescription,String ePlace,String d,String eTimeOfDay,String sTimeOfDay,Context con)
+    {
+        Events event = new Events();
+
+        event.setEName(n);
+
+        event.setCategory(c);
+
+        event.setEPlace(ePlace);
+
+        event.setEDescription(eDescription);
+
+        event.setSHour(sHour);
+
+        event.setSMinute(sMinute);
+
+        event.setDate(d);
+
+        event.setEHour(eHour);
+
+        event.setEMinute(eMinute);
+
+        event.setETimeOfDay(eTimeOfDay);
+
+        event.setSTimeOfDay(sTimeOfDay);
+        String[] write=d.split("/");
+        String fileName = n+"_"+write[0]+"_"+write[1]+"_"+write[2]+"_"+".txt";
         try
         {
-            FileInputStream in = MainActivity.this.openFileInput(fileName);
-            byte[] buffer = new byte[(int) in.getChannel().size()];
-
-            try {
-                in.read(buffer);
-                String buf=new String(buffer);
-                String [] buff = buf.split(",");
-                Events eve=new Events(buff[0],buff[1],buff[2],buff[3],Integer.parseInt(buff[4]),Integer.parseInt(buff[5]),buff[6],buff[7],Integer.parseInt(buff[8]),Integer.parseInt(buff[9]),buff[10]);
-                return eve;
-            }
-            finally {
-                in.close();
+            FileOutputStream stream = con.openFileOutput(fileName,Context.MODE_PRIVATE);
+            try
+            {
+                stream.write((""+ event.getEName()+"\n").getBytes());//Event name:
+                stream.write(("," + event.getEPlace() + "\n").getBytes());//Event location:
+                stream.write(("," + event.getEDescription() + "\n").getBytes());//Event description:
+                stream.write(("," + event.getCategory() + "\n").getBytes()); // Category
+                stream.write(("," + event.getSHour() + "," + event.getSMinute() + "," + event.getSTimeOfDay() + "\n").getBytes());//Event start time:
+                stream.write(("," + event.getDate() + "\n").getBytes());//Event date:
+                stream.write(("," + event.getEHour() + "," + event.getEMinute() + "," + event.getETimeOfDay() + "\n").getBytes());//Event end time:
+            } finally
+            {
+                stream.close();
             }
         }
         catch(IOException ex)
         {
-            Events eve= new Events();
-            return eve;
+            System.out.println(
+                    "Error writing to file '"
+                            + fileName + "'");
         }
 
     }
-    public boolean onTouchEvent(MotionEvent touchevent)
+    public void editEvent(String n, String c,int sHour,int sMinute,int eHour,int eMinute,String eDescription,String ePlace,String d,String eTimeOfDay,String sTimeOfDay,Context con)
     {
-        switch (touchevent.getAction())
-        {
-            case MotionEvent.ACTION_DOWN:
-                lastX = touchevent.getX();
-                break;
-            case MotionEvent.ACTION_UP:
-                float currentX = touchevent.getX();
-                // Handling left to right screen swap.
-                if (lastX < currentX)
-                {
-                    // If there aren't any other children, just break.
-                    if (viewFlipper.getDisplayedChild() == 0)
-                        break;
-                    // Next screen comes in from left.
-                    viewFlipper.setInAnimation(this, R.anim.slide_in_from_left);
-                    // Current screen goes out from right.
-                    viewFlipper.setOutAnimation(this, R.anim.slide_out_to_right);
-                    // Display next screen.
-                    viewFlipper.showNext();
-                }
-                // Handling right to left screen swap.
-                if (lastX > currentX)
-                {
-                    // If there is a child (to the left), kust break.
-                    if (viewFlipper.getDisplayedChild() == 1)
-                        break;
-                    // Next screen comes in from right.
-                    viewFlipper.setInAnimation(this, R.anim.slide_in_from_right);
-                    // Current screen goes out from left.
-                    viewFlipper.setOutAnimation(this, R.anim.slide_out_to_left);
-                    // Display previous screen.
-                    viewFlipper.showPrevious();
-                }
-                break;
-        }
-        return false;
-    }
 
+        if(n.equals(""))
+            n=getEName();
+
+        if(c.equals(""))
+            c=getCategory();
+
+        if(ePlace.equals(""))
+            ePlace=getEPlace();
+
+        if(eDescription.equals(""))
+            eDescription=getEDescription();
+
+        if(sHour==0)
+        {
+            sHour = getSHour();
+        }
+        if(sMinute==78)
+        {
+            sMinute = getSMinute();
+        }
+
+        if(d.equals(""))
+        {
+            d = getDate();
+        }
+
+        if(eHour==0)
+            eHour=getEHour();
+
+        if(eMinute==78)
+            eMinute=getEMinute();
+
+        if(eTimeOfDay.equals("AM/PM"))
+            eTimeOfDay=getETimeOfDay();
+
+        if(sTimeOfDay.equals("AM/PM")) {
+            sTimeOfDay = getSTimeOfDay();
+        }
+            deleteEvent(getFileName()+"_.txt",con);
+            addEvent(n,c,sHour,sMinute,eHour,eMinute,eDescription,ePlace,d,eTimeOfDay,sTimeOfDay,con);
+    }
+    public boolean eventConflict() {
+    	boolean conflict = false;
+    	String[] splitDate = date.split("/");
+    	File dir = new File("."); // search all directories, "." is a wildcard
+    	FileFilter fileFilter = new WildcardFileFilter(("*" + "_" + splitDate[0] + "_" + splitDate[1] + "_" + splitDate[2] + "_" + ".txt")); // this string is considering all events with the same date
+    	File[] files = dir.listFiles(fileFilter);
+    	try {
+    		for(int i = 0; i < files.length; i++) {
+    			// open and parse each file found and compare time to see if conflict happens
+    			// if conflict happens then set conflict to true and break
+    			// else continue
+    			if() {
+    				conflict = true;
+    				break;
+    			} else
+    				;
+    		}
+    	} catch(SecurityException e) { // if privileges are not sufficient enough 
+    			System.out.println("Read Access to the file is denied." + e.printStackTrace());
+    	}
+    	return conflict;
+    }
+    public String getFileName()
+    {
+        String[] write=date.split("/");
+        String beforeFix=  ""+eventName+"_"+write[0]+"_"+write[1]+"_"+write[2]+"_"+".txt";
+        String afterFix1=(beforeFix.split("_")[0].substring(0,beforeFix.split("_")[0].length()-1));
+        String afterFix2=afterFix1+"_"+(beforeFix.split("_")[1].substring(0, beforeFix.split("_")[1].length()));
+        String afterFix3=afterFix2+"_"+(beforeFix.split("_")[2].substring(0, beforeFix.split("_")[2].length()));
+        String afterFix4=afterFix3+"_"+(beforeFix.split("_")[3].substring(0, beforeFix.split("_")[3].length() - 1));
+        return afterFix4;
+    }
+    public boolean deleteEvent(String fn,Context con)
+    {
+        File dir = con.getFilesDir().getAbsoluteFile();
+        File file = new File(dir, fn);
+       return file.delete();
+
+    }
 }
