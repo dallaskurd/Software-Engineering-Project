@@ -216,14 +216,15 @@ public class MainActivity extends Activity
         View convertView = (View) inflater.inflate(R.layout.custom, null);
         alertDialog.setView(convertView);
         ListView lv = (ListView) convertView.findViewById(R.id.listView1);
-        String [] details = new String[6];
-        details[0]="Category: "+ev[i].getEPlace();
-        details[1]="Place of Event: "+ev[i].getEDescription();
-        details[2]="Description: "+ev[i].getCategory();
+        String [] details = new String[7];
+        details[0]="Category: "+ev[i].getCategory();
+        details[1]="Place of Event: "+ev[i].getEPlace();
+        details[2]="Description: "+ev[i].getEDescription();
         details[3]="Time Event Starts: "+ev[i].getSTime();
         details[4]="Time Event Ends: "+ev[i].getETime();
         details[5]="Date: "+ev[i].getDate();
-        final  ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, details);
+        details[6]="Recurrence: "+ev[i].getRecurrence().split(" ")[0];
+        final ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, details);
         lv.setAdapter(adapter);
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -306,7 +307,16 @@ public class MainActivity extends Activity
         layout.addView(text11);
         text11.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View arg0) {popupCalender();}});
+            public void onClick(View arg0) {
+                popupCalender();
+            }
+        });
+        final EditText text12 = new EditText(context);
+        text12.setHint("Recurrence: Yearly,Monthly,Weekly");
+        text12.setText("");
+        layout.addView(text12);
+        alertDialog.setView(layout);
+        final GregorianCalendar calendar = new GregorianCalendar();
         alertDialog.setView(layout);
         alertDialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
@@ -320,30 +330,31 @@ public class MainActivity extends Activity
                     int eTime2 = Integer.parseInt(eT2.split(" ")[0]);
                     int eTime = Integer.parseInt(eT);
                     // event checking is done here to check for event conflicting
-                    ev.addEvent(text.getText().toString(), text2.getText().toString(), // this is so the data that was just
-                            sTime, sTime2, eTime, eTime2, text9.getText().toString(),  // entered is passed over to the event class
-            			    text10.getText().toString(), selectedDate, sT2.split(" ")[1],
-            			    eT2.split(" ")[1], MainActivity.this);
-            	    if(ev.eventConflict()) {
-                	ev.deleteEvent(ev.getFileName(),MainActivity.this); // this deletes the event that was created above, cleaning up basically
-                	final AlertDialog.Builder alertDialog2 = new AlertDialog.Builder(MainActivity.this);
-            		alertDialog2.setTitle("Event Conflict");
-            		LinearLayout layout = new LinearLayout(MainActivity.this);
-                    alertDialog2.setView(layout);
-                    alertDialog2.show();
-                    alertDialog2.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                    	public void onClick(DialogInterface dialog, int whichButton) {
-                    		dialog.cancel();
-                    	}
-                     });
+                    calendar.set(Integer.parseInt(selectedDate.split("/")[2]), Integer.parseInt(selectedDate.split("/")[0]), Integer.parseInt(selectedDate.split("/")[1]));
+                    ev.addEvent(text.getText().toString(), text2.getText().toString(), sTime, sTime2, eTime,
+                            eTime2, text9.getText().toString(), text10.getText().toString(), selectedDate, sT2.split(" ")[1], eT2.split(" ")[1], text12.getText().toString() + " " + calendar.get(Calendar.DAY_OF_WEEK), MainActivity.this);
+                    if (ev.eventConflict(setDayEvents(Integer.parseInt(selectedDate.split("/")[2]), Integer.parseInt(selectedDate.split("/")[0]), Integer.parseInt(selectedDate.split("/")[1])))) //Gives an array to event conflicts of events
+                    {
+                        ev.deleteEvent(ev.getFileName(), MainActivity.this); // this deletes the event that was created above, cleaning up basically
+                        final AlertDialog.Builder alertDialog2 = new AlertDialog.Builder(MainActivity.this);
+                        alertDialog2.setTitle("Event Conflict");
+                        LinearLayout layout = new LinearLayout(MainActivity.this);
+                        alertDialog2.setView(layout);
+                        alertDialog2.show();
+                        alertDialog2.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int whichButton) {
+                                dialog.cancel();
+                            }
+                        });
+                    } else {
+                        ev.addEvent(text.getText().toString(), text2.getText().toString(), sTime, sTime2, eTime,
+                                eTime2, text9.getText().toString(), text10.getText().toString(), selectedDate, sT2.split(" ")[1], eT2.split(" ")[1], text12.getText().toString() + " " + calendar.get(Calendar.DAY_OF_WEEK), MainActivity.this);
                     }
-                } else {
-                	ev.addEvent(text.getText().toString(), text2.getText().toString(),
-                			sTime, sTime2, eTime, eTime2, text9.getText().toString(),
-                			text10.getText().toString(), selectedDate, sT2.split(" ")[1],
-                			eT2.split(" ")[1], MainActivity.this);
-                	}
-                } catch (Exception e) {
+                } catch (
+                        Exception e
+                        )
+
+                {
                     final AlertDialog.Builder alertDialog2 = new AlertDialog.Builder(MainActivity.this);
                     alertDialog2.setTitle("Error in adding event");
                     LinearLayout layout = new LinearLayout(MainActivity.this);
@@ -354,7 +365,9 @@ public class MainActivity extends Activity
                             dialog.cancel();
                         }
                     });
-                } finally {
+                } finally
+
+                {
                     dialog.cancel();
                     setDayView();
                 }
@@ -423,6 +436,12 @@ public class MainActivity extends Activity
                 popupCalender();
             }
         });
+        final EditText text12 = new EditText(context);
+        text12.setHint("Recurrence: Yearly,Monthly,Weekly");
+        text12.setText("");
+        layout.addView(text12);
+        alertDialog.setView(layout);
+        final GregorianCalendar calendar = new GregorianCalendar();
         alertDialog.setView(layout);
         alertDialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
@@ -435,9 +454,10 @@ public class MainActivity extends Activity
                     String eT2 = selectedETime.split(":")[1];
                     int eTime2 = Integer.parseInt(eT2.split(" ")[0]);
                     int eTime = Integer.parseInt(eT);
+                    calendar.set(Integer.parseInt(selectedDate.split("/")[2]), Integer.parseInt(selectedDate.split("/")[0]), Integer.parseInt(selectedDate.split("/")[1]));
                     ev1.editEvent(text.getText().toString(), text2.getText().toString(), sTime, sTime2, eTime,
                             eTime2, text9.getText().toString(), text10.getText().toString(), selectedDate, eT2.split(" ")[1],
-                            sT2.split(" ")[1], MainActivity.this);
+                            sT2.split(" ")[1], text12.getText().toString()+" "+calendar.get(Calendar.DAY_OF_WEEK), MainActivity.this);
                 }
                 catch (Exception e)
                 {
@@ -630,7 +650,7 @@ public class MainActivity extends Activity
                     evetemp[number_of_events_today] = getEvents(list[i]);
                     number_of_events_today++;
                 }
-             }
+            }
             else
             {
                 if (list[i].contains(month + "_" + day + "_" + year))
