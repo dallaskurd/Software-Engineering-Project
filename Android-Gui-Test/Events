@@ -52,7 +52,6 @@ public class Events
     {
         name=n;
         category=c;
-        holi=false;
         startingHour=sHour;
         endingHour=eHour;
         startingMinute=sMinute;
@@ -63,6 +62,7 @@ public class Events
         date=d;
         endingTimeOfDay=eTimeOfDay;
         startingTimeOfDay=sTimeOfDay;
+        holi=true;
     }
     public Events()
     {
