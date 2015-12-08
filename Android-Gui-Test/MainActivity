@@ -30,7 +30,11 @@ import java.util.GregorianCalendar;
 import java.util.Locale;
 import android.graphics.*;
 
-
+/**
+ * 
+ * @author Jason, Safer, Zach, Muhammad
+ *
+ */
 public class MainActivity extends Activity
 {
     private ViewFlipper viewFlipper;
@@ -42,6 +46,10 @@ public class MainActivity extends Activity
     private String selectedDate;
     private String selectedSTime;
     private String selectedETime;
+    /**
+     * 
+     * @param savedInstanceState works with variable to perfrom multiple tasks
+     */
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
@@ -85,6 +93,9 @@ public class MainActivity extends Activity
         //Day View
         setDayView();
     }
+    /**
+     * function to set the day view
+     */
     public void setDayView()
     {
         ListView lv2 = (ListView) findViewById(R.id.dayevents);
@@ -109,6 +120,9 @@ public class MainActivity extends Activity
             }
         });
     }
+    /**
+     * function to set the day view
+     */
     public void setWeekView()
     {
         Button sun = (Button) findViewById(R.id.Sundayevents);
@@ -165,6 +179,10 @@ public class MainActivity extends Activity
             }
         });
     }
+    /**
+     * 
+     * @param d is the a particular date that is used to see before or after
+     */
     public void setWeekEvents (int d)
     {
         ci = new GregorianCalendar();
@@ -197,6 +215,12 @@ public class MainActivity extends Activity
         todaysDate= date.format(today);
         popUpEvent(todaysDate, month, day, year);
     }
+    /**
+     * 
+     * @param ev array to hold events, and to initalize array size of evs
+     * @param ad string array adapter
+     * @param pos position of the event
+     */
     public void fullEvent(Events [] ev,ArrayAdapter<String> ad,int pos)
     {
         final Events [] evs=ev;
@@ -240,6 +264,12 @@ public class MainActivity extends Activity
         });
         alertDialog.show();
     }
+    /**
+     * 
+     * @param ev array to hold events, and to initalize array size of evs
+     * @param ad ad string array adapter
+     * @param pos pos position of the event
+     */
     public void deleteOrEdit(Events ev,ArrayAdapter<String> ad,int pos)
     {
         final Events evs=ev;
@@ -269,6 +299,9 @@ public class MainActivity extends Activity
         });
         alertDialog.show();
     }
+    /**
+     * method to add events
+     */
     public void add()
     {
         final AlertDialog.Builder alertDialog = new AlertDialog.Builder(MainActivity.this);
@@ -387,6 +420,10 @@ public class MainActivity extends Activity
         });
         alertDialog.show();
     }
+     /**
+     * 
+     * @param ev array to hold events, and to initalize array size of evs
+     */
     public void edit(Events ev)
     {
 
@@ -493,6 +530,10 @@ public class MainActivity extends Activity
         });
         alertDialog.show();
     }
+    /**
+     * 
+     * @param fn identifies which event to delete
+     */
     public void delete(final String fn)
     {
 
@@ -525,6 +566,9 @@ public class MainActivity extends Activity
 
         alertDialog.show();
     }
+    /**
+     * method to show pop up calendar
+     */
     public void popupCalender() {
         final AlertDialog.Builder alertDialog2 = new AlertDialog.Builder(MainActivity.this);
         LayoutInflater inflater = getLayoutInflater();
@@ -546,6 +590,9 @@ public class MainActivity extends Activity
 
         alertDialog2.show();
     }
+    /**
+     * popup time
+     */
     public void popupSTime(){
         final AlertDialog.Builder alertDialog2 = new AlertDialog.Builder(MainActivity.this);
         LayoutInflater inflater = getLayoutInflater();
@@ -597,6 +644,9 @@ public class MainActivity extends Activity
             }
         });
     }
+    /**
+     * popup time
+     */
     public void popupETime(){
         final AlertDialog.Builder alertDialog2 = new AlertDialog.Builder(MainActivity.this);
         LayoutInflater inflater = getLayoutInflater();
@@ -648,6 +698,13 @@ public class MainActivity extends Activity
             }
         });
     }
+    /**
+     * 
+     * @param to
+     * @param m month 
+     * @param d date
+     * @param y year
+     */
     public void popUpEvent( String to,int m,int d,int y)
     {
         final Events[] ev=setDayEvents(m + 1, d, y);
@@ -675,6 +732,13 @@ public class MainActivity extends Activity
         alertDialog.show();
         adapter.notifyDataSetChanged();
     }
+    /**
+     * 
+     * @param month
+     * @param day
+     * @param year
+     * @return
+     */
     public Events[] setDayEvents(int month,int day,int year)
     {
         String[] list = fileList();
@@ -944,6 +1008,11 @@ public class MainActivity extends Activity
         }
         return eves;
     }
+    /**
+     * 
+     * @param fileName name of file where event saved
+     * @return evnets
+     */
     public Events getEvents(String fileName)
     {
 
@@ -970,6 +1039,11 @@ public class MainActivity extends Activity
         }
 
     }
+    /**
+     * 
+     * @param touchevent
+     * @return
+     */
     public boolean onTouchEvent(MotionEvent touchevent)
     {
         switch (touchevent.getAction())
