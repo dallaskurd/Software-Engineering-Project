@@ -40,11 +40,11 @@ Add Events:
 Delete Events:
 	To delete an event the user must click on the day with the event in either month or week view. After clicking a pop-up window will prompt the user with the events of that day. Then the user must click on the an event and at the bottom of this pop up window will be a button labeled 'delete'.
 Adding Categories:
-	To add a category click the add category button in the upper right corner and create a new category by name and color type. If a category is created that already exists nothing will happen and the original category will persist.
+	To add a category click the add category button on any view and create a new category by name and color type. If a category is created that already exists nothing will happen and the original category will persist. There are only a possibilty of 99 category spots available to add. 
 
 Team Contributions:
 
-Jason did most if not all of the implementation to the Final Product of the Calendar. After a certain point in the progress, the team felt most comfortable designing a process or method then handing it off to Jason to integrate into the App. He piloted the design and look of the final product. He also guided other team members to completion with methods they were having difficulty completing. 
+Jason did most, if not all of the implementation to the Final Product of our Calendar. After a certain point in the progress, the team felt most comfortable designing a process or method then handing it off to Jason to integrate into the App. He piloted the design and look of the final product. He also guided other team members to completion with methods they were having difficulty completing. 
 
 Safer also created a Calendar App that we did not end up using but built into a functing month view. Safer provided a substancial amount of information and knowledge about how best to implement methods and save information in the App. He completed the conflict code and worked with other team members to do this is a concise way. 
 
@@ -52,6 +52,6 @@ Muhammet completed the add event code which Jason implemented in the beginning v
 
 Zach wrote the code for the Holidays, the readme and the user manual. He tried the event categories with Jason and Safer's help but failed. Zach also organized meetings with the group. 
 
-All team members attended meetings and provided meaningful input to the implementation and the progress of the app.
+All team members attended meetings and provided meaningful input to the implementation and the progress of the app. We met regularly to ask questions of each others code and to make the best methods to work with the end product without having to back-track work. To reiterate once again, the bulk of our commits were implemented through Jason by passing him code to check and implement seemlessly with the existing main program.
 
 
