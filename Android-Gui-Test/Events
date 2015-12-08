@@ -295,22 +295,59 @@ public class Events
         deleteEvent(getFileName()+"_.txt",con);
         addEvent(n,c,sHour,sMinute,eHour,eMinute,eDescription,ePlace,d,eTimeOfDay,sTimeOfDay,r,con);
     }
-    public boolean eventConflict(Events[] ev)
-    {
-        boolean conflict = false;
-        for(int i = 0; i < ev.length; i++)
-        {
-            //Parse though thee events array that was taken from the file
-            // if conflict happens then set conflict to true and break
-            // else continue
-            if((!ev[i].getHoliday())) //Add other reqs here
-            {
-                conflict = true;
-                break;
-            } else
-                ;
-        }
-        return conflict;
+    public boolean eventConflict() {
+    	boolean conflict = false;
+    	String[] splitDate = date.split("/");
+    	File dir = new File("."); // search all directories, "." is a wildcard
+    	FileFilter fileFilter = new WildcardFileFilter(("*" + "_" + splitDate[0] + "_" + splitDate[1] + "_" + splitDate[2] + "_" + ".txt")); // this string is considering all events with the same date
+    	File[] files = dir.listFiles(fileFilter);
+    	try {
+    		for(int i = 0; i < files.length; i++) { // loop entire list of events with the same date
+    			try {
+    				FileReader reader = new FileReader(files[i].getPath()); // copy file (event) pathname
+    				Scanner sc = new Scanner(reader); // open the file
+    				for(int i = 4; i != 0; i--) { // skip (parse) to the fifth line
+    					sc.nextLine();
+    				}
+    				String line = sc.nextLine(); // read in start time data
+    				String [] startTime = line.split(","); // an array of SHour, SMinute, STimeOfDay
+    				sc.nextLine(); // skip data line since we are only looking at events with the same date already
+    				line = sc.nextLine(); // read in last line of the .txt file, being the end time
+    				String [] endTime = line.split(","); // an array of EHour, EMinute, ETimeOfDay
+    				reader.close(); // clean up
+    				sc.close(); // clean up
+    				// decided to create new variables instead of traversing array
+    				int startHourTime, startMinuteTime, endHourTime, endMinuteTime;
+    				String startTimeOfDay, endTimeOfDay;
+    				startHourTime = Integer.parseInt(startTime[0]); // convert String to int, start hour
+    				startMinuteTime = Integer.parseInt(startTime[1]); // convert String to in, start minute
+    				startTimeOfDay = startTime[2]; // set start time of day 
+    				endHourTime = Integer.parseInt(endTime[0]); // convert String to int, end hour
+    				endMinuteTime = Integer.parseInt(endTime[1]); // convert String to int, end minute
+    				endTimeOfDay = endTime[2]; // set end time of day
+    				if(getSTimeOfDay() == startTimeOfDay) { // both events start at the same time
+    					if(getSHour() == startHourTime)
+    						if(getSMinute() == startMinuteTime) {
+    							conflict = true;
+    							break;
+    						}
+    				} else if(getETimeOfDay() == endTimeOfDay) { // both events end at the same time
+    					if(getEHour() == endHourTime)
+    						if(getEMinute() == endMinuteTime) {
+    							conflict = true;
+    							break;
+    						}
+    				} // add more checks for conflicts
+    				else // continue to the next event, do nothing bc no conflict
+    					;
+    			} catch(IOException e) {
+    				System.out.println(e.printStackTrace());
+    			}
+    		}
+    	} catch(SecurityException e) { // if privileges are not sufficient enough 
+    			System.out.println("Read Access to the file is denied." + e.printStackTrace());
+    	}
+    	return conflict;
     }
     public String getFileName()
     {
