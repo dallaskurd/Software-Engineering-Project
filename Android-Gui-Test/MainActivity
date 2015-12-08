@@ -20,7 +20,10 @@ import android.widget.CalendarView.OnDateChangeListener;
 import android.view.MotionEvent;
 import android.widget.TimePicker;
 import android.widget.ViewFlipper;
+
+import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.sql.Time;
 import java.text.SimpleDateFormat;
@@ -30,11 +33,7 @@ import java.util.GregorianCalendar;
 import java.util.Locale;
 import android.graphics.*;
 
-/**
- * 
- * @author Jason, Safer, Zach, Muhammad
- *
- */
+
 public class MainActivity extends Activity
 {
     private ViewFlipper viewFlipper;
@@ -46,15 +45,69 @@ public class MainActivity extends Activity
     private String selectedDate;
     private String selectedSTime;
     private String selectedETime;
-    /**
-     * 
-     * @param savedInstanceState works with variable to perfrom multiple tasks
-     */
+    private String[] catnames=new String[1];
+    private String[] catcolor=new String[1];
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
 
+        if(!(new File(getFilesDir().getAbsoluteFile(),"Cat").exists()))
+        {
+            try
+            {
+                FileOutputStream stream = openFileOutput("Cat",Context.MODE_PRIVATE);
+                try
+                {
+                    stream.write((",school,red + \n").getBytes());
+                    catcolor[0]="red";
+                    catnames[0]="school";
+                } finally
+                {
+                    stream.close();
+                }
+            }
+            catch(IOException ex)
+            {
+                System.out.println(
+                        "Error writing to file '"
+                                 + "Cat");
+            }
+        }
+        else
+        {
+            try
+            {
+                FileInputStream in = MainActivity.this.openFileInput("Cat");
+                byte[] buffer = new byte[(int) in.getChannel().size()];
 
+                try {
+                    in.read(buffer);
+                    String buf=new String(buffer);
+                    String [] buff = buf.split(",");
+                    int n=0;
+                    int c=0;
+                    for(int i=0; i<buff.length;i++)
+                    {
+                        System.out.println(buff[i]);
+                        if(i==0||i%2==0)
+                        {
+                            catnames[n]=buff[i];
+                            n++;
+                        }
+                        else{
+                            catcolor[c]=buff[i];
+                            c++;
+                        }
+                    }
+                }
+                finally {
+                    in.close();
+                }
+            }
+            catch(IOException ex)
+            {
+            }
+        }
 
         ci = new GregorianCalendar();
         ci2 = new GregorianCalendar();
@@ -87,15 +140,20 @@ public class MainActivity extends Activity
 
             }
         });
+        Button cat = (Button) findViewById(R.id.cat);
+        cat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View arg0) {
+                cat();
+
+            }
+        });
         //Week View Code
         setWeekView();
 
         //Day View
         setDayView();
     }
-    /**
-     * function to set the day view
-     */
     public void setDayView()
     {
         ListView lv2 = (ListView) findViewById(R.id.dayevents);
@@ -110,7 +168,7 @@ public class MainActivity extends Activity
         {
             dayNames[i] = dayevents[i].getName();
         }
-        final ArrayAdapter<String> adapter = new MySimpleArrayAdapter<>(this, android.R.layout.simple_list_item_1, dayNames, dayevents);
+        final ArrayAdapter<String> adapter = new MySimpleArrayAdapter<>(this, android.R.layout.simple_list_item_1, dayNames, dayevents,catnames,catcolor);
         lv2.setAdapter(adapter);
         adapter.notifyDataSetChanged();
         lv2.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -120,9 +178,6 @@ public class MainActivity extends Activity
             }
         });
     }
-    /**
-     * function to set the day view
-     */
     public void setWeekView()
     {
         Button sun = (Button) findViewById(R.id.Sundayevents);
@@ -138,12 +193,10 @@ public class MainActivity extends Activity
                 setWeekEvents(1);
             }
         });
-        mon.setOnClickListener(new View.OnClickListener()
-        {
+        mon.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View arg0)
-            {
-                setWeekEvents (2);
+            public void onClick(View arg0) {
+                setWeekEvents(2);
             }
         });
         tues.setOnClickListener(new View.OnClickListener()
@@ -179,10 +232,59 @@ public class MainActivity extends Activity
             }
         });
     }
-    /**
-     * 
-     * @param d is the a particular date that is used to see before or after
-     */
+    public void cat()
+    {
+        final AlertDialog.Builder alertDialog = new AlertDialog.Builder(MainActivity.this);
+        alertDialog.setTitle("Categories");
+        alertDialog.setMessage("Categories");
+        Context context = MainActivity.this;
+        LinearLayout layout = new LinearLayout(context);
+        layout.setOrientation(LinearLayout.VERTICAL);
+        LayoutInflater inflater = getLayoutInflater();
+        View convertView = (View) inflater.inflate(R.layout.custom, null);
+        alertDialog.setView(convertView);
+        ListView lv = (ListView) convertView.findViewById(R.id.listView1);
+        final  ArrayAdapter<String> adapter = new MySimpleArrayAdapter<>(this, android.R.layout.simple_list_item_1, catnames,catcolor);
+        lv.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
+        alertDialog.setNeutralButton("Add Category", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                final AlertDialog.Builder alertDialog = new AlertDialog.Builder(MainActivity.this);
+                alertDialog.setTitle("Add");
+                Context context = MainActivity.this;
+                LinearLayout layout = new LinearLayout(context);
+                layout.setOrientation(LinearLayout.VERTICAL);
+                final EditText add = new EditText(context);
+                add.setHint("Name of Category");
+                layout.addView(add);
+                final EditText color = new EditText(context);
+                color.setHint("red,green,black,white,cyan,magenta,lightgray,gray");
+                layout.addView(color);
+                alertDialog.setView(layout);
+                alertDialog.setNeutralButton("Ok", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int whichButton) {
+                                dialog.dismiss();
+                            /*    int i = catnames.length;
+                                String[] temp= new String[i+1];
+                                String[] temp2= new String[i+1];
+                                for (int t = 0; t > i; t++) {
+                                    temp[t]=catnames[t];
+                                    temp2[t]=catcolor[t];
+                                }
+                                temp[i]=add.getText().toString();
+                                temp2[i]=color.getText().toString();
+                                catnames=temp;
+                                catcolor=temp2;*/
+                            }
+                        }
+
+                );
+                alertDialog.show();
+
+            }
+        });
+        alertDialog.show();
+    }
     public void setWeekEvents (int d)
     {
         ci = new GregorianCalendar();
@@ -215,12 +317,6 @@ public class MainActivity extends Activity
         todaysDate= date.format(today);
         popUpEvent(todaysDate, month, day, year);
     }
-    /**
-     * 
-     * @param ev array to hold events, and to initalize array size of evs
-     * @param ad string array adapter
-     * @param pos position of the event
-     */
     public void fullEvent(Events [] ev,ArrayAdapter<String> ad,int pos)
     {
         final Events [] evs=ev;
@@ -264,12 +360,6 @@ public class MainActivity extends Activity
         });
         alertDialog.show();
     }
-    /**
-     * 
-     * @param ev array to hold events, and to initalize array size of evs
-     * @param ad ad string array adapter
-     * @param pos pos position of the event
-     */
     public void deleteOrEdit(Events ev,ArrayAdapter<String> ad,int pos)
     {
         final Events evs=ev;
@@ -299,9 +389,6 @@ public class MainActivity extends Activity
         });
         alertDialog.show();
     }
-    /**
-     * method to add events
-     */
     public void add()
     {
         final AlertDialog.Builder alertDialog = new AlertDialog.Builder(MainActivity.this);
@@ -368,8 +455,8 @@ public class MainActivity extends Activity
                     String eT2 = selectedETime.split(":")[1];
                     int eTime2 = Integer.parseInt(eT2.split(" ")[0]);
                     int eTime = Integer.parseInt(eT);
-                int day=Integer.parseInt(selectedDate.split("/")[1]);
-                    calendar.set(Integer.parseInt(selectedDate.split("/")[2]), Integer.parseInt(selectedDate.split("/")[0])-1, day);
+                    int day = Integer.parseInt(selectedDate.split("/")[1]);
+                    calendar.set(Integer.parseInt(selectedDate.split("/")[2]), Integer.parseInt(selectedDate.split("/")[0]) - 1, day);
                     ev.addEvent(text.getText().toString(), text2.getText().toString(), sTime, sTime2, eTime,
                             eTime2, text9.getText().toString(), text10.getText().toString(), selectedDate, sT2.split(" ")[1], eT2.split(" ")[1], text12.getText().toString() + " " + calendar.get(Calendar.DAY_OF_WEEK), MainActivity.this);
                     if (ev.eventConflict(setDayEvents(Integer.parseInt(selectedDate.split("/")[2]), Integer.parseInt(selectedDate.split("/")[0]), Integer.parseInt(selectedDate.split("/")[1])))) //Gives an array to event conflicts of events
@@ -409,7 +496,7 @@ public class MainActivity extends Activity
                 {
                     dialog.cancel();
                     setDayView();
-               }
+                }
 
             }
         });
@@ -420,10 +507,6 @@ public class MainActivity extends Activity
         });
         alertDialog.show();
     }
-     /**
-     * 
-     * @param ev array to hold events, and to initalize array size of evs
-     */
     public void edit(Events ev)
     {
 
@@ -530,10 +613,6 @@ public class MainActivity extends Activity
         });
         alertDialog.show();
     }
-    /**
-     * 
-     * @param fn identifies which event to delete
-     */
     public void delete(final String fn)
     {
 
@@ -566,9 +645,6 @@ public class MainActivity extends Activity
 
         alertDialog.show();
     }
-    /**
-     * method to show pop up calendar
-     */
     public void popupCalender() {
         final AlertDialog.Builder alertDialog2 = new AlertDialog.Builder(MainActivity.this);
         LayoutInflater inflater = getLayoutInflater();
@@ -590,9 +666,6 @@ public class MainActivity extends Activity
 
         alertDialog2.show();
     }
-    /**
-     * popup time
-     */
     public void popupSTime(){
         final AlertDialog.Builder alertDialog2 = new AlertDialog.Builder(MainActivity.this);
         LayoutInflater inflater = getLayoutInflater();
@@ -644,9 +717,6 @@ public class MainActivity extends Activity
             }
         });
     }
-    /**
-     * popup time
-     */
     public void popupETime(){
         final AlertDialog.Builder alertDialog2 = new AlertDialog.Builder(MainActivity.this);
         LayoutInflater inflater = getLayoutInflater();
@@ -698,13 +768,6 @@ public class MainActivity extends Activity
             }
         });
     }
-    /**
-     * 
-     * @param to
-     * @param m month 
-     * @param d date
-     * @param y year
-     */
     public void popUpEvent( String to,int m,int d,int y)
     {
         final Events[] ev=setDayEvents(m + 1, d, y);
@@ -719,7 +782,7 @@ public class MainActivity extends Activity
         {
             names[i]=ev[i].getName();
         }
-        final  ArrayAdapter<String> adapter = new MySimpleArrayAdapter<>(this, android.R.layout.simple_list_item_1, names,ev);
+        final  ArrayAdapter<String> adapter = new MySimpleArrayAdapter<>(this, android.R.layout.simple_list_item_1, names,ev,catnames,catcolor);
         lv.setAdapter(adapter);
 
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -732,13 +795,6 @@ public class MainActivity extends Activity
         alertDialog.show();
         adapter.notifyDataSetChanged();
     }
-    /**
-     * 
-     * @param month
-     * @param day
-     * @param year
-     * @return
-     */
     public Events[] setDayEvents(int month,int day,int year)
     {
         String[] list = fileList();
@@ -752,11 +808,14 @@ public class MainActivity extends Activity
                 evetemp[number_of_events_today] = getEvents(list[i]);
                 number_of_events_today++;
             }
-            else if(getEvents(list[i]).getRecurrence()!=null) {
-                if (getEvents(list[i]).getRecurrence().contains("onthly") && (list[i].contains("_0" + day + "_" + year) || list[i].contains("_" + day + "_" + year))) {
+            else if(!list[i].equals("Cat"))
+            {
+                if ((list[i].contains("_0" + day + "_" + year) || list[i].contains("_" + day + "_" + year))&&(getEvents(list[i]).getRecurrence().contains("onthly")))
+                {
                     evetemp[number_of_events_today] = getEvents(list[i]);
                     number_of_events_today++;
-                } else if (getEvents(list[i]).getRecurrence().contains("early") && (list[i].contains(month + "_0" + day + "_") || list[i].contains(month + "_" + day + "_"))) {
+                } else if ((list[i].contains(month + "_0" + day + "_") || list[i].contains(month + "_" + day + "_"))&&getEvents(list[i]).getRecurrence().contains("early") )
+                {
                     evetemp[number_of_events_today] = getEvents(list[i]);
                     number_of_events_today++;
                 } else if (getEvents(list[i]).getRecurrence().contains("eekly " + calendar.get(Calendar.DAY_OF_WEEK))) {
@@ -1008,11 +1067,6 @@ public class MainActivity extends Activity
         }
         return eves;
     }
-    /**
-     * 
-     * @param fileName name of file where event saved
-     * @return evnets
-     */
     public Events getEvents(String fileName)
     {
 
@@ -1039,11 +1093,6 @@ public class MainActivity extends Activity
         }
 
     }
-    /**
-     * 
-     * @param touchevent
-     * @return
-     */
     public boolean onTouchEvent(MotionEvent touchevent)
     {
         switch (touchevent.getAction())
