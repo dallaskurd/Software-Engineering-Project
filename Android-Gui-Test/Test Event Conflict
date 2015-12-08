@@ -1,4 +1,7 @@
-    public boolean eventConflict(Events[] ev)
+/**
+ * event conflicts to test the app 
+ */
+public boolean eventConflict(Events[] ev)
     {
         boolean conflict = false;
         for(int i = 0; i < ev.length; i++)
@@ -37,3 +40,4 @@
         }
         return conflict;
     }
+
