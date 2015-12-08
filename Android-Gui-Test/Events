@@ -14,6 +14,11 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.*;
+/**
+ * 
+ * @author Muhammad
+ *
+ */
 public class Events
 {
     private String name;
@@ -31,6 +36,20 @@ public class Events
     private String startingTimeOfDay;
     private File file;
     private String recurrence;
+     /**
+     * 
+     * @param n name of event set to name
+     * @param ePlace place of event set to eventPlace
+     * @param eDescription description of event set to eventDescrption
+     * @param c set to category
+     * @param sHour set to startHour
+     * @param sMinute set to startMinute
+     * @param sTimeOfDay set to startingTimeOfDay (am or pm)
+     * @param d set to date
+     * @param eHour set to endingHour
+     * @param eMinute set to endingMinute
+     * @param eTimeOfDay set to endingTimeOfDay (am or pm) 
+     */
     public Events(String n,String ePlace,String eDescription, String c,int sHour,int sMinute,String sTimeOfDay,String d,int eHour,int eMinute,String eTimeOfDay,String r)
     {
         name=n;
@@ -48,6 +67,11 @@ public class Events
         startingTimeOfDay=sTimeOfDay;
         recurrence=r;
     }
+    /**
+     * 
+     * @param n set to event name
+     * @param c set to category
+     */
    public Events(String n,String c,String ePlace, String eDescription,int sHour,int sMinute,String sTimeOfDay,String d,int eHour,int eMinute,String eTimeOfDay)
     {
         name=n;
@@ -64,136 +88,261 @@ public class Events
         startingTimeOfDay=sTimeOfDay;
         holi=true;
     }
+    /**
+     * test method
+     */
     public Events()
     {
         name="";
         category="";
         holi=false;
     }
+     /**
+     * 
+     * @return name of event variable name
+     */
     public String getName()
     {
         return name;
     }
+     /**
+     * 
+     * @return holiday variable holi
+     */
     public boolean getHoliday()
     {
         return    holi;
     }
+    /**
+     * set holi to true
+     */
     public void setHoliday()
     {
         holi=true;
     }
+    /**
+     * 
+     * @return event category
+     */
     public String getCategory()
     {
         return category;
     }
-
+   /**
+     * 
+     * @param h sets startingHour
+     */
     public void setSHour(int h)
     {
         startingHour = h;
     }
+     /**
+     * 
+     * @return startingHour
+     */
     public int getSHour()
     {
         return startingHour;
     }
-
+    /**
+     * 
+     * @param h set to startingMinute
+     */
     public void setSMinute(int h)
     {
         startingMinute = h;
     }
+     /**
+     * 
+     * @return startingMinute
+     */
     public int getSMinute()
     {
         return startingMinute;
     }
-
+    /**
+     * 
+     * @param h set to endingHour
+     */
     public void setEHour(int h)
     {
         endingHour = h;
     }
+    /**
+     * 
+     * @return endingHour
+     */
     public int getEHour()
     {
         return endingHour;
     }
+     /**
+     * 
+     * @param h set to endingMinute
+     */
     public void setEMinute(int h)
     {
         endingMinute = h;
     }
+    /**
+     * 
+     * @return endingMinute
+     */
     public int getEMinute()
     {
         return endingMinute;
     }
-
+    /**
+     * 
+     * @param n set to eventName
+     */
     public void setEName(String n)
     {
         eventName = n;
     }
+    /**
+     * 
+     * @return eventName
+     */
     public String getEName()
     {
         return eventName;
     }
-
+    /**
+     * 
+     * @param d set to eventDescription
+     */
     public void setEDescription(String d)
     {
         eventDescription = d;
     }
+     /**
+     * 
+     * @return eventDescription
+     */
     public String getEDescription()
     {
         return eventDescription;
     }
-
+    /**
+     * 
+     * @param p set to eventPlace
+     */
     public void setEPlace(String p)
     {
         eventPlace = p;
     }
+    /**
+     * 
+     * @return eventPlace
+     */
     public String getEPlace()
     {
         return eventPlace;
     }
-
+    /**
+     * 
+     * @param t set to date
+     */
     public void setDate(String t)
     {
         date = t;
     }
+    /**
+     * 
+     * @return date
+     */
     public String getDate()
     {
         return date;
     }
-
+    /**
+     * 
+     * @param t set to endingTimeOfDay
+     */
     public void setETimeOfDay(String t)
     {
         endingTimeOfDay = t;
     }
+    /**
+     * 
+     * @return endingTimeOfDay
+     */
     public String getETimeOfDay()
     {
         return endingTimeOfDay;
     }
+    /**
+     * 
+     * @return startingTimeOfDay
+     */
     public String getSTimeOfDay()
     {
         return startingTimeOfDay;
     }
+    /**
+     * 
+     * @param t set to startingTimeOfDay
+     */
     public void setSTimeOfDay(String t)
     {
         startingTimeOfDay = t;
     }
+    /**
+     * 
+     * @param t set to category
+     */
     public void setCategory(String t)
     {
         category = t;
     }
+    /**
+     * 
+     * @param r set to recurrence (if events occurs more than once)
+     */
     public void setRecurrence(String r)
     {
         recurrence = r;
     }
+    /**
+     * 
+     * @return recurrence of event
+     */
     public String getRecurrence()
     {
         return recurrence;
     }
+     /**
+     * 
+     * @return string of the starting time
+     */
     public String getSTime()
     {
         return ""+getSHour()+":"+getSMinute()+" "+getSTimeOfDay();
     }
+    /**
+     * 
+     * @return string of the starting time
+     */
     public String getETime()
     {
         return ""+getEHour()+":"+getEMinute()+" "+getETimeOfDay();
     }
+     /**
+     * 
+     * @param n passed to event.setEName
+     * @param c passed to event.setCategory
+     * @param sHour passed to event.setSHour to set starting hour
+     * @param sMinute passed to event.setSMinute to set starting minute
+     * @param eHour	passed to event.setEHour to set ending hour
+     * @param eMinute passed to event.setEMinute to set ending minute
+     * @param eDescription passed to event.setEDescription
+     * @param ePlace passed to event.setEPlace
+     * @param d passed to event.setDate
+     * @param eTimeOfDay passed to event.setETimeOfDay (either am or pm)
+     * @param sTimeOfDay passed to event.setSTimeOfDay (either am or pm)
+     * @param con
+     */
     public void addEvent(String n, String c,int sHour,int sMinute,int eHour,int eMinute,String eDescription,String ePlace,String d,String eTimeOfDay,String sTimeOfDay,String r,Context con)
     {
         Events event = new Events();
@@ -248,6 +397,14 @@ public class Events
         }
 
     }
+    /**
+     * @author Jason
+     * @param ePlace sets to getEPlace()
+     * @param d sets to getDate()
+     * @param eTimeOfDay sets to getETimeOfDay()
+     * @param sTimeOfDay sets to getSTimeOfDay()
+     * @param con
+     */
     public void editEvent(String n, String c,int sHour,int sMinute,int eHour,int eMinute,String eDescription,String ePlace,String d,String eTimeOfDay,String sTimeOfDay,String r,Context con)
     {
 
@@ -295,6 +452,10 @@ public class Events
         deleteEvent(getFileName()+"_.txt",con);
         addEvent(n,c,sHour,sMinute,eHour,eMinute,eDescription,ePlace,d,eTimeOfDay,sTimeOfDay,r,con);
     }
+     /**
+     * @ author Safer, Zach and Jason
+     * @return where the conflict between two events is occurring 
+     */
     public boolean eventConflict() {
     	boolean conflict = false;
     	String[] splitDate = date.split("/");
@@ -349,6 +510,10 @@ public class Events
     	}
     	return conflict;
     }
+    /**
+     * @author Jason
+     * @return the name of file
+     */
     public String getFileName()
     {
         String[] write=date.split("/");
@@ -359,6 +524,12 @@ public class Events
         String afterFix4=afterFix3+"_"+(beforeFix.split("_")[3].substring(0, beforeFix.split("_")[3].length() - 1));
         return afterFix4;
     }
+    /**
+     * 
+     * @param fn file name to be deleted
+     * @param con
+     * @return the value from file.delete()
+     */
     public boolean deleteEvent(String fn,Context con)
     {
         File dir = con.getFilesDir().getAbsoluteFile();
