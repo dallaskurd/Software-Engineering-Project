@@ -18,23 +18,13 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 import static android.view.View.TEXT_ALIGNMENT_CENTER;
-/**
- * 
- * @author Safer
- *
- * @param <S>
- */
+
 public class MySimpleArrayAdapter<S> extends ArrayAdapter<String> {
     private final Context context;
     private final String[] values;
     private final Events[] events;
-    /**
-     * 
-     * @param context assigned to context
-     * @param test 
-     * @param values assigned to values
-     * @param ev assigned to events
-     */
+    private final String[] color;
+    private final String[] catnames;
     public MySimpleArrayAdapter(Context context,int test, String[] values, Events[] ev,String[] cn,String[] co) {
         super(context, test, values);
         this.context = context;
@@ -52,13 +42,6 @@ public class MySimpleArrayAdapter<S> extends ArrayAdapter<String> {
         events=null;
         catnames=values;
     }
-    /**
-     * 
-     * @param position - where it's located
-     * @param convert - View to convert the view
-     * @param parent 
-     * @return view - returns the value view
-     */
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View view = super.getView(position, convertView, parent);
@@ -82,7 +65,7 @@ public class MySimpleArrayAdapter<S> extends ArrayAdapter<String> {
             }
             return view;
         }
-        else {
+        else if(!catnames[0].equals("")) {
             myText.setGravity(Gravity.CENTER);
             int f=0;
             while (!(catnames[i].equals(myText.getText()))) {
@@ -91,16 +74,15 @@ public class MySimpleArrayAdapter<S> extends ArrayAdapter<String> {
                 myText.setTextColor(Color.parseColor(color[f]));
             return view;
         }
+        else
+            return view;
     }
-    /**
-     * 
-     * @param category - helps create files, 
-     */
+
     public void Categories(String category) {
 
         FileOutputStream fop = null;
         File file;
-        
+
         try {
 
             file = new File(category + ".txt");
@@ -131,3 +113,4 @@ public class MySimpleArrayAdapter<S> extends ArrayAdapter<String> {
         }
     }
 }
+
