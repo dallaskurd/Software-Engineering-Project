@@ -5,8 +5,6 @@
         {
         if((!ev[i].getHoliday())) //Add other reqs here
             {
-            int laterStart;
-            int earlyEnd;
             if(getSTimeOfDay() == ev[i].getSTimeOfDay()) { // both events start at the same time
                 if(getSHour() == ev[i].getSHour())
                     if(getSMinute() == ev[i].getSMinute()) {
@@ -28,10 +26,11 @@
                                     conflict = true;
                                     break;
                                     }
-            } else if((Integer.parseInt(ev[i].getSHour())) > Integer.parseInt(getSHour())) { // new event starts between old event
-                    if(getSTimeOfDay() == ev[i].getSTimeOfDay())
-                        
-            }
+            } else if((ev[i].getSTimeOfDay() == "AM") && (getSTimeOfDay() == "PM")) { // new event starts between old event
+                    if((Integer.parseInt(ev[i].getSHour())) > Integer.parseInt(getSHour())) {
+                        conflict = true;
+                        break;
+                    }
             } else // no conflict, do nothing
                 ;
             }
