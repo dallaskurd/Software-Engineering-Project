@@ -48,7 +48,7 @@ public class Events
         startingTimeOfDay=sTimeOfDay;
         recurrence=r;
     }
-    public Events(String n,String ePlace,String eDescription, String c,int sHour,int sMinute,String sTimeOfDay,String d,int eHour,int eMinute,String eTimeOfDay)
+   public Events(String n,String c,String ePlace, String eDescription,int sHour,int sMinute,String sTimeOfDay,String d,int eHour,int eMinute,String eTimeOfDay)
     {
         name=n;
         category=c;
