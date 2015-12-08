@@ -1,0 +1,23 @@
+//@Author Zach Miller
+// I'm not sure how to implement a method test for our program because the only has adding and deleting events but here goes.
+
+
+Public class CalendarTest{
+//Do we need to create a calendar or can we just write a method to create lots of events from the //starting of the app?
+@Before
+MainActivity TestActivity;
+Events testEvent;
+}
+
+@Test
+//This first test is to try and overload the add function for a single day.
+//The idea is that it will try and create an event for every minute of the day
+Public void AddTest(){
+String TimeOfday = “AM”;
+Int hour = 12;
+//hour is just a counter, hour used is the 
+For(int militaryhour = 0; militaryhour < 24; militaryhour++){
+	For(int minute = 1; minute < 60; minute++){
+testEvent.addEvent(“test1”,”Location”,”Description”, “Test Category”, hour, (minute-1), “AM”, ”12/08/15”, hour, minute, “AM” , “no”);}
+	if(hour == 12)
+	{	hour = 1; }
