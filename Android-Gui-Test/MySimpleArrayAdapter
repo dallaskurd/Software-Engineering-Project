@@ -35,12 +35,22 @@ public class MySimpleArrayAdapter<S> extends ArrayAdapter<String> {
      * @param values assigned to values
      * @param ev assigned to events
      */
-    public MySimpleArrayAdapter(Context context,int test, String[] values, Events[] ev)
+    public MySimpleArrayAdapter(Context context,int test, String[] values, Events[] ev,String[] cn,String[] co) {
+        super(context, test, values);
+        this.context = context;
+        this.values = values;
+        events = ev;
+        color = co;
+        catnames=cn;
+    }
+    public MySimpleArrayAdapter(Context context,int test, String[] values, String[] ev)
     {
         super(context, test, values);
         this.context = context;
         this.values = values;
-        events=ev;
+        color=ev;
+        events=null;
+        catnames=values;
     }
     /**
      * 
@@ -55,21 +65,32 @@ public class MySimpleArrayAdapter<S> extends ArrayAdapter<String> {
         int i = 0;
         TextView myText = (TextView) view;
         myText.setGravity(Gravity.CENTER);
-        while (!(events[i].getName().equals(myText.getText()))) {
-            i++;
-       }
-        System.out.println(events[i].getEPlace());
-            if (events[i].getEPlace() == "Family") {
+        if(events!=null) {
+            while (!(events[i].getName().equals(myText.getText()))) {
+                i++;
+            }
+            if (events[i].getCategory() == "Holiday") {
                 myText.setTextColor(Color.BLUE);
-            } else if (events[i].getEPlace() == "School") {
+            } else if (events[i].getCategory() == "School") {
                 myText.setTextColor(Color.RED);
-            } else if (events[i].getEPlace() == "Work") {
+            } else if (events[i].getCategory() == "Work") {
                 myText.setTextColor(Color.MAGENTA);
+            } else if (events[i].getRecurrence().split(" ")[1].contains("1") || events[i].getRecurrence().split(" ")[1].contains("7")) {
+                myText.setTextColor(Color.YELLOW);
             } else {
                 myText.setTextColor(Color.DKGRAY);
             }
-
-        return view;
+            return view;
+        }
+        else {
+            myText.setGravity(Gravity.CENTER);
+            int f=0;
+            while (!(catnames[i].equals(myText.getText()))) {
+                f++;
+            }
+                myText.setTextColor(Color.parseColor(color[f]));
+            return view;
+        }
     }
     /**
      * 
