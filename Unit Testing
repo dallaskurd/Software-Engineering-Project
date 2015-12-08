@@ -1,23 +1,40 @@
-//@Author Zach Miller
-// I'm not sure how to implement a method test for our program because the only has adding and deleting events but here goes.
+import JUnit.framework.TestCase;
 
-
-Public class CalendarTest{
-//Do we need to create a calendar or can we just write a method to create lots of events from the //starting of the app?
-@Before
-MainActivity TestActivity;
-Events testEvent;
+Public class CalendarTest extends TestCase {
+	
+	@Before1
+	protected void setUp() throws Exception {
+		MainActivity testActivity;
+		Events	testEvent = new Events;
+	}
+	
+	@Test1
+	// adds as many events as possible
+	public void overLoadEvents () {
+		setUp();
+		while(true) { // infinte loop
+		testEvent = new Events;
+		}
+	}
+	@Before2
+	protected void setUp() throws Exception {
+		MainActivity testActivity;
+		Events testEvent = new Event;
+		
+		testEvent.setCategory("school");
+	}
+	@Test2
+	// adds as many categories as possible
+	public void overLoadCategories () {
+		setUp();
+		for(;;) {
+		testEvent.setCategory();
+		}
+		
+	}
+	@Test
+	// adds as conflicted events to see event conflict is working
+	public void eventConflictCheck () {
+		
+	}
 }
-
-@Test
-//This first test is to try and overload the add function for a single day.
-//The idea is that it will try and create an event for every minute of the day
-Public void AddTest(){
-String TimeOfday = “AM”;
-Int hour = 12;
-//hour is just a counter, hour used is the 
-For(int militaryhour = 0; militaryhour < 24; militaryhour++){
-	For(int minute = 1; minute < 60; minute++){
-testEvent.addEvent(“test1”,”Location”,”Description”, “Test Category”, hour, (minute-1), “AM”, ”12/08/15”, hour, minute, “AM” , “no”);}
-	if(hour == 12)
-	{	hour = 1; }
